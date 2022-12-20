@@ -8,7 +8,8 @@ Panza, G.F., Romanelli, F. and Vaccari, F., 2001. Seismic wave propagation in la
 Panza, G.F., La Mura, C., Peresan, A., Romanelli, F. and Vaccari, F., 2012. Seismic hazard scenarios as preventive tools for a disaster resilient society. In Advances in geophysics (Vol. 53, pp. 93-165). Elsevier.
 
 original PGA value distribution
-![regiomap_pga_original](https://user-images.githubusercontent.com/61290423/208783593-f010d3d2-20e8-438e-8c5c-3af77d34a671.png)
+![regiomap_pga_original_small](https://user-images.githubusercontent.com/61290423/208784049-dc958df0-a162-48df-82d0-ffe6f84c42b8.png)
+
 
 kriged PGA distribution
-![regiomap_pga_kriged](https://user-images.githubusercontent.com/61290423/208783605-a71690a2-8147-4b04-b704-f8d5e219ef51.png)
+![regiomap_pga_kriged - small](https://user-images.githubusercontent.com/61290423/208784062-dc5e7056-aa57-406f-ab36-2365e571a204.png)
