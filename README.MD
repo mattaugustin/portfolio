@@ -1,4 +1,0 @@
-This work relates to a section of my PhD project and aims at developing a regional seismic hazard map for the United Kingdom (UK). The work started with calculating Peak Ground Acceleration (PGA) values at nodes of a regularly-spaced grid (0.2 degrees) mapped over the UK land, using the Neo-Deterministic Seismic Hazard Analysis methodology detailed in Panza (2001, 2012). 
-In the proposed code, the gridded PGA distribution was then smoothed over the entire UK land using a kriging technique, ensuring that potential high hazard individual nodes are not smoothed out in the final distribution prior to the plotting of hazard map.
-Steps include preparing relevant spatial items (dataframes, grid, raster), creating and fitting a variogram for the kriging operation, assessing PGA value range, creating amplitude bins and plotting the kriged hazard map.
-
