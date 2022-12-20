@@ -6,3 +6,9 @@ References:
 Panza, G.F., Romanelli, F. and Vaccari, F., 2001. Seismic wave propagation in laterally heterogeneous anelastic media: theory and applications to seismic zonation. In Advances in geophysics (Vol. 43, pp. 1-95). Elsevier.
 
 Panza, G.F., La Mura, C., Peresan, A., Romanelli, F. and Vaccari, F., 2012. Seismic hazard scenarios as preventive tools for a disaster resilient society. In Advances in geophysics (Vol. 53, pp. 93-165). Elsevier.
+
+original PGA value distribution
+![regiomap_pga_original](https://user-images.githubusercontent.com/61290423/208783593-f010d3d2-20e8-438e-8c5c-3af77d34a671.png)
+
+kriged PGA distribution
+![regiomap_pga_kriged](https://user-images.githubusercontent.com/61290423/208783605-a71690a2-8147-4b04-b704-f8d5e219ef51.png)
