@@ -13,7 +13,7 @@
 
 library(dplyr)   ; library(stringr)  ;
 library(readr)   ; library(reshape2) ;
-library(ggplot2)  ;
+
 library(purrr)    ; library(geosphere)
 library(eseis)    ; library(expm)
 library(scales)   ; library(lubridate)
@@ -64,6 +64,62 @@ arias_parameters   <- function(step , accel_1 , accel_2){
   return(parameters)
 }
 
+
+resp_spectra_harsh <- function( acceleration , duration , nStep, per ){ 
+  #
+  #
+  acceleration <- c(0, acceleration)
+  # per <- seq(0.01, 10, by = 0.1)
+  #
+  freq <- 1/per
+  nPeriod <- length(per)
+  #
+  dw <- 2*pi/duration
+  w <- seq(0, nStep*dw , by = dw)
+  #
+  u <- c()
+  utime <- c()
+  umax <- c()
+  vmax <- c()
+  amax <- c()
+  H <- c()
+  #
+  Afft <- fft(acceleration)
+  #
+  k <- 1000
+  damp <- 0.05
+  #
+  for (j in 1:nPeriod) {
+    #  
+    m <- (per[j]/(2*pi))^2  * k
+    c <- 2*damp*(k*m)^(0.5)
+    #
+    if(schoolmath::is.odd(nStep) == TRUE ){ nStep = nStep - 1  }
+    for (l in 1:(nStep/2+1)){
+      H[l] <- 1/(-m*w[l]*w[l] + sqrt(as.complex(-1))*c*w[l] + k) 
+      H[nStep +3 -l] <- Conj(H[l])
+    }
+    #
+    #
+    Qfft <- -m * Afft
+    for(l in 1:(nStep+1)){
+      u[l]<- H[l] * Qfft[l]
+    }
+    #
+    #
+    utime <- Re(signal::ifft(u))
+    umax[j] = max (abs(utime))
+    vmax[j] = (2*pi/per[j])*umax[j]
+    amax[j] = (2*pi/per[j])*vmax[j]
+  }
+  #
+  #
+  resultsharsh <- list ( amax)
+  names(resultsharsh) <- c("PSA")
+  return(resultsharsh)
+}
+
+
 #####
 ###################################
 ##    CONSRUCT  FILE  STRUCTURE  ##
@@ -71,8 +127,7 @@ arias_parameters   <- function(step , accel_1 , accel_2){
 
 
 earthquakes_info <- read_csv("portfolio/observations/earthquakes_info.csv", trim_ws = FALSE)  %>% as.data.frame()
-View(earthquakes_info)
-# write.csv(earthquakes_info, "portfolio/observations/earthquakes_info.csv", row.names = FALSE)
+head(earthquakes_info)
 
 
 data_directory   <- "portfolio/observations/"
@@ -84,21 +139,8 @@ orientation      <- c("HHE","HHN","BHE","BHN")
 
 file_list_station       <- expand.grid(  earthquakes_info$event , channel  )
 file_list_station$path  <- paste0(  data_directory , file_list_station$Var1, "/Base_" , file_list_station$Var2 , "/PZ/" )
-list_station            <- list.files( path = file_list_station$path , recursive = F) %>%
-                           str_sub(  . , 7 , nchar(.) - 4 ) %>% 
-                           unique()
-
-## better solution using str_split but how to finish ??
-# file_list_station       <- expand.grid(  event , channel  )
-# file_list_station$path  <- paste0(  data_directory , file_list_station$Var1, "/Base_" , file_list_station$Var2 , "/PZ/" )
-# list_station            <- list.files( path = file_list_station$path , recursive = F) %>%
-#                            str_split( file_list_station , pattern = "\\." , n = 3  )  %>% 
-#                            unique()
-
-
-# lapply( file_list_station , FUN = str_split( x , pattern = "\\.") , n = 3  )
-# sub( "SACPZ." , replacement = "" , file_list_station[[1]])
-# file_list_station[[1]] %>% sub("^.*\\Z."  , replacement = "" , .) # %>% sub( ".BH\\*"  , replacement = "" , .)
+list_station            <-  list.files( path = file_list_station$path , recursive = F) %>%
+                            str_split_fixed(  . , "\\." , n =3 ) %>% as.data.frame %>% select( . , 2  ) %>% unlist() %>% unique() %>% as.character()
 
 
 #####
@@ -123,8 +165,9 @@ for(i in 1:nrow(file_list_station)){
     }
 }
 list_pz <- do.call("rbind", list_pz) %>% rename(. , "PZ"="." ,"event"="Var1","channel"="Var2","stem_path"="path")
-head(list_pz)
 
+
+head(list_pz)
 list_pz$PZ       <-  list_pz$PZ %>% as.character()
 list_pz$station  <- str_sub(  list_pz$PZ , 7 , nchar(list_pz$PZ %>% as.character()) - 4 )
 list_pz$path_pz  <- paste0( list_pz$stem_path , list_pz$PZ )
@@ -140,7 +183,7 @@ for (i in 1:nrow(list_pz)){
   pzdata[[i]] <- read.csv(list_pz$path_pz[[i]], stringsAsFactors = FALSE)
 }
 names(pzdata) <- list_pz$exp_name
-View(list_pz)
+View(pzdata)
 
 
 
@@ -172,6 +215,7 @@ list_sac$exp_name  <- paste0( list_sac$event   , "_"  , list_sac$channel , "_" ,
 list_sac$exists <- case_when(  file.exists( list_sac$path_sac) ~ TRUE,   TRUE ~ FALSE )
 list_sac <- list_sac[list_sac$exists == TRUE,]
 
+
 sacdata <- list()
 start_sac <- Sys.time()
 for (i in 1:nrow(list_sac)){
@@ -182,7 +226,6 @@ end_sac <- Sys.time()
 paste("time difference is " , difftime(end_sac, start_sac, units = "mins") )
 
 
-
 ###   Detailed characteristics for each event with SAC-data available stations and coordinates
 sac_features <- str_split_fixed( string = names(sacdata) , pattern = "_" , n = 6 ) %>% as.data.frame() %>% 
   rename( . , "event"="V1","channel"="V2","filtering"="V3","motion"="V4","station"="V5","component"="V6") 
@@ -191,16 +234,12 @@ earthquakes_info <- left_join(earthquakes_info , sac_features ) %>% relocate( . 
 
 
 
-
-rm( sacdata , pzdata , file_list_sac , file_list_signal , list_sac, list_pz , file_list_station)
-
-
 #####
 ###########################################################################################
 ###                     VIEW  SIGNAL FOR A GIVEN SAC FILE                               ###
 ###########################################################################################
 
-
+## choose an i index between 1 and length(sacdata) to plot the signals
 i <- 1  
 main_title_sac <-  paste0( str_split_fixed( names(sacdata)[i] , "_", n=6)[,1] %>% toupper(), "  " ,
                            str_split_fixed( names(sacdata)[i] , pattern = "_" , n =6)[,4] , 
@@ -219,67 +258,6 @@ abline(v=seq(sacdata[[i]]$meta$starttime,
 ###  ASSIGN  OCCURRENCE TIMES TO SAC SIGNALS  DUE TO INCOMPLETENESS OF SAC META DATA    ###
 ###########################################################################################
 
-
-###  Some SAC files have wrong metadata start times in spite of correct time registration and earthquake-consistent signals on BGS website. 
-###  These erroneous metadata  cause "SAC clipping" operation to generate too large SAC files.
-###  Hence, find out which SAC files includes inconsistent "start times", aka "start times" more than 1 day before or after the earthquake occurrence date and time. 
-# df_test <- data.frame( time = as.POSIXlt(x = "2000-01-01 10:00:00" , tz = "UTC" ) , name = as.character()  )
-# df_test_time <- as.POSIXct(x = "2000-01-01 10:00:00" , tz = "UTC" )
-# df_test_name <- as.character()
-# for(i in 1:length(sacdata_event)){
-#   #
-#   for(j in 1:length(sacdata_event[[i]])){
-#     df_test[j]  <-   sacdata_event[[i]][[j]]$meta$starttime %>% as.POSIXlt()
-#     df_test[j]  <-   names(sacdata_event[[i]])[j]
-#   }
-#   df_test[[i]] <- data.frame(  time_sac = df_test_time %>% as.POSIXlt()  , name =  df_test_name )
-# }
-# df_test <- do.call("rbind" , df_test  )
-# df_test$event <- str_split_fixed(  df_test$name , fixed("_") , n = 6)[,1]
-# df_test <- left_join( df_test , earthquakes_info[ , c("event","date_bis") ]  ) %>% rename( . , "date_event"="date_bis")
-# df_test$time_difference <-  difftime(  df_test$time_sac  ,  df_test$date_event , units = "mins") %>% as.numeric() %>% round ( . , digits = 2)
-# head(df_test , 4 )
-# max( abs(df_test$time_difference)  ) < 24*60  ## 1 day converted in minutes
-# 
-# 
-# ##  For these time-inconsistent SAC files, redefine start-times shortly before earthquake occurrence
-# for(i in 1:length(sacdata_event)){
-#   #
-#   for(j in 1:length( sacdata_event[[i]] )){
-#     #
-#          sacdata_event[[i]][[j]]$meta$starttime    <- case_when(
-#             abs( difftime(   sacdata_event[[i]][[j]]$meta$starttime , earthquakes_info$date_bis[i] , units = "min" ) ) > 24*60 ~ earthquakes_info$date_bis[i] - 60 ,
-#             TRUE ~ sacdata_event[[i]][[j]]$meta$starttime
-#     )
-#   }
-# }
-# 
-# 
-# ##   Verify using time difference values between SAC metadata and earthquake occurrence times that NO SAC metadata is containing errors.
-# df_test_new <- list( data.frame( ))
-# df_test_time <- as.POSIXct(x = "2000-01-01 10:00:00" , tz = "UTC" )
-# df_test_name <- as.character()
-# for(i in 1:length(sacdata_event)){
-#   #
-#   for(j in 1:length(sacdata_event[[i]])){
-#       df_test_time[j]  <-   sacdata_event[[i]][[j]]$meta$starttime %>% as.POSIXlt()
-#       df_test_name[j]  <-   names(sacdata_event[[i]])[j]
-#   }
-#   df_test_new[[i]] <- data.frame(  time_sac = df_test_time %>% as.POSIXlt()  , name =  df_test_name )
-# }
-# df_test_new <- do.call("rbind" , df_test_new  )
-# df_test_new$event <- str_split_fixed(  df_test_new$name , fixed("_") , n = 6)[,1]
-# df_test_new <- left_join( df_test_new , earthquakes_info[ , c("event","date_bis") ]  ) %>% rename( . , "date_event"="date_bis")
-# df_test_new$time_difference <-  difftime(  df_test_new$time_sac  ,  df_test_new$date_event , units = "mins") %>% as.numeric() %>% round ( . , digits = 2)
-# head(df_test_new , 4 )
-# max( abs(df_test_new$time_difference)  ) < 24*60  ## 1 day in minute
-# 
-
-# rm( df_test, df_test_new , df_test_time, df_test_name)
-
-
-
-######## NEW 
 
 ###  Some SAC files have wrong metadata start times in spite of correct time registration and earthquake-consistent signals on BGS website. 
 ###  These erroneous metadata  cause "SAC clipping" operation to generate too large SAC files.
@@ -329,7 +307,6 @@ head(df_test_new , 4 )
 max( abs(df_test_new$time_difference)  ) < 24*60  ## 1 day in minute
 
 
-# rm( df_test, df_test_new , df_test_time, df_test_name)
 
 
 #####
@@ -352,52 +329,12 @@ names(sacdata_clip) <- names(sacdata)
 
 
 
-# rm(sacdata , sacdata_event , sac_event )
-
-
-
-
 #####
 ###########################################################################################
 ###      PLOT SAC AND CLIPPED SAC SIGNALS  TO  VISUALIZE CLIPPING EFFECT                ###
 ###########################################################################################
 
-
-# i <- 2  ; j <- 45
-# main_title_sac     <-  paste0( names(sacdata_event)[i] %>% toupper(), "  " ,
-#                            str_split_fixed( names(sacdata_event[[i]])[[j]] , pattern = "_" , n =6)[,4] , 
-#                            "  signal recorded at station  " ,  sacdata_event[[i]][[j]]$meta$station )
-# main_title_sacclip <-  paste0( names(sacdata_clip)[i]  %>% toupper(), "  " ,
-#                            str_split_fixed( names(sacdata_clip[[i]])[[j]] , pattern = "_" , n =6)[,4] , 
-#                            "  signal clipped & recorded at station  " ,  sacdata_clip[[i]][[j]]$meta$station )
-# 
-# par(mfrow=c(1,2))
-# plot_signal( data = sacdata_event[[i]][[j]]  , col = "black" ,  lwd  = 0.3 ,
-#              main  = main_title_sac  ,
-#              xlim = c( sacdata_event[[i]][[j]]$meta$starttime , 
-#                        sacdata_event[[i]][[j]]$meta$starttime + sacdata_event[[i]][[j]]$meta$dt * sacdata_event[[i]][[j]]$meta$n   ) ,
-#              xlab = "time of event" , ylab = "amplitude"  )
-# # abline(h=seq(-1,1,0.25),col="grey80" , lty=2, lwd = 0.2)
-# abline(v=seq(sacdata_event[[i]][[j]]$meta$starttime, 
-#              sacdata_event[[i]][[j]]$meta$starttime + 60*60, 2*60)  , col="grey80", lty=2 , lwd = 0.2)  ## minor plot lines every 2 min
-# plot_signal( data = sacdata_clip[[i]][[j]]  , col = "darkred" ,  lwd = 0.3 ,
-#              main  = main_title_sacclip  ,
-#              xlim = c( sacdata_event[[i]][[j]]$meta$starttime , 
-#                        sacdata_event[[i]][[j]]$meta$starttime + sacdata_event[[i]][[j]]$meta$dt * sacdata_event[[i]][[j]]$meta$n   ) ,
-#              xlab = "time of event" , ylab = "amplitude"  )
-# # abline(h=seq(-1,1,0.25),col="grey80" , lty=2, lwd = 0.2)
-# abline(v=seq(sacdata_event[[i]][[j]]$meta$starttime, 
-#              sacdata_event[[i]][[j]]$meta$starttime + 60*60, 2*60)  , col="grey80", lty=2 , lwd = 0.2)  ## minor plot lines every 2 min
-# 
-
-# 
-# plot_signal( data = sacdata_clip$swansea$swansea_Hchan_35Hz_accel_MCH1_HHN  , col = "darkred" ,  lwd = 0.3 ,
-#              main  = main_title_sacclip  ,
-#              # xlim = c( sacdata_clip$swansea$swansea_Hchan_35Hz_accel_MCH1_HHE$meta$starttime , 
-#               #         sacdata_clip$swansea$swansea_Hchan_35Hz_accel_MCH1_HHE$meta$starttime + sacdata_event[[i]][[j]]$meta$dt * sacdata_event[[i]][[j]]$meta$n   ) ,
-#              xlab = "time of event" , ylab = "amplitude"  )
-
-
+## choose an i index between 1 and length(sacdata) to plot the signal and the corresponding clipped version
 i <- 5  
 main_title_sac     <-  paste0( str_split_fixed( names(sacdata)[i] , pattern = "_" , n =6)[,1]  %>% toupper(), "  " ,
                                str_split_fixed( names(sacdata)[i] , pattern = "_" , n =6)[,4] , 
@@ -444,9 +381,7 @@ for (i in 1:length(pzdata)){
 }   
 station_info <- cbind.data.frame ( station_name , station_latitude , station_longitude , event , sampling  , stringsAsFactors = FALSE ) %>% unique()
 
-
 head(station_info, 4)
-head(earthquakes_info, 4)
 
 
 
@@ -466,21 +401,6 @@ for(i in 1:length(sacdata_clip) ){
     sacdata_clip[[i]]$meta$longitude <- station_info[station_info$station_name == stanami & station_info$event == eventi & station_info$sampling == chani,]$station_longitude
     sacdata_clip[[i]]$meta$latitude  <- station_info[station_info$station_name == stanami & station_info$event == eventi & station_info$sampling == chani,]$station_latitude
 }
-
-
-
-
-
-
-
-sacdata_clip_reduced <- list()
-for(i in 1:length(sacdata_clip) ){
-  #
-  sacdata_clip_reduced   <- sacdata_clip[ str_detect ( names(sacdata_clip) , "MCH1|CWF|STNC|SWN1|HPK")  ]
-}
-# View(sacdata_clip_reduced)
-
-
 
 
 
@@ -511,8 +431,8 @@ for (i in 1:length(stacked_list)) {
       for (l in 1:length(stacked_list[[i]][[j]][[k]])) {
         searchname <- paste0( names(stacked_list[[i]])[j], "_", names(stacked_list[[i]][[j]])[k], "_", names(stacked_list[[i]][[j]][[k]])[l],
                              "_", names(stacked_list)[i])
-        sac_element <- grep( searchname  , names(sacdata_clip_reduced)  , fixed = TRUE)
-        stacked_list[[i]][[j]][[k]][[l]] <- sacdata_clip_reduced[sac_element]
+        sac_element <- grep( searchname  , names(sacdata_clip)  , fixed = TRUE)
+        stacked_list[[i]][[j]][[k]][[l]] <- sacdata_clip[sac_element]
         
       }
     }
@@ -531,7 +451,7 @@ for (i in 1:length(stacked_list)) {
 stacked_tables    <-  rep( list( list() ) , levels(earthquakes_info$motion) %>% length  ) %>% setNames( . , levels(earthquakes_info$motion ))     
 parameters_table  <-  rep( list( list() ) , levels(earthquakes_info$motion) %>% length  ) %>% setNames( . , levels(earthquakes_info$motion ))       
 #
-xi <- 0.05 ;    #  damping factor for spectral acceleration (SA) calculation
+xi <- 0.05 ;                                                                          #  damping factor for spectral acceleration (SA) calculation
 sPeriod <- c(0.05 , 0.1 , 0.2 , 0.3 , 0.4 , 0.5 , 0.6 , 0.7 , 0.8 , 0.9 , 1 , 2 , 3)  # structural periods at which to calculate SA 
 
 startime <- Sys.time()
@@ -555,7 +475,6 @@ for (i in 1:length(stacked_list)) {
       # loop on Hz filtering level
       for (l in 1:length(stacked_list[[i]][[j]][[k]]) ) {
         #
-        # all eseis files - loop through half of them
         #
         if( length(stacked_list[[i]][[j]][[k]][[l]]) != 0 ) {
           maxHe <- c() ; maxHn <- c() ; maxGM <- c() ; maxEN <- c()  ; maxRes <- c() 
@@ -566,7 +485,7 @@ for (i in 1:length(stacked_list)) {
           ew_m_time_5 <- c() ; ew_m_time_95 <- c() ; ns_m_time_5 <- c() ; ns_m_time_95 <- c() ;
           #
           for (m in 0:(length(stacked_list[[i]][[j]][[k]][[l]])/2-1) ){
-            #   # extract the max values
+            # 
             #
             stacked_list_subset_ew   <- stacked_list[[i]][[j]][[k]][[l]][[2*m+1]]
             stacked_list_subset_ns   <- stacked_list[[i]][[j]][[k]][[l]][[2*m+2]]
@@ -601,7 +520,7 @@ for (i in 1:length(stacked_list)) {
               Sa_gm[[m+1]]  <- as.data.frame(t(as.data.frame(spac_gm )))
               Sa_res[[m+1]] <- as.data.frame(t(as.data.frame(spac_res)))   
               #
-              parameters       <- arias_parameters_cum( srate, stacked_list_subset_ew$signal /10 , stacked_list_subset_ns$signal / 10 )
+              parameters         <- arias_parameters( srate, stacked_list_subset_ew$signal /10 , stacked_list_subset_ns$signal / 10 )
               arias_ew_g[m+1]    <- parameters[[1]]
               arias_ns_g[m+1]    <- parameters[[2]]
               arias_ew_m[m+1]    <- parameters[[3]]
@@ -697,18 +616,16 @@ parameters_table <- parameters_table[,c("event","channel" ,"filtering", "station
 
 head(parameters_table, 4 )
 
+##  combine original earthquake infos with station information (coordinates...)
+earthquakes_info             <- left_join( earthquakes_info, station_info , by = c( "event","station"="station_name","channel"="sampling")) #%>% 
+earthquakes_info$epidistance <- round( distGeo( earthquakes_info[,c("longitude","latitude")]   , earthquakes_info[,c("station_longitude","station_latitude")]   , a = 6378.137, f=1/298.257223563 ), 3)
+earthquakes_info             <- earthquakes_info %>% relocate( . , component, .before = filtering) %>%  relocate( . , epidistance, .before = station_latitude)
 
-earthquakes_info_bis             <- left_join( earthquakes_info, station_info , by = c( "event","station"="station_name","channel"="sampling")) #%>% 
-earthquakes_info_bis$epidistance <- round( distGeo( earthquakes_info_bis[,c("longitude","latitude")]   , earthquakes_info_bis[,c("station_longitude","station_latitude")]   , a = 6378.137, f=1/298.257223563 ), 3)
-earthquakes_info_bis             <- earthquakes_info_bis %>% relocate( . , component, .before = filtering) %>%  relocate( . , epidistance, .before = station_latitude)
-
-
-
-# write.csv(parameters_table    , "portfolio/observations/parameters_table_sample.csv"            , row.names = FALSE)
-# write.csv(earthquakes_info_bis, "portfolio/observations/earthquake_stations_characteristics.csv", row.names = FALSE)
+write.csv(parameters_table    , "portfolio/observations/parameters_table_sample.csv"            , row.names = FALSE)
+write.csv(earthquakes_info ,    "portfolio/observations/earthquake_stations_characteristics.csv", row.names = FALSE)
 
 
-
-rm( sacdata_clip_reduced ,  earthquakes_info_bis , earthquakes_info , sacdata_clip , sacdata , parameters , parameters_cum , parameters_table,
-    stacked_tables , stacked_list , df_test , df_test_new , df_test_name , df_test_time , list_sac, list_pz , pzdata )
+# remove size-chunk data from environment
+# rm( sacdata_clip_reduced ,  earthquakes_info_bis , earthquakes_info , sacdata_clip , sacdata , parameters , parameters_cum , parameters_table,
+#   stacked_tables , stacked_list , df_test , df_test_new , df_test_name , df_test_time , list_sac, list_pz , pzdata )
 
