@@ -5,6 +5,7 @@ Earthquake signals as recorded by seismic stations are usually available for bot
   In this example, signals are registered on broadband (B channel) or higher broadband (H channel) stations, depending on the regional monitoring network. The bandpass filtering frequency is set according to station instrumental recording rate and users decision, hence in this example at 35 Hz (or 25 Hz owing to station instrumental limitations) and 10 Hz.
 
 With this code is provided a set of SAC earthquake signals and associated station metadata referred to as PoleZero files (PZ).
+ https://drive.google.com/drive/folders/1FRe2bp1G7aQ-0hjDYUV57vSaD_2b9zix?usp=sharing
 
 Steps are as follows :
 + defining functions used for later engineering parameter calculations (Arias intensity, spectral accelerations)
