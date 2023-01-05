@@ -705,10 +705,6 @@ parameters_table_long$filtering_bis <- case_when(
 ggplot() +
   #
   portfolio_parameters_style () +
-    theme(panel.grid.minor.x = element_line(colour = "grey70" , size = 0.1 , linetype = "dotted") ,
-        panel.grid.minor.y = element_line(colour = "grey70" , size = 0.1 , linetype = "dotted") ,
-        legend.box = "vertical" ,
-        legend.spacing.y = unit( 0.02 , "mm"  ) ) +
   #
   geom_point(parameters_table_long %>% filter( . ,  component == "resultant" , groundmotion_bis == "PGA" )  ,
              mapping = aes(x = epidistance, y = amplitude , shape = site_type_binary , size = site_type_binary , col = filtering_bis ) , alpha = 1 ) +
@@ -739,40 +735,18 @@ portfolio_parameters_style <- function() {
   font <- "Be Vietnam Light"
   font_bold  <- "Be Vietnam ExtraBold"
   
-  # font <- "Calibri Light" # in case the first one doesnt work
-  # font_bold  <- "Calibri"
-  
   extrafont::loadfonts(device = "win", quiet = TRUE)
   
-  # combination of NY Times and new_colours2 + yellow: https://coolors.co/329cd7-87d1bf-fff9e0-f9e3a9-feb87b-e76a68
   new_colours11 = colorRampPalette(c("#329cd7","#5DB7CB","#87d1bf","#C3E2BE","#FFEEA8","#F6CE6A","#FE9E62","#e76a68"))
-  
-  
-  
-  # greens https://coolors.co/0f3057-005b80-008f99-90c6b4-e2eac8-fff5e5
-  # greens = colorRampPalette(c("white", new_colours(10)[5:1]))
-  # greens2 = colorRampPalette(new_colours3(9)[5:1])
-  # greens3 = colorRampPalette(new_colours3(9)[6:1])
-  # reds = colorRampPalette(new_colours(9)[5:9])
-  # reds2 = colorRampPalette(new_colours3(9)[5:9])
-  # GrReds = colorRampPalette(new_colours(9)[3:9])
-  
-  water2.5 = colorRampPalette(c("#E2F0F6", "#E5F5FD"))(4)[3]
-  water4 = colorRampPalette(c(water2.5, "white"))(3)[2]
   
   ggplot2::theme(
     
     #Text format:
     #This sets the font, size, type and colour of text for the chart's title
-    # plot.title = ggplot2::element_text(family=font_bold,
-    #                                    size=28,
-    #                                    # face="bold",
-    #                                    color="#222222"),                 # 222222
     plot.title = ggplot2::element_blank(),
     #This sets the font, size, type and colour of text for the chart's subtitle, as well as setting a margin between the title and the subtitle
     plot.subtitle = ggplot2::element_text(family=font,
                                           size=10,
-                                          # margin=ggplot2::margin(9,0,9,0)
     ),
     plot.caption = ggplot2::element_blank(),
     #This leaves the caption text element empty, because it is set elsewhere in the finalise plot function
@@ -786,44 +760,41 @@ portfolio_parameters_style <- function() {
                                          face = "bold",
                                          size=8,
                                          color="#3e3e3e"),
-    #plot.margin = ggplot2::unit(c(0.3,0.07,0.3,0.07), "cm"),
     legend.key = ggplot2::element_blank(),
     legend.text = ggplot2::element_text(family=font,
                                         size=7.5,
-                                        color="#3e3e3e"),                 # 222222
+                                        color="#3e3e3e"),         
     legend.margin = margin(0.1,0,0,0, unit = "cm"),
-    # legend.spacing.y = unit(-.1, "cm"),
+    legend.box = "vertical" ,
+    legend.spacing.y = unit( 0.02 , "mm"  )
+    
     #Axis format
     #This sets the text font, size and colour for the axis test, as well as setting the margins and removes lines and ticks. In some cases, axis lines and axis ticks are things we would want to have in the chart - the cookbook shows examples of how to do so.
     axis.title = ggplot2::element_text(family=font_bold,
                                        size=8,
                                        face = "bold",
                                        color="#3e3e3e"),
-    #axis.title.x = element_text(hjust = -.02),
     axis.title.y = element_text(hjust= .5, vjust = 3, angle = 90),
     axis.text = ggplot2::element_text(family=font,
                                       size=7.5,
-                                      color="#3e3e3e"),                 # 222222
-    # axis.text.x = ggplot2::element_text(margin=ggplot2::margin(5, b = 10)),
+                                      color="#3e3e3e"),
     axis.ticks = ggplot2::element_blank(),
-    #axis.line = ggplot2::element_blank(),
-    
+        
     #Grid lines
     #This removes all minor gridlines and adds major y gridlines. In many cases you will want to change this to remove y gridlines and add x gridlines. The cookbook shows you examples for doing so
     panel.grid.minor = ggplot2::element_blank(),
-    panel.grid.major = ggplot2::element_line(colour = "grey30"),          # dbdbdb   cbcbcb
+    panel.grid.major = ggplot2::element_line(colour = "grey30"),          
     #
-    panel.grid.minor.y = element_line(colour = "grey80",linetype = "dashed"  ) ,
-    panel.grid.major.y = element_line(colour = "grey50",linetype = "dashed"  ) ,
-    #panel.grid.major.x = ggplot2::element_blank(),
+    panel.grid.minor.y = element_line(colour = "grey80",linetype = "dotted"  ) ,
+    panel.grid.major.y = element_line(colour = "grey80",linetype = "dotted"  ) ,
     panel.grid = ggplot2::element_line(linetype = "dotted", size=0.15), # 0.2
     
     
     #Blank background
     #This sets the panel background as blank, removing the standard grey ggplot background colour from the plot
     panel.background = ggplot2::element_blank(),
-    panel.border = ggplot2::element_rect(fill = NA, colour = "black", size = .2),   #  size = .4
-    #panel.border = element_rect( size = 0.2   ) ,
+    panel.border = ggplot2::element_rect(fill = NA, colour = "black", size = .2),  
+    
     #  Space between faceted wrap figures to accomodate for legend on x axis
     plot.margin = margin(1, 3 , 1 , 3 , "mm")  , 
     
@@ -836,8 +807,7 @@ portfolio_parameters_style <- function() {
                                        face = "bold",
                                        margin = margin(1,0, 1,0, unit = "mm")),
     panel.spacing.x = unit(4, "mm") ,
-    #strip.text.x = element_text( margin = margin( b = 2, t = 2 )   ) ,
-    
+   
   )
 }
 
