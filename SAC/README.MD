@@ -16,3 +16,5 @@ Steps are as follows :
 + creating a tree architecture to keep track of identification characteristics such as earthquake name, filtering frequency, station recording channel etc ... .
 + extracting earthquake engineering parameters and derive other parameters from signal processing.
 + plotting selected parameters to show amplitude decay across epidistance.
+
+![ground_motion_PGA](https://user-images.githubusercontent.com/61290423/210856361-e67b4e03-ad28-4770-be9a-3d6d1f36b27e.png)
