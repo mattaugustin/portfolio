@@ -18,4 +18,4 @@ Steps are as follows :
 + plotting selected parameters to show amplitude decay across epidistance.
 
 ![ground_motion_PGA](https://user-images.githubusercontent.com/61290423/210856702-8d820efc-3e41-4abe-b564-e27c8dcb4336.png)
-<img src="[Assets/icon.png](https://user-images.githubusercontent.com/61290423/210856702-8d820efc-3e41-4abe-b564-e27c8dcb4336.png)" width="100">
+<img src="https://user-images.githubusercontent.com/61290423/210856702-8d820efc-3e41-4abe-b564-e27c8dcb4336.png" width="100"/>
