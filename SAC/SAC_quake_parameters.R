@@ -629,3 +629,215 @@ write.csv(earthquakes_info ,    "portfolio/observations/earthquake_stations_char
 # rm( sacdata_clip_reduced ,  earthquakes_info_bis , earthquakes_info , sacdata_clip , sacdata , parameters , parameters_cum , parameters_table,
 #   stacked_tables , stacked_list , df_test , df_test_new , df_test_name , df_test_time , list_sac, list_pz , pzdata )
 
+#####
+###########################################################################################
+#####     PLOT ENGINEERING PARAMETERS  ACROSS EPIDISTANCE                           #######
+###########################################################################################
+
+
+## Assign soil conditions to stations, re-organize table prior to plotting
+parameters_table  <- read_csv("portfolio/observations/parameters_table_sample.csv",  trim_ws = FALSE)  %>% as.data.frame()
+station_soil      <- read_csv("portfolio/observations/station_soil_info.csv"      ,  trim_ws = FALSE)  %>% as.data.frame()
+
+head( parameters_table , 4  )
+head( station_soil     , 4  )
+
+parameters_table       <-    select( parameters_table , which ( !str_detect( names(parameters_table) , "EW|NS|time_5|time_95"  ) ) ) %>% 
+                             left_join( .  , station_soil , by = c("station","station_latitude", "station_longitude")  ) %>% 
+                             relocate(., c( Vs_30_value, site_type_binary)  , .before = Dis_Max)  
+
+parameters_table_long  <- parameters_table   %>% melt(.  ,  
+                                                     id.vars = c("event","channel","filtering","station","epidistance",
+                                                                 "station_latitude" , "station_longitude" ,"Vs_30_value","site_type_binary") , 
+                                                     measure.vars = c(  "Dis_Max","Vel_Max","Acc_Max","Max_Sa_0.05_s","Max_Sa_0.1_s","Max_Sa_0.2_s","Max_Sa_0.3_s","Max_Sa_0.4_s","Max_Sa_0.5_s",
+                                                                        "Max_Sa_0.6_s","Max_Sa_0.7_s","Max_Sa_0.8_s","Max_Sa_0.9_s","Max_Sa_1_s","Max_Sa_2_s","Max_Sa_3_s",
+                                                                        "Dis_GM_max","Vel_GM_max","Acc_GM_max","GM_Sa_0.05_s","GM_Sa_0.1_s","GM_Sa_0.2_s","GM_Sa_0.3_s","GM_Sa_0.4_s",
+                                                                        "GM_Sa_0.5_s","GM_Sa_0.6_s","GM_Sa_0.7_s","GM_Sa_0.8_s","GM_Sa_0.9_s","GM_Sa_1_s","GM_Sa_2_s","GM_Sa_3_s",
+                                                                        "Dis_Res_max","Vel_Res_max","Acc_Res_max","Res_Sa_0.05_s","Res_Sa_0.1_s","Res_Sa_0.2_s","Res_Sa_0.3_s","Res_Sa_0.4_s",
+                                                                        "Res_Sa_0.5_s","Res_Sa_0.6_s","Res_Sa_0.7_s","Res_Sa_0.8_s","Res_Sa_0.9_s","Res_Sa_1_s","Res_Sa_2_s","Res_Sa_3_s",
+                                                                        "arias_ew_g","arias_ns_g","arias_ew_m","arias_ns_m","arias_ew_std","arias_ns_std"), 
+                                                     variable.name = "groundmotion"  ,value.name = "amplitude"  )
+
+
+parameters_table_long$groundmotion <- parameters_table_long$groundmotion %>% as.character()
+parameters_table_long$component <- case_when(
+  str_detect( parameters_table_long$groundmotion , "res|Res" )   ~ "resultant" ,
+  str_detect( parameters_table_long$groundmotion , "GM"  )       ~ "geometric mean" ,
+  str_detect( parameters_table_long$groundmotion , "max|Max" )   ~ "maximum" ,
+  str_detect( parameters_table_long$groundmotion , "ew" )        ~ "East-West" ,
+  str_detect( parameters_table_long$groundmotion , "ns" )        ~ "North-South" ,
+  TRUE ~ "none"
+)
+
+parameters_table_long$groundmotion_bis <- case_when(
+  str_detect( parameters_table_long$groundmotion , "Dis" )       ~ "PGD" ,
+  str_detect( parameters_table_long$groundmotion , "Vel" )       ~ "PGV" ,
+  str_detect( parameters_table_long$groundmotion , "Acc" )       ~ "PGA" ,
+  str_detect( parameters_table_long$groundmotion , "std" )       ~ "Arias STD" ,
+  str_detect( parameters_table_long$groundmotion , "_g" )        ~ "Arias intensity (g)" ,
+  str_detect( parameters_table_long$groundmotion , "ew_m|ns_m" ) ~ "Arias intensity (m)" ,
+  #
+  str_detect( parameters_table_long$groundmotion , "Sa_0.05")    ~ "Sa(T=0.05 s)",
+  str_detect( parameters_table_long$groundmotion , "Sa_0.1" )    ~ "Sa(T=0.1s)" ,
+  str_detect( parameters_table_long$groundmotion , "Sa_0.2" )    ~ "Sa(T=0.2s)" ,
+  str_detect( parameters_table_long$groundmotion , "Sa_0.3" )    ~ "Sa(T=0.3s)" ,
+  str_detect( parameters_table_long$groundmotion , "Sa_0.4" )    ~ "Sa(T=0.4s)" ,
+  str_detect( parameters_table_long$groundmotion , "Sa_0.5" )    ~ "Sa(T=0.5s)" ,
+  str_detect( parameters_table_long$groundmotion , "Sa_0.6" )    ~ "Sa(T=0.6s)" ,
+  str_detect( parameters_table_long$groundmotion , "Sa_0.7" )    ~ "Sa(T=0.7s)" ,
+  str_detect( parameters_table_long$groundmotion , "Sa_0.8" )    ~ "Sa(T=0.8s)" ,
+  str_detect( parameters_table_long$groundmotion , "Sa_0.9" )    ~ "Sa(T=0.9s)" ,
+  str_detect( parameters_table_long$groundmotion , "Sa_1" )      ~ "Sa(T=1s)"   ,
+  str_detect( parameters_table_long$groundmotion , "Sa_2" )      ~ "Sa(T=2s)"   ,
+  str_detect( parameters_table_long$groundmotion , "Sa_3" )      ~ "Sa(T=3s)"   ,
+  TRUE ~ "none"
+)
+
+parameters_table_long$filtering_bis <- case_when(
+  str_detect( parameters_table_long$filtering , "10Hz" )  ~ "low frequency filtering (10 Hz)" ,
+  TRUE ~ "high frequency filtering (35 Hz)"
+)
+
+# View(parameters_table)
+
+
+## NB : the custom theme is provided at end of the script
+ggplot() +
+  #
+  portfolio_parameters_style () +
+    theme(panel.grid.minor.x = element_line(colour = "grey70" , size = 0.1 , linetype = "dotted") ,
+        panel.grid.minor.y = element_line(colour = "grey70" , size = 0.1 , linetype = "dotted") ,
+        legend.box = "vertical" ,
+        legend.spacing.y = unit( 0.02 , "mm"  ) ) +
+  #
+  geom_point(parameters_table_long %>% filter( . ,  component == "resultant" , groundmotion_bis == "PGA" )  ,
+             mapping = aes(x = epidistance, y = amplitude , shape = site_type_binary , size = site_type_binary , col = filtering_bis ) , alpha = 1 ) +
+  #
+  scale_y_log10( limits = c(0.01 , 50) , breaks = c(0.01 , 0.1 , 1, 10 ,100 ), minor_breaks =  rep(1:9, 21)*(10^rep(-10:10, each = 9)) ) +    #
+  annotation_logticks(sides = "lr" ,size = .001 ,alpha = 0.2) +
+  # scale_x_log10( limits = c(1, 400 )   , breaks = c(1,10, 100 , 1000 ), minor_breaks =  rep(1:9, 21)*(10^rep(-10:10, each = 9))) +
+  scale_x_continuous( limits = c(0, 350 ) , breaks = seq(0,300,50)  ) +
+  scale_colour_manual( values = new_colours11(8)[c(1,6,8)]   )        + 
+  scale_shape_manual ( values = c( "Rock"= 18, "Soil" = 21   )  )     +
+  scale_size_manual  ( values = c( "Rock"= 2.6  , "Soil" = 2.2   )  ) +
+  ylab( bquote('PGA (cm/'~s^2~ ')') ) + xlab("epidistance (km)")      +
+  facet_wrap( ~ event , labeller = labeller(  event = c("folkestone"="Folkestone","rasen"="Market Rasen","swansea"="Swansea") ) ,  ncol =1 ) +
+  guides(fill = "none", 
+         colour = guide_legend(title = "Filtering" , override.aes = c(alpha=0.5 , size = 2 )  ),
+         shape = guide_legend(title = "Observed values on"),
+         size  = guide_legend(title = "Observed values on")  ) +
+  coord_cartesian(  xlim = c(0,350 ) , expand = c(0,0 ))      
+
+ggsave("portfolio/observations/ground_motion_PGA.png", type = "cairo", width = 10, height = 10, units = "cm")
+
+
+
+
+
+###  Customized theme for plotting
+portfolio_parameters_style <- function() {
+  font <- "Be Vietnam Light"
+  font_bold  <- "Be Vietnam ExtraBold"
+  
+  # font <- "Calibri Light" # in case the first one doesnt work
+  # font_bold  <- "Calibri"
+  
+  extrafont::loadfonts(device = "win", quiet = TRUE)
+  
+  # combination of NY Times and new_colours2 + yellow: https://coolors.co/329cd7-87d1bf-fff9e0-f9e3a9-feb87b-e76a68
+  new_colours11 = colorRampPalette(c("#329cd7","#5DB7CB","#87d1bf","#C3E2BE","#FFEEA8","#F6CE6A","#FE9E62","#e76a68"))
+  
+  
+  
+  # greens https://coolors.co/0f3057-005b80-008f99-90c6b4-e2eac8-fff5e5
+  # greens = colorRampPalette(c("white", new_colours(10)[5:1]))
+  # greens2 = colorRampPalette(new_colours3(9)[5:1])
+  # greens3 = colorRampPalette(new_colours3(9)[6:1])
+  # reds = colorRampPalette(new_colours(9)[5:9])
+  # reds2 = colorRampPalette(new_colours3(9)[5:9])
+  # GrReds = colorRampPalette(new_colours(9)[3:9])
+  
+  water2.5 = colorRampPalette(c("#E2F0F6", "#E5F5FD"))(4)[3]
+  water4 = colorRampPalette(c(water2.5, "white"))(3)[2]
+  
+  ggplot2::theme(
+    
+    #Text format:
+    #This sets the font, size, type and colour of text for the chart's title
+    # plot.title = ggplot2::element_text(family=font_bold,
+    #                                    size=28,
+    #                                    # face="bold",
+    #                                    color="#222222"),                 # 222222
+    plot.title = ggplot2::element_blank(),
+    #This sets the font, size, type and colour of text for the chart's subtitle, as well as setting a margin between the title and the subtitle
+    plot.subtitle = ggplot2::element_text(family=font,
+                                          size=10,
+                                          # margin=ggplot2::margin(9,0,9,0)
+    ),
+    plot.caption = ggplot2::element_blank(),
+    #This leaves the caption text element empty, because it is set elsewhere in the finalise plot function
+    
+    #Legend format
+    #This sets the position and alignment of the legend, removes a title and backround for it and sets the requirements for any text within the legend. The legend may often need some more manual tweaking when it comes to its exact position based on the plot coordinates.
+    legend.position = "top",
+    legend.text.align = 0,
+    legend.background = ggplot2::element_blank(),
+    legend.title = ggplot2::element_text(family=font_bold,
+                                         face = "bold",
+                                         size=8,
+                                         color="#3e3e3e"),
+    #plot.margin = ggplot2::unit(c(0.3,0.07,0.3,0.07), "cm"),
+    legend.key = ggplot2::element_blank(),
+    legend.text = ggplot2::element_text(family=font,
+                                        size=7.5,
+                                        color="#3e3e3e"),                 # 222222
+    legend.margin = margin(0.1,0,0,0, unit = "cm"),
+    # legend.spacing.y = unit(-.1, "cm"),
+    #Axis format
+    #This sets the text font, size and colour for the axis test, as well as setting the margins and removes lines and ticks. In some cases, axis lines and axis ticks are things we would want to have in the chart - the cookbook shows examples of how to do so.
+    axis.title = ggplot2::element_text(family=font_bold,
+                                       size=8,
+                                       face = "bold",
+                                       color="#3e3e3e"),
+    #axis.title.x = element_text(hjust = -.02),
+    axis.title.y = element_text(hjust= .5, vjust = 3, angle = 90),
+    axis.text = ggplot2::element_text(family=font,
+                                      size=7.5,
+                                      color="#3e3e3e"),                 # 222222
+    # axis.text.x = ggplot2::element_text(margin=ggplot2::margin(5, b = 10)),
+    axis.ticks = ggplot2::element_blank(),
+    #axis.line = ggplot2::element_blank(),
+    
+    #Grid lines
+    #This removes all minor gridlines and adds major y gridlines. In many cases you will want to change this to remove y gridlines and add x gridlines. The cookbook shows you examples for doing so
+    panel.grid.minor = ggplot2::element_blank(),
+    panel.grid.major = ggplot2::element_line(colour = "grey30"),          # dbdbdb   cbcbcb
+    #
+    panel.grid.minor.y = element_line(colour = "grey80",linetype = "dashed"  ) ,
+    panel.grid.major.y = element_line(colour = "grey50",linetype = "dashed"  ) ,
+    #panel.grid.major.x = ggplot2::element_blank(),
+    panel.grid = ggplot2::element_line(linetype = "dotted", size=0.15), # 0.2
+    
+    
+    #Blank background
+    #This sets the panel background as blank, removing the standard grey ggplot background colour from the plot
+    panel.background = ggplot2::element_blank(),
+    panel.border = ggplot2::element_rect(fill = NA, colour = "black", size = .2),   #  size = .4
+    #panel.border = element_rect( size = 0.2   ) ,
+    #  Space between faceted wrap figures to accomodate for legend on x axis
+    plot.margin = margin(1, 3 , 1 , 3 , "mm")  , 
+    
+    #Strip background (#This sets the panel background for facet-wrapped plots to white, removing the standard grey ggplot background colour and sets the title size of the facet-wrap title to font size 22)
+    strip.background = ggplot2::element_rect(fill="white", colour = NA),
+    strip.text = ggplot2::element_text(size  = 8,  
+                                       #hjust = 0, 
+                                       vjust = 1,
+                                       family = font_bold,
+                                       face = "bold",
+                                       margin = margin(1,0, 1,0, unit = "mm")),
+    panel.spacing.x = unit(4, "mm") ,
+    #strip.text.x = element_text( margin = margin( b = 2, t = 2 )   ) ,
+    
+  )
+}
+
