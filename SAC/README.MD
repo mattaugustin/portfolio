@@ -7,6 +7,7 @@ Earthquake signals as recorded by seismic stations are usually available for bot
 With this code is provided a set of SAC earthquake signals and associated station metadata referred to as PoleZero files (PZ).
 
 Steps are as follows :
++ defining functions used for later engineering parameter calculations (Arias intensity, spectral accelerations)
 + building the file architecture in order to read SAC files (containing the earthquake signals) and the PZ files containing recording stations metadata.
 + collecting earthquake event details and corresponding recording stations features (coordinates, distance ...).
 + retrieving and assigning stations metadata to SAC files.
