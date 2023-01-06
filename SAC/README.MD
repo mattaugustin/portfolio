@@ -8,16 +8,18 @@ With this code is provided a set of SAC earthquake signals and associated statio
  https://drive.google.com/drive/folders/1FRe2bp1G7aQ-0hjDYUV57vSaD_2b9zix?usp=sharing
 
 Steps are as follows :
-+ defining functions used for later engineering parameter calculations (Arias intensity, spectral accelerations)
-+ building the file architecture in order to read SAC files (containing the earthquake signals) and the PZ files containing recording stations metadata.
-+ collecting earthquake event details and corresponding recording stations features (coordinates, distance ...).
-+ retrieving and assigning stations metadata to SAC files.
-+ clipping the signals to their main physical contents in order to reduce file size and to ease data manipulation and calculation.
-+ creating a tree architecture to keep track of identification characteristics such as earthquake name, filtering frequency, station recording channel etc ... .
-+ extracting earthquake engineering parameters and derive other parameters from signal processing.
++ defining functions used for later engineering parameter calculations (Arias intensity, spectral accelerations),
++ building the file architecture in order to read SAC files (containing the earthquake signals) and the PZ files containing recording stations metadata,
++ collecting earthquake event details and corresponding recording stations features (coordinates, distance ...),
++ retrieving and assigning stations metadata to SAC files,
++ clipping the signals to their main physical contents in order to reduce file size and to ease data manipulation and calculation,
++ creating a tree architecture to keep track of identification characteristics such as earthquake name, filtering frequency, station recording channel etc ... ,
++ extracting earthquake engineering parameters and derive other parameters from signal processing,
 + plotting selected parameters to show amplitude decay across epidistance.
 
 
+> clipping the signals to their main physical contents ...
 <img src="https://user-images.githubusercontent.com/61290423/210902751-f54c43f5-3a4a-4eca-b091-af74226b83ae.png" alt="SAC signals plot" width="750"/>
 
-<img src="https://user-images.githubusercontent.com/61290423/210856702-8d820efc-3e41-4abe-b564-e27c8dcb4336.png" alt="ground_motion_PGA" width="750"/>
+> plotting selected parameters to show amplitude decay across epidistance
+<img src="https://user-images.githubusercontent.com/61290423/210989406-c875d05f-8d55-4798-97ef-c0e399dbab50.png" width="750"/>
