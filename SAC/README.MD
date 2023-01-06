@@ -17,4 +17,7 @@ Steps are as follows :
 + extracting earthquake engineering parameters and derive other parameters from signal processing.
 + plotting selected parameters to show amplitude decay across epidistance.
 
+
+<img src="https://user-images.githubusercontent.com/61290423/210902751-f54c43f5-3a4a-4eca-b091-af74226b83ae.png" alt="SAC signals plot" width="750"/>
+
 <img src="https://user-images.githubusercontent.com/61290423/210856702-8d820efc-3e41-4abe-b564-e27c8dcb4336.png" alt="ground_motion_PGA" width="750"/>
