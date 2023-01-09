@@ -17,3 +17,11 @@ References:
 + Panza, G.F., Romanelli, F. and Vaccari, F., 2001. Seismic wave propagation in laterally heterogeneous anelastic media: theory and applications to seismic zonation. In Advances in geophysics (Vol. 43, pp. 1-95). Elsevier.
 
 + Panza, G.F., La Mura, C., Peresan, A., Romanelli, F. and Vaccari, F., 2012. Seismic hazard scenarios as preventive tools for a disaster resilient society. In Advances in geophysics (Vol. 53, pp. 93-165). Elsevier.
+
+> Geology distribution associated to the seismic monitoring stations
+
+![events_geology_vs_distance](https://user-images.githubusercontent.com/61290423/211395831-d7d4aeed-bae8-4f52-8a7b-dfe53c04a143.png)
+
+> Amplitude distribution associated to the seismic wavefront directivity angle in case of the Swansea earthquake
+
+![PGA_amp_directivity_distr](https://user-images.githubusercontent.com/61290423/211396042-991788bc-cfcd-451a-ab35-22b58d07fc4e.png)
