@@ -414,12 +414,263 @@ paste("time difference is " , difftime(endtime, startime, units = "mins") , "min
 ########################################
 
 
-parameter_table  <-  parameter_table %>% relocate( . , c(directivity,event,channel,real) , .before = station_id  )
-names(parameter_table) ; View(parameter_table)
+names(parameter_table)  <- c( "station_id" ,
+                              "Acc_Max_EW"   ,  "Acc_Max_NS" ,    "Acc_Max"   ,  "Acc_GM_max"   ,  "Acc_Res_max"  ,
+                              "Max_Sa_0.05_s" ,  "Max_Sa_0.1_s", "Max_Sa_0.2_s" , "Max_Sa_0.3_s" , "Max_Sa_0.4_s" , "Max_Sa_0.5_s",
+                              "Max_Sa_0.6_s",  "Max_Sa_0.7_s", "Max_Sa_0.8_s",  "Max_Sa_0.9_s",  "Max_Sa_1_s",  "Max_Sa_2_s" , "Max_Sa_3_s",
+                              #
+                              "GM_Sa_0.05_s" ,  "GM_Sa_0.1_s", "GM_Sa_0.2_s" , "GM_Sa_0.3_s" , "GM_Sa_0.4_s" , "GM_Sa_0.5_s",
+                              "GM_Sa_0.6_s",  "GM_Sa_0.7_s", "GM_Sa_0.8_s",  "GM_Sa_0.9_s",  "GM_Sa_1_s",  "GM_Sa_2_s" , "GM_Sa_3_s",
+                              #
+                              "Res_Sa_0.05_s" ,  "Res_Sa_0.1_s", "Res_Sa_0.2_s" , "Res_Sa_0.3_s" , "Res_Sa_0.4_s" , "Res_Sa_0.5_s",
+                              "Res_Sa_0.6_s",  "Res_Sa_0.7_s", "Res_Sa_0.8_s",  "Res_Sa_0.9_s",  "Res_Sa_1_s",  "Res_Sa_2_s" , "Res_Sa_3_s",
+                              #
+                              "arias_ew_g","arias_ns_g","arias_ew_m","arias_ns_m","arias_ew_std","arias_ns_std", 
+                              "ew_m_time_5","ew_m_time_95","ns_m_time_5"   ,"ns_m_time_95",
+                              "directivity"   ,  "event", "channel", "real" 
+                              )
+
+
+parameter_table  <-  parameter_table %>% relocate( . , c(directivity,event,channel,real) , .before = station_id  ) %>%
+                                         relocate( . , Acc_GM_max  , .before = GM_Sa_0.05_s  ) %>%
+                                         relocate( . , Acc_Res_max , .before = Res_Sa_0.05_s )
+
 write.csv(parameter_table, "portfolio/signals/quake_parameters.csv", row.names = FALSE)
+
 
 
 # Clean data environment
 rm(  parameter_table ,  stacked_list_ndsha_acc  ,stacked_ndsha_acc_tables, ndsha_ew_ns , signal_ndsha_acc_ew ,
      signal_ndsha_acc_ns ,path_signal , path_signal_bis ,  signal_ndsha_acc_ewns)
 
+
+#####
+#############################################################
+##   CONNECTING EARTHQUAKE PARAMETERS TO STATION DATA      ##
+#############################################################
+
+## In the following sections, instead of the example dataset, the full dataset including all 99 realisations for each directivity angle and all monitoring stations 
+## is connected to station information and re-arranged prior to plotting
+
+parameter_table  <-  read_csv("portfolio/signals/quake_parameters_fullset.csv"    , trim_ws = FALSE)  %>% as.data.frame()
+head( parameter_table )
+  
+station_metadata <-  read_csv("portfolio/signals/station_instru_info.csv" , trim_ws = FALSE)  %>% as.data.frame()
+
+
+parameter_table  <- left_join( parameter_table , station_metadata  ) 
+parameter_table$epidistance  <-  distGeo( parameter_table %>% select(., event_longitude   , event_latitude)   , 
+                                          parameter_table %>% select(., station_longitude , station_latitude) ,
+                                            a=6378.137, f=1/298.257223563   )  %>% round( . , digits = 3)
+
+parameter_table  <- parameter_table  %>%  relocate(. , c(structure,station_longitude,station_latitude, epidistance,station,Vs_30, site_type), .before = Acc_Max_EW ) %>%
+                                          relocate(. , c(event_longitude, event_latitude) , .after = event)
+
+
+parameter_table_long  <- parameter_table   %>% melt(.  ,  
+                                                      id.vars = c("directivity","event","event_longitude", "event_latitude",
+                                                                  "channel","real","station","station_id","structure",
+                                                                  "epidistance","station_latitude" , "station_longitude" ,
+                                                                  "Vs_30","site_type") , 
+                                                      measure.vars = c(  "Dis_Max"  ,"Vel_Max","Acc_Max","Max_Sa_0.05_s","Max_Sa_0.1_s","Max_Sa_0.2_s","Max_Sa_0.3_s","Max_Sa_0.4_s",
+                                                                         "Max_Sa_0.5_s","Max_Sa_0.6_s","Max_Sa_0.7_s","Max_Sa_0.8_s","Max_Sa_0.9_s","Max_Sa_1_s","Max_Sa_2_s","Max_Sa_3_s",
+                                                                         #
+                                                                         "Dis_GM_max","Vel_GM_max","Acc_GM_max","GM_Sa_0.05_s","GM_Sa_0.1_s","GM_Sa_0.2_s","GM_Sa_0.3_s","GM_Sa_0.4_s",
+                                                                         "GM_Sa_0.5_s","GM_Sa_0.6_s","GM_Sa_0.7_s","GM_Sa_0.8_s","GM_Sa_0.9_s","GM_Sa_1_s","GM_Sa_2_s","GM_Sa_3_s",
+                                                                         #
+                                                                         "Dis_Res_max","Vel_Res_max","Acc_Res_max","Res_Sa_0.05_s","Res_Sa_0.1_s","Res_Sa_0.2_s","Res_Sa_0.3_s","Res_Sa_0.4_s",
+                                                                         "Res_Sa_0.5_s","Res_Sa_0.6_s","Res_Sa_0.7_s","Res_Sa_0.8_s","Res_Sa_0.9_s","Res_Sa_1_s","Res_Sa_2_s","Res_Sa_3_s",
+                                                                         "arias_ew_g","arias_ns_g","arias_ew_m","arias_ns_m","arias_ew_std","arias_ns_std"), 
+                                                      variable.name = "groundmotion"  ,value.name = "amplitude"  )
+
+
+parameter_table_long$groundmotion <- parameter_table_long$groundmotion %>% as.character()
+parameter_table_long$component <- case_when(
+  str_detect( parameter_table_long$groundmotion , "res|Res" )   ~ "resultant" ,
+  str_detect( parameter_table_long$groundmotion , "GM"  )       ~ "geometric mean" ,
+  str_detect( parameter_table_long$groundmotion , "max|Max" )   ~ "maximum" ,
+  str_detect( parameter_table_long$groundmotion , "ew" )        ~ "East-West" ,
+  str_detect( parameter_table_long$groundmotion , "ns" )        ~ "North-South" ,
+  TRUE ~ "none"
+)
+
+parameter_table_long$groundmotion_bis <- case_when(
+  str_detect( parameter_table_long$groundmotion , "Dis" )       ~ "PGD" ,
+  str_detect( parameter_table_long$groundmotion , "Vel" )       ~ "PGV" ,
+  str_detect( parameter_table_long$groundmotion , "Acc" )       ~ "PGA" ,
+  str_detect( parameter_table_long$groundmotion , "std" )       ~ "Arias STD" ,
+  str_detect( parameter_table_long$groundmotion , "_g" )        ~ "Arias intensity (g)" ,
+  str_detect( parameter_table_long$groundmotion , "ew_m|ns_m" ) ~ "Arias intensity (m)" ,
+  #
+  str_detect( parameter_table_long$groundmotion , "Sa_0.05")    ~ "Sa(T=0.05 s)",
+  str_detect( parameter_table_long$groundmotion , "Sa_0.1" )    ~ "Sa(T=0.1s)" ,
+  str_detect( parameter_table_long$groundmotion , "Sa_0.2" )    ~ "Sa(T=0.2s)" ,
+  str_detect( parameter_table_long$groundmotion , "Sa_0.3" )    ~ "Sa(T=0.3s)" ,
+  str_detect( parameter_table_long$groundmotion , "Sa_0.4" )    ~ "Sa(T=0.4s)" ,
+  str_detect( parameter_table_long$groundmotion , "Sa_0.5" )    ~ "Sa(T=0.5s)" ,
+  str_detect( parameter_table_long$groundmotion , "Sa_0.6" )    ~ "Sa(T=0.6s)" ,
+  str_detect( parameter_table_long$groundmotion , "Sa_0.7" )    ~ "Sa(T=0.7s)" ,
+  str_detect( parameter_table_long$groundmotion , "Sa_0.8" )    ~ "Sa(T=0.8s)" ,
+  str_detect( parameter_table_long$groundmotion , "Sa_0.9" )    ~ "Sa(T=0.9s)" ,
+  str_detect( parameter_table_long$groundmotion , "Sa_1" )      ~ "Sa(T=1s)"   ,
+  str_detect( parameter_table_long$groundmotion , "Sa_2" )      ~ "Sa(T=2s)"   ,
+  str_detect( parameter_table_long$groundmotion , "Sa_3" )      ~ "Sa(T=3s)"   ,
+  TRUE ~ "none"
+)
+
+
+
+write.csv(  parameter_table_long %>% filter( . , !str_detect(  groundmotion_bis , "Arias")) , "portfolio/signals/groundmotion_PGX_SA.csv", row.names = FALSE)
+write.csv(  parameter_table_long %>% filter( . ,  str_detect(  groundmotion_bis , "Arias")) , "portfolio/signals/groundmotion_Arias.csv", row.names = FALSE)
+
+
+#####
+####################################################
+##   PLOTTING SELECTED EARTHQUAKE PARAMETERS      ##
+####################################################
+
+
+parameter_table  <-  read_csv("portfolio/signals/groundmotion_PGX_SA.csv", trim_ws = FALSE)  %>% as.data.frame()
+head(parameter_table , 4)
+
+
+parameter_table$event_format <- recode(parameter_table$event,"dudley"="Dudley","folkestone"="Folkestone","rasen"="Market Rasen","swansea"="Swansea") %>%
+  factor(levels = c("Dudley","Folkestone", "Market Rasen" ,"Swansea"))
+
+
+###  PLOT  GEOLOGY DISTRIBUTION VS EPICENTRAL DISTANCE BY SELECTING THE UNIQUE SET OF SEISMIC MONITORING STATIONS
+### 
+ggplot(parameter_table %>% select( . , event, event_format, epidistance,site_type, channel) %>% unique ) + 
+    #
+  geom_quasirandom(aes(epidistance, factor(site_type, levels = c("soil", "rock")), fill = site_type , shape = site_type ), 
+                   size = 2.5, alpha = .6, stroke = .1, groupOnX = F, width = .5) + #, shape = 21
+  xlab("Distance (km)") +
+  scale_fill_manual(values = new_colours11(2), name = "Site type") +
+  scale_shape_manual(values = c("rock" = 23, "soil" = 21), name = "Site type") +
+  guides() +
+  facet_wrap(~ event_format , ncol = 1) +
+  martina_new_style() + theme(axis.title.y = element_blank(), legend.margin = margin(0,0,-.5,0,"cm"), panel.spacing = unit(.2, "lines"))
+
+
+ggsave(filename = "portfolio/signals/events_geology_vs_distance.png", type = "cairo", width = 15, height = 9, units = "cm")
+
+
+
+
+###  PLOT  AMPLITUDE DISTRIBUTION DUE TO DIRECTIVITY ANGLE ACROSS EPICENTRAL DISTANCE BY SELECTING AN EARTHQUAKE
+###
+ggplot() +
+  #
+  portfolio_parameters_style () +
+  #
+  ggbeeswarm::geom_quasirandom(  parameter_table[parameter_table$groundmotion_bis == "PGA" & parameter_table$component == "resultant" & parameter_table$event == "swansea" ,] ,
+                                 mapping = aes(x= epidistance , y = amplitude, col = directivity  ),  #
+                                alpha = 0.8 , width = 5 , size = 0.2  ) +
+  #
+  annotation_logticks(sides = "lr" ,size = .001 ,alpha = 0.2) +
+  #
+  scale_y_log10( limits = c(0.01, 200)    ,  breaks = scales::trans_breaks("log10", function(x) 10^x), labels = scales::trans_format("log10", scales::math_format(10^.x)) ,
+                                             minor_breaks =  rep(1:9, 21)*(10^rep(-10:10, each = 9))  )   +
+  scale_x_continuous( limits = c(0, 350 ) , breaks = seq(0,300,50)  ) +
+  scale_fill_manual(   values = rep(NA, length(unique(parameter_table$station)))  ) +
+  scale_colour_manual( values = new_colours11(8)[c(1,6,8)] ,
+                       labels = c("bil_dir000"="0°","bil_dir090"="90°","bil_dir180"="180°") ) +
+  #
+  ylab( bquote('PGA (cm/'~s^2~ ')') ) + xlab("epidistance (km)") +  ggtitle("Amplitude distribution due to directivity angle (Swansea earthquake)") +
+  # facet_wrap( ~ event_format , labeller = labeller(  event = c("dudley" ="Dudley", "folkestone"="Folkestone","mkrasen"="Market Rasen","swansea"="Swansea") ) ,  ncol =1 ) +
+  facet_wrap( ~ directivity , ncol = 3 , labeller = labeller ( directivity = c("bil_dir000"="","bil_dir090"="","bil_dir180"="") ) ) +
+  guides(fill = "none", 
+         colour = guide_legend(title = "Directivity" , override.aes = c(alpha=0.5 , size = 3 )  )) +
+  coord_cartesian(  xlim = c(0,350 ) , expand = c(0,0 ))
+
+
+ggsave(filename = "portfolio/signals/PGA_amp_directivity_distr.png", type = "cairo", width = 25, height = 14, units = "cm")
+
+
+## CLEAN DATA ENVIRONMENT                  
+rm(  parameter_table ,  stacked_list_ndsha_acc  ,stacked_ndsha_acc_tables, ndsha_ew_ns , signal_ndsha_acc_ew ,
+     signal_ndsha_acc_ns ,path_signal , path_signal_bis ,  signal_ndsha_acc_ewns)
+
+                
+                
+
+ ###   CUSTOM THEME FOR PLOTTING        
+ ###                
+portfolio_parameters_style <- function() {
+  font <- "Be Vietnam Light"
+  font_bold  <- "Be Vietnam ExtraBold"
+  
+  extrafont::loadfonts(device = "win", quiet = TRUE)
+  
+  new_colours11 = colorRampPalette(c("#329cd7","#5DB7CB","#87d1bf","#C3E2BE","#FFEEA8","#F6CE6A","#FE9E62","#e76a68"))
+  
+  ggplot2::theme(
+    
+    #Text format:
+    #This sets the font, size, type and colour of text for the chart's title
+    plot.title = ggplot2::element_text(),
+    #This sets the font, size, type and colour of text for the chart's subtitle, as well as setting a margin between the title and the subtitle
+    plot.subtitle = ggplot2::element_text(family=font,
+                                          size=10,
+    ),
+    plot.caption = ggplot2::element_blank(),
+    #This leaves the caption text element empty, because it is set elsewhere in the finalise plot function
+    
+    #Legend format
+    #This sets the position and alignment of the legend, removes a title and backround for it and sets the requirements for any text within the legend. The legend may often need some more manual tweaking when it comes to its exact position based on the plot coordinates.
+    legend.position = "top",
+    legend.text.align = 0,
+    legend.background = ggplot2::element_blank(),
+    legend.title = ggplot2::element_text(family=font_bold,
+                                         face = "bold",
+                                         size=8,
+                                         color="#3e3e3e"),
+    legend.key = ggplot2::element_blank(),
+    legend.text = ggplot2::element_text(family=font,
+                                        size=7.5,
+                                        color="#3e3e3e"),         
+    legend.margin = margin(0.1,0,0,0, unit = "cm"),
+    legend.box = "vertical" ,
+    legend.spacing.y = unit( 0.02 , "mm"  )
+    
+    #Axis format
+    #This sets the text font, size and colour for the axis test, as well as setting the margins and removes lines and ticks. In some cases, axis lines and axis ticks are things we would want to have in the chart - the cookbook shows examples of how to do so.
+    axis.title = ggplot2::element_text(family=font_bold,
+                                       size=8,
+                                       face = "bold",
+                                       color="#3e3e3e"),
+    axis.title.y = element_text(hjust= .5, vjust = 3, angle = 90),
+    axis.text = ggplot2::element_text(family=font,
+                                      size=7.5,
+                                      color="#3e3e3e"),
+    axis.ticks = ggplot2::element_blank(),
+        
+    #Grid lines
+    #This removes all minor gridlines and adds major y gridlines. In many cases you will want to change this to remove y gridlines and add x gridlines. The cookbook shows you examples for doing so
+    panel.grid.minor = ggplot2::element_blank(),
+    panel.grid.major = ggplot2::element_line(colour = "grey30"),          
+    #
+    panel.grid.minor.x = element_line(colour = "grey80",linetype = "dotted"  ) ,
+    panel.grid.minor.y = element_line(colour = "grey80",linetype = "dotted"  ) ,
+    panel.grid.major.y = element_line(colour = "grey80",linetype = "dotted"  ) ,
+    panel.grid = ggplot2::element_line(linetype = "dotted", size=0.15), # 0.2
+    
+    
+    #Blank background
+    #This sets the panel background as blank, removing the standard grey ggplot background colour from the plot
+    panel.background = ggplot2::element_blank(),
+    panel.border = ggplot2::element_rect(fill = NA, colour = "black", size = .2),  
+    
+    #  Space between faceted wrap figures to accomodate for legend on x axis
+    plot.margin = margin(1, 3 , 1 , 3 , "mm")  , 
+    
+    #Strip background (#This sets the panel background for facet-wrapped plots to white, removing the standard grey ggplot background colour and sets the title size of the facet-wrap title to font size 22)
+    strip.background = ggplot2::element_rect(fill="white", colour = NA),
+    strip.text = element_blank() ,
+    panel.spacing.x = unit(4, "mm") ,
+   
+  )
+}
+                
+                
+ 
