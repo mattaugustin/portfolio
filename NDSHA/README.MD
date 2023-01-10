@@ -29,5 +29,5 @@ References:
 
 > Map of earthquakes and associated monitoring stations
 
-<img src="https://user-images.githubusercontent.com/61290423/211563354-b06ce175-33f4-4b98-9f8a-5b616f313949.png" alt="map quakes station" width="750"/>
+<img src="https://user-images.githubusercontent.com/61290423/211563354-b06ce175-33f4-4b98-9f8a-5b616f313949.png" alt="map quakes station" width="650"/>
 
