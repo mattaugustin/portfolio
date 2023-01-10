@@ -11,7 +11,7 @@
 ##
 library(dplyr)   ; library(stringr)  ;
 library(readr)   ; library(purrr)   ; library(plyr) ;
-library(reshape2); library(ggplot2) ;
+library(reshape2); library(ggplot2) ; library(ggrepel) ;
 
 
 ##########################################################
@@ -520,8 +520,8 @@ parameter_table_long$groundmotion_bis <- case_when(
 
 
 
-write.csv(  parameter_table_long %>% filter( . , !str_detect(  groundmotion_bis , "Arias")) , "portfolio/signals/groundmotion_PGX_SA.csv", row.names = FALSE)
-write.csv(  parameter_table_long %>% filter( . ,  str_detect(  groundmotion_bis , "Arias")) , "portfolio/signals/groundmotion_Arias.csv", row.names = FALSE)
+write.csv(  parameter_table_long %>% filter( . , !str_detect(  groundmotion_bis , "Arias")) , "portfolio/signals/results/groundmotion_PGX_SA.csv", row.names = FALSE)
+write.csv(  parameter_table_long %>% filter( . ,  str_detect(  groundmotion_bis , "Arias")) , "portfolio/signals/results/groundmotion_Arias.csv", row.names = FALSE)
 
 
 #####
@@ -530,7 +530,7 @@ write.csv(  parameter_table_long %>% filter( . ,  str_detect(  groundmotion_bis 
 ####################################################
 
 
-parameter_table  <-  read_csv("portfolio/signals/groundmotion_PGX_SA.csv", trim_ws = FALSE)  %>% as.data.frame()
+parameter_table  <-  read_csv("portfolio/signals/results/groundmotion_PGX_SA.csv", trim_ws = FALSE)  %>% as.data.frame()
 head(parameter_table , 4)
 
 
@@ -552,7 +552,7 @@ ggplot(parameter_table %>% select( . , event, event_format, epidistance,site_typ
   martina_new_style() + theme(axis.title.y = element_blank(), legend.margin = margin(0,0,-.5,0,"cm"), panel.spacing = unit(.2, "lines"))
 
 
-ggsave(filename = "portfolio/signals/events_geology_vs_distance.png", type = "cairo", width = 15, height = 9, units = "cm")
+ggsave(filename = "portfolio/signals/img/events_geology_vs_distance.png", type = "cairo", width = 15, height = 9, units = "cm")
 
 
 
@@ -584,20 +584,70 @@ ggplot() +
   coord_cartesian(  xlim = c(0,350 ) , expand = c(0,0 ))
 
 
-ggsave(filename = "portfolio/signals/PGA_amp_directivity_distr.png", type = "cairo", width = 25, height = 14, units = "cm")
+ggsave(filename = "portfolio/signals/img/PGA_amp_directivity_distr.png", type = "cairo", width = 25, height = 14, units = "cm")
+
+                
+###   Load  relevant maps of the UK and meighbouring countries
+###   Plot the original map distribution and save to an external file for publication
+###
+
+station_metadata <-  read_csv("portfolio/signals/station_instru_info.csv" , trim_ws = FALSE)  %>% as.data.frame()
+IsleOfMan_df     <-  read.csv("portfolio/signals/IsleOfMan_df.csv" , as.is = 7 ) %>% as.data.frame()
+ukmap_df         <-  read.csv("portfolio/signals/UKmap_df.csv"     , as.is = 7 , stringsAsFactors =  TRUE) %>% as.data.frame() 
+ukmap_df$group   <- ukmap_df$group %>% as.character() %>% factor( )
+
+
+basemap <- ggplot() +
+  geom_polygon( ukmap_df      , mapping = aes(long, lat, group = group_char ), colour = "black", fill = "white", size = .2) +
+  geom_polygon( IsleOfMan_df  , mapping = aes(long, lat, group = group)      , colour = "black", fill = "white", size = .2) +
+  #
+  geom_polygon(ukmap_df[ukmap_df$FID == "UK", ] , mapping = aes(long, lat, group = group_char), colour = "black", fill = NA, size = .2) +
+  coord_map(xlim = c(-9,3) , ylim = c(49,60)) + 
+  scale_y_continuous(expand=c(0,0)) +
+  scale_x_continuous(expand=c(0,0)) +
+  portfolio_map_style() +
+  theme( plot.title = element_text() )
+
+position_repel <- position_quasirandom( width = 4 )
+position_repel <- position_jitter( width = 0.2  , seed = 40 )
+
+basemap + 
+  #
+  coord_map(xlim = c(-8.2 ,3 ), ylim = c(49.5,60)) +
+  geom_point( data = unique(datadis_instrumental[,1:4]), 
+              mapping = aes(Source_lon, Source_lat), shape = 8, size = 1.8, stroke = 2, colour = new_colours11(4)[4]) +
+  #
+  geom_text_repel(data = unique(station_metadata %>% select(., event, event_longitude, event_latitude) ), 
+                  mapping = aes(event_longitude, event_latitude , label = event), size = 4, fontface = "bold", colour = new_colours11(4)[4]) +
+  #
+  geom_point(data = station_metadata %>% select(., station, station_longitude, station_latitude) %>% unique , 
+             mapping = aes(station_longitude, station_latitude), size = .8, shape = 2, stroke = 1.5, colour = "grey30") +
+  #
+  geom_text_repel( data = station_metadata %>% select(., station, station_longitude, station_latitude) %>% unique , 
+                   mapping = aes(station_longitude, station_latitude, label = station) , size = 2, 
+                   fontface = "bold", colour = "grey30" , position = position_repel )  +
+  #
+  scale_y_continuous(expand=c(0,0)) +
+  scale_x_continuous(expand=c(0,0)) +
+  #
+  guides(fill = guide_legend(title.position = "top", ncol = 3)) +
+  ggtitle("Seismic Hazard Map for the United Kingdom (NDSHA)"  )  
+  #
+
+
+ggsave(  "portfolio/signals/img/UKmap_stations_event.png" , 
+         plot = ggplot2::last_plot() , width = 21   , height = 21 , units = "cm" , type = "cairo") 
 
 
 ## CLEAN DATA ENVIRONMENT                  
-rm(  parameter_table ,  stacked_list_ndsha_acc  ,stacked_ndsha_acc_tables, ndsha_ew_ns , signal_ndsha_acc_ew ,
-     signal_ndsha_acc_ns ,path_signal , path_signal_bis ,  signal_ndsha_acc_ewns)
-
-                
+rm(  parameter_table ,  parameter_table_long, position_repel, IsleOfMan_df ,  ukmap_df , station_metadata)
                 
 
- ###   CUSTOM THEME FOR PLOTTING        
- ###                
+                
+###   CUSTOM THEME FOR PLOTTING        
+###                
 portfolio_parameters_style <- function() {
-  font <- "Be Vietnam Light"
+  font       <- "Be Vietnam Light"
   font_bold  <- "Be Vietnam ExtraBold"
   
   extrafont::loadfonts(device = "win", quiet = TRUE)
@@ -672,5 +722,75 @@ portfolio_parameters_style <- function() {
   )
 }
                 
-                
+
+### Define preferred style for plotting the map
+###
+portfolio_map_style <- function() {
+  font <- "Be Vietnam Light"
+  font_bold  <- "Be Vietnam ExtraBold"
+  #
+  extrafont::loadfonts(device = "win", quiet = TRUE)
+  
+  new_colours = colorRampPalette(c("#0f3057", "#00587a", "#008891", "#88d2d7", "#e7e7de", "#ffcb8e", "#e97171", "#cf1b1b", "#900d0d"))
+  greens    = colorRampPalette(c("white", new_colours(10)[5:1]))
+  YlGreens  = colorRampPalette(new_colours(11)[7:1])
+  YlReds    = colorRampPalette(new_colours(11)[5:11])
+  
+  water2.5  = colorRampPalette(c("#E2F0F6", "#E5F5FD"))(4)[3]
+  water4    = colorRampPalette(c(water2.5, "white"))(3)[2]
+  
+  ggplot2::theme(
+    #
+    #Text format:
+    #
+    # plot.title = ggplot2::element_blank(),              
+    #
+    plot.title = ggplot2::element_text(family=  font_bold,
+                                                size=13,
+                                                face = "bold",
+                                                color="#3e3e3e") ,
+    # plot.subtitle = ggplot2::element_text(family=font,
+    #                                       size=22,
+    #                                       margin=ggplot2::margin(9,0,9,0)),
+    plot.caption = ggplot2::element_blank(),
+    #
+    #  Legend format
+    # 
+    legend.position = "bottom",
+    legend.text.align = 0,
+    legend.background = ggplot2::element_blank(),
+    legend.title = ggplot2::element_text(family=font_bold,
+                                         size=13,
+                                         face = "bold",
+                                         color="#3e3e3e"),
+    
+    legend.key = ggplot2::element_blank(),
+    legend.text = ggplot2::element_text(family=font,
+                                        size=11,
+                                        color="#3e3e3e"),                
+    legend.box.margin = margin(3,0,0,0) ),
+    #
+    #Axis format
+    #
+    axis.title = ggplot2::element_blank(),
+    axis.text = ggplot2::element_blank(),                
+    axis.ticks = ggplot2::element_blank(),
+    axis.line = ggplot2::element_blank(),
+    #
+    #Grid lines
+    # 
+    panel.grid = ggplot2::element_blank(),
+    panel.border = element_rect(fill = NA) ,
+    #Blank background
+    #
+    panel.background = ggplot2::element_rect(fill = water4, colour = "black"),
+    #
+    #Strip background 
+    strip.background = ggplot2::element_rect(fill="white"),
+    strip.text = ggplot2::element_text(size  = 11,  
+                                       # hjust = 0, 
+                                       face = "bold",
+                                       family = font_bold)
+  )
+}
  
