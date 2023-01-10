@@ -21,7 +21,7 @@ References:
 
 > Geology distribution associated to the seismic monitoring stations
 
-<img src="https://user-images.githubusercontent.com/61290423/211395831-d7d4aeed-bae8-4f52-8a7b-dfe53c04a143.png" alt="geo distr" width="500"/>
+<img src="https://user-images.githubusercontent.com/61290423/211395831-d7d4aeed-bae8-4f52-8a7b-dfe53c04a143.png" alt="geo distr" width="600"/>
 
 > PGA Amplitude distribution associated to the seismic wavefront directivity angle in case of the Swansea earthquake
 
