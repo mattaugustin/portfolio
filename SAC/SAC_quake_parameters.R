@@ -700,8 +700,9 @@ parameters_table_long$filtering_bis <- case_when(
 
 # View(parameters_table)
 
-
 ## NB : the custom theme is provided at end of the script
+
+####   PLOT IMPACT OF FILTERING
 ggplot() +
   #
   portfolio_parameters_style () +
