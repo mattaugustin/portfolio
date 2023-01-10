@@ -360,7 +360,7 @@ plot_signal( data = sacdata_clip[[i]]  , col = "darkred" ,  lwd = 0.3 ,
 # abline(h=seq(-1,1,0.25),col="grey80" , lty=2, lwd = 0.2)
 abline(v=seq(sacdata[[i]]$meta$starttime, 
              sacdata[[i]]$meta$starttime + 120*60, 2*60)  , col="grey80", lty=2 , lwd = 0.2)  ## minor plot lines every 2 min
-
+dev.off()
 
 
 #####
@@ -614,33 +614,10 @@ parameters_table <- parameters_table[,c("event","channel" ,"filtering", "station
                              "arias_ew_g","arias_ns_g","arias_ew_m","arias_ns_m","arias_ew_std","arias_ns_std", "ew_m_time_5","ew_m_time_95","ns_m_time_5"   ,"ns_m_time_95")   ]
 
 
-head(parameters_table, 4 )
-
-##  combine original earthquake infos with station information (coordinates...)
-earthquakes_info             <- left_join( earthquakes_info, station_info , by = c( "event","station"="station_name","channel"="sampling")) #%>% 
-earthquakes_info$epidistance <- round( distGeo( earthquakes_info[,c("longitude","latitude")]   , earthquakes_info[,c("station_longitude","station_latitude")]   , a = 6378.137, f=1/298.257223563 ), 3)
-earthquakes_info             <- earthquakes_info %>% relocate( . , component, .before = filtering) %>%  relocate( . , epidistance, .before = station_latitude)
-
-write.csv(parameters_table    , "portfolio/observations/parameters_table_sample.csv"            , row.names = FALSE)
-write.csv(earthquakes_info ,    "portfolio/observations/earthquake_stations_characteristics.csv", row.names = FALSE)
-
-
-# remove size-chunk data from environment
-# rm( sacdata_clip_reduced ,  earthquakes_info_bis , earthquakes_info , sacdata_clip , sacdata , parameters , parameters_cum , parameters_table,
-#   stacked_tables , stacked_list , df_test , df_test_new , df_test_name , df_test_time , list_sac, list_pz , pzdata )
-
-#####
-###########################################################################################
-#####     PLOT ENGINEERING PARAMETERS  ACROSS EPIDISTANCE                           #######
-###########################################################################################
-
-
 ## Assign soil conditions to stations, re-organize table prior to plotting
-parameters_table  <- read_csv("portfolio/observations/parameters_table_sample.csv",  trim_ws = FALSE)  %>% as.data.frame()
+
 station_soil      <- read_csv("portfolio/observations/station_soil_info.csv"      ,  trim_ws = FALSE)  %>% as.data.frame()
 
-head( parameters_table , 4  )
-head( station_soil     , 4  )
 
 parameters_table       <-    select( parameters_table , which ( !str_detect( names(parameters_table) , "EW|NS|time_5|time_95"  ) ) ) %>% 
                              left_join( .  , station_soil , by = c("station","station_latitude", "station_longitude")  ) %>% 
@@ -698,7 +675,29 @@ parameters_table_long$filtering_bis <- case_when(
   TRUE ~ "high frequency filtering (35 Hz)"
 )
 
-# View(parameters_table)
+
+
+##  combine original earthquake infos with station information (coordinates...)
+earthquakes_info             <- left_join( earthquakes_info, station_info , by = c( "event","station"="station_name","channel"="sampling")) #%>% 
+earthquakes_info$epidistance <- round( distGeo( earthquakes_info[,c("longitude","latitude")]   , earthquakes_info[,c("station_longitude","station_latitude")]   , a = 6378.137, f=1/298.257223563 ), 3)
+earthquakes_info             <- earthquakes_info %>% relocate( . , component, .before = filtering) %>%  relocate( . , epidistance, .before = station_latitude)
+
+write.csv(parameters_table      , "portfolio/observations/parameters_table_sample.csv"    , row.names = FALSE)
+write.csv(parameters_table_long , "portfolio/observations/parameters_plot.csv"            , row.names = FALSE)
+write.csv(earthquakes_info      ,    "portfolio/observations/earthquake_stations_characteristics.csv", row.names = FALSE)
+
+
+# remove size-chunk data from environment
+# rm( sacdata_clip_reduced ,  earthquakes_info_bis , earthquakes_info , sacdata_clip , sacdata , parameters , parameters_cum , parameters_table,
+#   stacked_tables , stacked_list , df_test , df_test_new , df_test_name , df_test_time , list_sac, list_pz , pzdata )
+
+#####
+###########################################################################################
+#####     PLOT ENGINEERING PARAMETERS  ACROSS EPIDISTANCE                           #######
+###########################################################################################
+
+parameters_table  <- read_csv("portfolio/observations/parameters_plot.csv",  trim_ws = FALSE)  %>% as.data.frame()
+
 
 ## NB : the custom theme is provided at end of the script
 
@@ -725,20 +724,55 @@ ggplot() +
          size  = guide_legend(title = "Observed values on")  ) +
   coord_cartesian(  xlim = c(0,350 ) , expand = c(0,0 ))      
 
-ggsave("portfolio/observations/ground_motion_PGA.png", type = "cairo", width = 10, height = 10, units = "cm")
+ggsave("portfolio/observations/img/ground_motion_PGA.png", type = "cairo", width = 10, height = 10, units = "cm")
 
 
+
+###   PLOT  PGA, PGV AND PGD ACROSS ALL EVENTS
+###
+
+parameters_table  <- read_csv("portfolio/observations/parameters_plot.csv",  trim_ws = FALSE)  %>% as.data.frame()
+parameters_table  <- parameters_table %>% filter(., groundmotion_bis %in% c("PGA","PGV","PGD") , component == "resultant" , filtering != "10Hz"  ) 
+parameters_table$groundmotion_bis <- recode(parameters_table$groundmotion_bis,"PGA"="PGA (cm/s2)","PGV"="PGV (cm/s)","PGD"="PGD (cm)") %>%
+  factor(levels = c("PGA (cm/s2)","PGV (cm/s)","PGD (cm)"))
+parameters_table$event_format <- recode(parameters_table$event,"dudley"="Dudley","folkestone"="Folkestone","rasen"=str_wrap("Market Rasen", width = 8),"swansea"="Swansea") %>%
+  factor(levels = c("Dudley","Folkestone",str_wrap("Market Rasen", width = 8),"Swansea"))
+
+log_breaks_major <- 10^(-10:10)
+log_breaks_minor <- rep(1:9, 21)*(10^rep(-10:10, each=9))
+
+
+ggplot(  parameters_table ) +
+  #
+  geom_quasirandom( aes(event_format, amplitude , fill = epidistance), size = 1.5, alpha = .9, shape = 21, stroke = .1) + #, width = .3
+  scale_y_log10(name = "ground motion amplitude", breaks = log_breaks_major, minor_breaks = log_breaks_minor  , labels = comma ) +
+  scale_fill_stepsn(colours = rev(new_colours11(5)), breaks = seq(100,400,100), name = "Epicentral distance (km)") +
+  facet_wrap( . ~ groundmotion_bis, scales = "free" ) +
+  #
+  portfolio_parameters_style() +  theme(axis.title.x = element_blank()  , axis.title.y = element_text(vjust = 0), 
+                              axis.text.x = element_text(size = 6), axis.text.y  = element_text(size  = 6),
+                              panel.grid.minor.y = element_line(color="#cccccc"), plot.margin = unit(rep(0.1,4), "line"),
+                              legend.key.width = unit(1.5, "cm"), legend.key.height = unit(0.15, "cm"),
+                              legend.title = element_text(vjust = 0.2), legend.text.align = 0.5,
+                              legend.position = "bottom",
+                              legend.margin = margin(-.3,0,.3,0, unit = "cm"),
+                              panel.spacing = unit(0.5, "lines")
+  )
+
+
+ggsave("portfolio/observations/img/PGA_SAs.png", type = "cairo", width = 15, height = 10, units = "cm")
 
 
 
 ###  Customized theme for plotting
+
+new_colours11 = colorRampPalette(c("#329cd7","#5DB7CB","#87d1bf","#C3E2BE","#FFEEA8","#F6CE6A","#FE9E62","#e76a68"))
+
 portfolio_parameters_style <- function() {
   font <- "Be Vietnam Light"
   font_bold  <- "Be Vietnam ExtraBold"
   
   extrafont::loadfonts(device = "win", quiet = TRUE)
-  
-  new_colours11 = colorRampPalette(c("#329cd7","#5DB7CB","#87d1bf","#C3E2BE","#FFEEA8","#F6CE6A","#FE9E62","#e76a68"))
   
   ggplot2::theme(
     
@@ -786,6 +820,7 @@ portfolio_parameters_style <- function() {
     panel.grid.minor = ggplot2::element_blank(),
     panel.grid.major = ggplot2::element_line(colour = "grey30"),          
     #
+    panel.grid.minor.x = element_line(colour = "grey70" , size = 0.1 , linetype = "dotted") ,
     panel.grid.minor.y = element_line(colour = "grey80",linetype = "dotted"  ) ,
     panel.grid.major.y = element_line(colour = "grey80",linetype = "dotted"  ) ,
     panel.grid = ggplot2::element_line(linetype = "dotted", size=0.15), # 0.2
