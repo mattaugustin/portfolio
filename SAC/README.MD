@@ -23,3 +23,6 @@ Steps are as follows :
 
 > plotting selected parameters to show amplitude modification across epicentral distance from earthquake locus
 <img src="https://user-images.githubusercontent.com/61290423/210989406-c875d05f-8d55-4798-97ef-c0e399dbab50.png" width="750"/>
+
+> Selecting and plotting PGA PGV and PGD
+<img src="https://user-images.githubusercontent.com/61290423/211605116-49ff43f6-3e3c-4c2e-b13c-48f7057c4438.png" width="750"/>
