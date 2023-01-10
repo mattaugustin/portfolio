@@ -21,13 +21,13 @@ References:
 
 > Geology distribution associated to the seismic monitoring stations
 
-![events_geology_vs_distance](https://user-images.githubusercontent.com/61290423/211395831-d7d4aeed-bae8-4f52-8a7b-dfe53c04a143.png)
+<img src="https://user-images.githubusercontent.com/61290423/211395831-d7d4aeed-bae8-4f52-8a7b-dfe53c04a143.png" alt="geo distr" width="750"/>
 
 > PGA Amplitude distribution associated to the seismic wavefront directivity angle in case of the Swansea earthquake
 
-![PGA_amp_directivity_distr](https://user-images.githubusercontent.com/61290423/211396042-991788bc-cfcd-451a-ab35-22b58d07fc4e.png)
+<img src="https://user-images.githubusercontent.com/61290423/211396042-991788bc-cfcd-451a-ab35-22b58d07fc4e.png" alt="PGA amp distr" width="750"/>
 
 > Map of earthquakes and associated monitoring stations
 
-![UKmap_stations_event](https://user-images.githubusercontent.com/61290423/211563354-b06ce175-33f4-4b98-9f8a-5b616f313949.png)
+<img src="https://user-images.githubusercontent.com/61290423/211563354-b06ce175-33f4-4b98-9f8a-5b616f313949.png" alt="map quakes station" width="750"/>
 
