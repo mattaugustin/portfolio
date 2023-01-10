@@ -15,13 +15,13 @@ Steps are as follows :
 + clipping the signals to their main physical contents in order to reduce file size and to ease data manipulation and calculation,
 + creating a tree architecture to keep track of identification characteristics such as earthquake name, filtering frequency, station recording channel etc ... ,
 + extracting earthquake engineering parameters and derive other parameters from signal processing,
-+ plotting selected parameters to show amplitude modification across epicentral distance from earthquake locus.
++ plotting selected parameters.
 
 
-> clipping the signals to their main physical contents ...
+> clipping the signals to their main physical contents 
 <img src="https://user-images.githubusercontent.com/61290423/210902751-f54c43f5-3a4a-4eca-b091-af74226b83ae.png" alt="SAC signals plot" width="750"/>
 
-> plotting selected parameters to show amplitude modification across epicentral distance from earthquake locus
+> plotting selected parameters to show impact of filtering and epicentral distance
 <img src="https://user-images.githubusercontent.com/61290423/210989406-c875d05f-8d55-4798-97ef-c0e399dbab50.png" width="750"/>
 
 > Selecting and plotting PGA PGV and PGD
