@@ -5,7 +5,8 @@ The steps are as follows :
 + preparing the file architecture for subsequent reading, 
 + reading and processing dataframe, 
 + creating a Tree Structure for organizing the files, 
-+ processing files to extract relevant earthquake parameters such as PGA, spectral acceleration values, Arias-intensity related parameters.
++ processing files to extract relevant earthquake parameters such as PGA, spectral acceleration values, Arias-intensity related parameters,
++ plotting parameters related to earthquake events.
 
 An example dataset with earthquake signals corresponding to different events, recording channels and stations is provided at the following link:
 https://drive.google.com/drive/folders/1jdH0llIJzKXL89UEYmAZGeMVjHX_uXgJ?usp=sharing
@@ -25,3 +26,8 @@ References:
 > PGA Amplitude distribution associated to the seismic wavefront directivity angle in case of the Swansea earthquake
 
 ![PGA_amp_directivity_distr](https://user-images.githubusercontent.com/61290423/211396042-991788bc-cfcd-451a-ab35-22b58d07fc4e.png)
+
+> Map of earthquakes and associated monitoring stations
+
+![UKmap_stations_event](https://user-images.githubusercontent.com/61290423/211563354-b06ce175-33f4-4b98-9f8a-5b616f313949.png)
+
