@@ -452,10 +452,10 @@ rm(  parameter_table ,  stacked_list_ndsha_acc  ,stacked_ndsha_acc_tables, ndsha
 ## In the following sections, instead of the example dataset, the full dataset including all 99 realisations for each directivity angle and all monitoring stations 
 ## is connected to station information and re-arranged prior to plotting
 
-parameter_table  <-  read_csv("portfolio/NDSHA/quake_parameters_fullset.csv"    , trim_ws = FALSE)  %>% as.data.frame()
+parameter_table  <-  read_csv("portfolio/NDSHA/results/quake_parameters_fullset.csv"    , trim_ws = FALSE)  %>% as.data.frame()
 head( parameter_table )
   
-station_metadata <-  read_csv("portfolio/NDSHA/station_instru_info.csv" , trim_ws = FALSE)  %>% as.data.frame()
+station_metadata <-  read_csv("portfolio/NDSHA/data/station_instru_info.csv" , trim_ws = FALSE)  %>% as.data.frame()
 
 
 parameter_table  <- left_join( parameter_table , station_metadata  ) 
