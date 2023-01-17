@@ -520,8 +520,8 @@ parameter_table_long$groundmotion_bis <- case_when(
 
 
 
-write.csv(  parameter_table_long %>% filter( . , !str_detect(  groundmotion_bis , "Arias")) , "portfolio/signals/results/groundmotion_PGX_SA.csv", row.names = FALSE)
-write.csv(  parameter_table_long %>% filter( . ,  str_detect(  groundmotion_bis , "Arias")) , "portfolio/signals/results/groundmotion_Arias.csv", row.names = FALSE)
+write.csv(  parameter_table_long %>% filter( . , !str_detect(  groundmotion_bis , "Arias")) , "portfolio/NDSHA/results/groundmotion_PGX_SA.csv", row.names = FALSE)
+write.csv(  parameter_table_long %>% filter( . ,  str_detect(  groundmotion_bis , "Arias")) , "portfolio/NDSHA/results/groundmotion_Arias.csv", row.names = FALSE)
 
 
 #####
@@ -584,7 +584,7 @@ ggplot() +
   coord_cartesian(  xlim = c(0,350 ) , expand = c(0,0 ))
 
 
-ggsave(filename = "portfolio/signals/img/PGA_amp_directivity_distr.png", type = "cairo", width = 25, height = 14, units = "cm")
+ggsave(filename = "portfolio/NDSHA/img/PGA_amp_directivity_distr.png", type = "cairo", width = 25, height = 14, units = "cm")
 
                 
 ###   Load  relevant maps of the UK and meighbouring countries
