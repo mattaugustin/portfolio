@@ -126,11 +126,11 @@ resp_spectra_harsh <- function( acceleration , duration , nStep, per ){
 ###################################
 
 
-earthquakes_info <- read_csv("portfolio/observations/earthquakes_info.csv", trim_ws = FALSE)  %>% as.data.frame()
+earthquakes_info <- read_csv("portfolio/seismic_records/earthquakes_info.csv", trim_ws = FALSE)  %>% as.data.frame()
 head(earthquakes_info)
 
 
-data_directory   <- "portfolio/observations/"
+data_directory   <- "portfolio/seismic_records/"
 channel          <- c("Bchan","Hchan")
 filtering        <- c(10,25,35)
 motion           <- c("accel","vel","disp")
@@ -616,7 +616,7 @@ parameters_table <- parameters_table[,c("event","channel" ,"filtering", "station
 
 ## Assign soil conditions to stations, re-organize table prior to plotting
 
-station_soil      <- read_csv("portfolio/observations/station_soil_info.csv"      ,  trim_ws = FALSE)  %>% as.data.frame()
+station_soil      <- read_csv("portfolio/seismic_records/station_soil_info.csv"      ,  trim_ws = FALSE)  %>% as.data.frame()
 
 
 parameters_table       <-    select( parameters_table , which ( !str_detect( names(parameters_table) , "EW|NS|time_5|time_95"  ) ) ) %>% 
@@ -682,9 +682,9 @@ earthquakes_info             <- left_join( earthquakes_info, station_info , by =
 earthquakes_info$epidistance <- round( distGeo( earthquakes_info[,c("longitude","latitude")]   , earthquakes_info[,c("station_longitude","station_latitude")]   , a = 6378.137, f=1/298.257223563 ), 3)
 earthquakes_info             <- earthquakes_info %>% relocate( . , component, .before = filtering) %>%  relocate( . , epidistance, .before = station_latitude)
 
-write.csv(parameters_table      , "portfolio/observations/parameters_table_sample.csv"    , row.names = FALSE)
-write.csv(parameters_table_long , "portfolio/observations/parameters_plot.csv"            , row.names = FALSE)
-write.csv(earthquakes_info      ,    "portfolio/observations/earthquake_stations_characteristics.csv", row.names = FALSE)
+write.csv(parameters_table      , "portfolio/seismic_records/parameters_table_sample.csv"    , row.names = FALSE)
+write.csv(parameters_table_long , "portfolio/seismic_records/parameters_plot.csv"            , row.names = FALSE)
+write.csv(earthquakes_info      , "portfolio/seismic_records/earthquake_stations_characteristics.csv", row.names = FALSE)
 
 
 # remove size-chunk data from environment
@@ -696,7 +696,7 @@ write.csv(earthquakes_info      ,    "portfolio/observations/earthquake_stations
 #####     PLOT ENGINEERING PARAMETERS  ACROSS EPIDISTANCE                           #######
 ###########################################################################################
 
-parameters_table  <- read_csv("portfolio/observations/parameters_plot.csv",  trim_ws = FALSE)  %>% as.data.frame()
+parameters_table  <- read_csv("portfolio/seismic_records/parameters_plot.csv",  trim_ws = FALSE)  %>% as.data.frame()
 
 
 ## NB : the custom theme is provided at end of the script
@@ -724,7 +724,7 @@ ggplot() +
          size  = guide_legend(title = "Observed values on")  ) +
   coord_cartesian(  xlim = c(0,350 ) , expand = c(0,0 ))      
 
-ggsave("portfolio/observations/img/ground_motion_PGA.png", type = "cairo", width = 10, height = 10, units = "cm")
+ggsave("portfolio/seismic_records/img/ground_motion_PGA.png", type = "cairo", width = 10, height = 10, units = "cm")
 
 
 
@@ -760,7 +760,7 @@ ggplot(  parameters_table ) +
   )
 
 
-ggsave("portfolio/observations/img/PGA_SAs.png", type = "cairo", width = 15, height = 10, units = "cm")
+ggsave("portfolio/seismic_records/img/PGA_SAs.png", type = "cairo", width = 15, height = 10, units = "cm")
 
 
 
