@@ -16,9 +16,8 @@ Plotting the raw SAC signal for station.
 
 Plotting the SAC signal deconvolved from the station metadata.
 
-![mch1_hhe_deconvolved](https://user-images.githubusercontent.com/61290423/214098367-0557363f-cba2-4ef3-b9d9-271eac8817b5.PNG)
+![mch1_hhe_deconvolved](https://user-images.githubusercontent.com/61290423/214099081-5c7b0ac0-0901-4965-97af-ece885c50325.PNG)
  
-
 
 Plotting the SAC signal following filtering using a Butterworth bandpass.
 
