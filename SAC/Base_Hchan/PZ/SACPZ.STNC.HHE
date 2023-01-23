@@ -1,0 +1,37 @@
+* **************************************************
+* NETWORK     : GB
+* STATION     : STNC
+* LOCATION    : 00
+* CHANNEL     : HHE
+* CREATED     : 2020-07-29T11:19:12
+* START       : 2008-08-08T00:00:00
+* END         : 
+* DESCRIPTION : Stoke Newchapel, Staffordshire, England, UK
+* LATITUDE    : 53.09133
+* LONGITUDE   : -2.20617
+* ELEVATION   : 234.0
+* DEPTH       : 0.0
+* DIP (SEED)  : 0.0
+* AZIMUTH     : 90.0
+* SAMPLE RATE : 100.0
+* INPUT UNIT  : M
+* OUTPUT UNIT : COUNTS
+* INSTTYPE    : None
+* INSTGAIN    : 5999.33 (M/S)
+* SENSITIVITY : 1878310000.0 (M/S)
+* A0          : 571572000.0
+* **************************************************
+ZEROS 3
+ +0.000000e+00 +0.000000e+00
+ +0.000000e+00 +0.000000e+00
+ +0.000000e+00 +0.000000e+00
+POLES 5
+ -3.700000e-02 +3.700000e-02
+ -3.700000e-02 -3.700000e-02
+ -1.130970e+03 +0.000000e+00
+ -1.005310e+03 +0.000000e+00
+ -5.026550e+02 +0.000000e+00
+CONSTANT 1.073589e+18
+
+
+

@@ -1,0 +1,39 @@
+* **********************************
+* NETWORK   (KNETWK): GB
+* STATION    (KSTNM): SWN1
+* LOCATION   (KHOLE): 
+* CHANNEL   (KCMPNM): BHE
+* CREATED           : 2020-07-29T11:18:44
+* START             : 2006-03-23T00:00:00
+* END               : 
+* DESCRIPTION       : SWINDON, ENGLAND, UK, ENGLAND
+* LATITUDE          : 51.513168
+* LONGITUDE         : -1.800329
+* ELEVATION         : 192.0
+* DEPTH             : 0.0
+* DIP               : 90.0
+* AZIMUTH           : 90.0
+* SAMPLE RATE       : 50.0
+* INPUT UNIT        : M
+* OUTPUT UNIT       : COUNTS
+* INSTTYPE          : T
+* INSTGAIN          : 2.956690e+03 (M/S)
+* COMMENT           : N/A
+* SENSITIVITY       : 2.313240e+09 (M/S)
+* A0                : 5.715670e+08
+* **********************************
+ZEROS	3
+	+0.000000e+00	+0.000000e+00	
+	+0.000000e+00	+0.000000e+00	
+	+0.000000e+00	+0.000000e+00	
+POLES	5
+	-4.442210e-02	+4.442210e-02	
+	-4.442210e-02	-4.442210e-02	
+	-5.026500e+02	+0.000000e+00	
+	-1.005310e+03	+0.000000e+00	
+	-1.130970e+03	+0.000000e+00	
+CONSTANT	1.322172e+18
+
+
+
+

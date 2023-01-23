@@ -1,0 +1,15 @@
+
+macro clean_files.mac
+macro start_file.mac
+
+message ""
+message " --- Directory cleant and subdirectories created --- "
+message ""
+
+do station list CWF HPK MCH1 STNC SWN1
+do var list HHE HHN 
+macro signal_vel_acc.mac sta $station$ comp $var$ 
+macro signal_dis.mac sta $station$ comp $var$
+enddo
+enddo
+macro organize_plot.mac

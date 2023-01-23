@@ -1,0 +1,43 @@
+* **********************************
+* NETWORK   (KNETWK): GB
+* STATION    (KSTNM): CWF
+* LOCATION   (KHOLE): 
+* CHANNEL   (KCMPNM): HHN
+* CREATED           : 2020-07-29T11:18:41
+* START             : 2007-02-09T00:00:00
+* END               : 
+* DESCRIPTION       : CHARNWOOD FOREST, ENGLAND
+* LATITUDE          : 52.738499
+* LONGITUDE         : -1.307670
+* ELEVATION         : 203.0
+* DEPTH             : 0.0
+* DIP               : 90.0
+* AZIMUTH           : 0.0
+* SAMPLE RATE       : 100.0
+* INPUT UNIT        : M
+* OUTPUT UNIT       : COUNTS
+* INSTTYPE          : TR-240
+* INSTGAIN          : 1.197930e+03 (M/S)
+* COMMENT           : N/A
+* SENSITIVITY       : 4.791740e+08 (M/S)
+* A0                : 2.313230e+09
+* **********************************
+ZEROS	5
+	+0.000000e+00	+0.000000e+00	
+	-1.080000e+02	+0.000000e+00	
+	-1.610000e+02	+0.000000e+00	
+	+0.000000e+00	+0.000000e+00	
+	+0.000000e+00	+0.000000e+00	
+POLES	7
+	-1.815000e-02	+1.799000e-02	
+	-1.815000e-02	-1.799000e-02	
+	-1.960000e+02	+2.310000e+02	
+	-1.960000e+02	-2.310000e+02	
+	-7.320000e+02	+1.415000e+03	
+	-7.320000e+02	-1.415000e+03	
+	-1.730000e+02	+0.000000e+00	
+CONSTANT	1.108440e+18
+
+
+
+

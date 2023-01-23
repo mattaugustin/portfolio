@@ -1,0 +1,14 @@
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* * 													      * * 
+* *   THIS MACRO SHOULD BE RUN PRIOR TO MAIN ROUTINE AND      * *
+* *   	CREATES REQUIRED DIRECTORIES 						  * *
+* * 														  * *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+
+sc mkdir ./acceleration
+sc mkdir ./velocity
+sc mkdir ./displacement
+sc mkdir ./plots_pdf ./plots_pdf/accel_plot ./plots_pdf/veloc_plot ./plots_pdf/disp_plot
+* sc mkdir ./plots_ps ./plots_ps/accel_plot ./plots_ps/veloc_plot
+

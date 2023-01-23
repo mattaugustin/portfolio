@@ -1,0 +1,13 @@
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* *   THIS CODE SHOULD BE RUN PRIOR TO LAUNCHING MAIN CODE ROUTINE  * *
+* *   	TO REMOVE DIRECTORIES AND PLOTS								* *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+
+sc rm -r ./velocity
+sc rm -r ./acceleration
+sc rm -r ./displacement
+
+* sc rm ./plots_pdf/* ./plots_pdf/accel_plot/* ./plots_pdf/veloc_plot/* ./plots_pdf/disp_plot/*
+sc rm -r ./plots_pdf
+sc rm *.sgf

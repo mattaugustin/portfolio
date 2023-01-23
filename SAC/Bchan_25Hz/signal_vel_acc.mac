@@ -1,0 +1,104 @@
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* * 																		    * * 
+* *   IN THIS CODE, EARTHQUAKE SIGNALS ARE PROCESSED AND FILTERED AT 10 HZ.     * *
+* *   SIGNALS ARE PROCESSED TO OBTAIN VELOCITY AND ACCELERATION					* *
+* * 																			* *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+
+* * DEFINE VARIABLES FOR STATIONS, CORNER FREQUENCIES, IMAGE FILES
+
+$KEYS sta comp
+
+setbb f1 0.004
+setbb f2 0.009
+setbb f3 59
+setbb f4 60
+setbb psfile_vel "$sta$_$comp$_vel.ps"
+setbb pdffile_vel "$sta$_$comp$_vel.pdf"
+setbb psfile_acc "$sta$_$comp$_acc.ps"
+setbb pdffile_acc "$sta$_$comp$_acc.pdf"
+
+sc rm -f *.sgf
+sgf number 1 directory /
+qdp off
+
+
+
+* *  READ SAC FILES & REMOVE TREND, MEAN NOISE AND EDGE EFFECTS WITH TAPER
+
+message "---  Treatment of station  $sta$ $comp$  starting --- "
+message ""
+
+r ../Base_Bchan/SAC/$sta$.$comp$.SAC
+rmean
+rtr
+taper
+
+
+
+* *  DECONVOLVE RAW SAC FILES USING STATION METADATA (PZ) WITH FILTERING OF LOW FREQ NOISE & NYQUIST FREQ
+* *  APPLY BUTTERWORTH FILTER (4 POLES, ACAUSAL, CORNER FREQ 0.1 & 10), SET FROM M to CM/S
+
+transfer from polezero subtype ../Base_Bchan/PZ/SACPZ.$sta$.$comp$ to VEL freq %f1 %f2 %f3 %f4
+
+bp bu c 0.1 25 n 4 p 2
+mul 100
+
+message "Deconvolution and Butterworth filtering done"
+message ""
+message "Treatment of Velocity SAC"
+
+
+* *  SET PLOT PARAMETERS & SAVE PLOTS
+
+title on location top
+setbb ds "&1,KSTNM&'   '&1,KZTIME&"
+title "station: %ds%  , epidistance = &1,DIST& km"
+fileid l ur
+
+xlabel "Time @(s@)"
+ylabel "Velocity @(cm/s@)"
+ylim all
+ydiv power off ; xdiv power off ;
+
+bd sgf
+p1
+sc sgftops f001.sgf %psfile_vel%
+sc ps2pdf %psfile_vel% %pdffile_vel%
+
+
+
+* *  SAVE VELOCITY SAC SIGNALS
+
+w dir velocity append .vel
+message "Save of velocity SAC component"
+message "  "
+message "Treatment of Acceleration SAC"
+
+
+* *  DERIVE ACCELERATION SIGNALS, SAVE PLOTS & SAVE ACCELERATION SIGNALS
+
+
+dif
+
+title on location top
+title "station:  %ds%  , epidistance =  &1,DIST km "
+fileid l ur
+xlabel "Time @(s@)"
+ylabel "Acceleration @(cm/s2@)"
+ylim all
+p1
+sc sgftops f002.sgf %psfile_acc%
+sc ps2pdf %psfile_acc% %pdffile_acc%
+
+w dir acceleration append .acc 
+message " Save of accel SAC component"
+* message " Treatment of station $sta$ done "
+message ""
+* message ""
+
+sc cp *.pdf plots_pdf/
+sc rm *.pdf *.ps *.sgf

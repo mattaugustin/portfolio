@@ -1,0 +1,39 @@
+* **********************************
+* NETWORK   (KNETWK): GB
+* STATION    (KSTNM): MCH1
+* LOCATION   (KHOLE): 
+* CHANNEL   (KCMPNM): HHE
+* CREATED           : 2020-07-29T11:18:44
+* START             : 2016-10-25T00:00:00
+* END               : 
+* DESCRIPTION       : MICHAELCHURCH, WALES
+* LATITUDE          : 51.997330
+* LONGITUDE         : -2.998330
+* ELEVATION         : 219.0
+* DEPTH             : 0.0
+* DIP               : 90.0
+* AZIMUTH           : 90.0
+* SAMPLE RATE       : 100.0
+* INPUT UNIT        : M
+* OUTPUT UNIT       : COUNTS
+* INSTTYPE          : T
+* INSTGAIN          : 1499.9 (M/S)
+* COMMENT           : N/A
+* SENSITIVITY       : 468718000 (M/S)
+* A0                : 5.715720e+08
+* **********************************
+ZEROS	3
+	+0.000000e+00	+0.000000e+00	
+	+0.000000e+00	+0.000000e+00	
+	+0.000000e+00	+0.000000e+00	
+POLES	5
+	-3.700000e-02	+3.700000e-02	
+	-3.700000e-02	-3.700000e-02	
+	-1.130970e+03	+0.000000e+00	
+	-1.005310e+03	+0.000000e+00	
+	-5.026550e+02	+0.000000e+00	
+CONSTANT	1.346646e+18
+
+
+
+

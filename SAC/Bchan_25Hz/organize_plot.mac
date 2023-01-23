@@ -1,0 +1,12 @@
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* * 															    * * 
+* *   THIS CODE RE-ORGANIZES PDF FILES INTO TARGETED DIRECTORIES    * *
+* *   AND CLEANS MAIN DIRECTORY										* *
+* * 																* *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+sc cp ./plots_pdf/*acc.pdf ./plots_pdf/accel_plot/
+sc cp ./plots_pdf/*vel.pdf ./plots_pdf/veloc_plot/
+sc cp ./plots_pdf/*dis.pdf ./plots_pdf/disp_plot/
+
+sc rm ./plots_pdf/*acc.pdf ./plots_pdf/*vel.pdf ./plots_pdf/*dis.pdf ./plots_ps/*acc.ps ./plots_ps/*vel.ps ./plots_ps/*dis.ps

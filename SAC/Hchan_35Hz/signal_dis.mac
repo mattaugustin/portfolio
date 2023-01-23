@@ -1,0 +1,82 @@
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* * 																		    * * 
+* *   IN THIS CODE, EARTHQUAKE SIGNALS ARE PROCESSED AND FILTERED AT 10 HZ.     * *
+* *   SIGNALS ARE PROCESSED TO OBTAIN VELOCITY AND ACCELERATION					* *
+* * 																			* *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+
+* * DEFINE VARIABLES FOR STATIONS, CORNER FREQUENCIES, IMAGE FILES
+
+$KEYS sta comp
+
+setbb f1 0.004
+setbb f2 0.009
+setbb f3 59
+setbb f4 60
+setbb psfile_dis "$sta$_$comp$_dis.ps"
+setbb pdffile_dis "$sta$_$comp$_dis.pdf"
+
+sc rm -f *.sgf
+sgf number 1 directory /
+qdp off
+
+
+
+* *  READ SAC FILES & REMOVE TREND, MEAN NOISE AND EDGE EFFECTS WITH TAPER
+
+r ../Base_Hchan/SAC/$sta$.$comp$.SAC
+rmean
+rtr
+taper
+
+
+
+* *  DECONVOLVE RAW SAC FILES USING STATION METADATA (PZ) WITH FILTERING OF LOW FREQ NOISE & NYQUIST FREQ
+* *  APPLY BUTTERWORTH FILTER (4 POLES, ACAUSAL, CORNER FREQ 0.1 & 10), SET FROM M/S to CM/S
+
+transfer from polezero subtype ../Base_Hchan/PZ/SACPZ.$sta$.$comp$ to VEL freq %f1 %f2 %f3 %f4
+
+bp bu c 0.1 35 n 4 p 2
+mul 100
+
+* message "Deconvolution and Butterworth filtering done"
+message ""
+message "Treatment of Displacement SAC"
+
+* *  INTEGRATE TO DISPLACEMENT, SET PLOT PARAMETERS & SAVE PLOTS
+
+int
+rmean
+rtr
+taper
+
+title on location top
+setbb ds "&1,KSTNM&'   '&1,KZTIME&"
+title "station: %ds%  , epidistance = &1,DIST& km"
+fileid l ur
+
+xlabel "Time @(s@)"
+ylabel "Displacement @(cm@)"
+ylim all
+ydiv power off ; xdiv power off ;
+
+bd sgf
+p1
+sc sgftops f001.sgf %psfile_dis%
+sc ps2pdf %psfile_dis% %pdffile_dis%
+
+
+* *  SAVE DISPLACEMENT SAC SIGNALS INTO "DISPLACEMENT" DIRECTORY
+
+w dir displacement append .dis
+message "Save of displacement SAC component"
+message ""
+message "                     ---  Treatment of station $sta$ $comp$ done --- "
+message ""
+message ""
+
+sc cp *.pdf plots_pdf/
+sc rm *.pdf *.ps *.sgf

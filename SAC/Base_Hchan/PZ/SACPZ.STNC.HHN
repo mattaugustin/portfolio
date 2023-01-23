@@ -1,0 +1,39 @@
+* **********************************
+* NETWORK   (KNETWK): GB
+* STATION    (KSTNM): STNC
+* LOCATION   (KHOLE): 
+* CHANNEL   (KCMPNM): HHN
+* CREATED           : 2020-07-29T11:18:44
+* START             : 2008-04-28T00:00:00
+* END               : 
+* DESCRIPTION       : STOKE NEWCHAPEL, ENGLAND
+* LATITUDE          : 53.091301
+* LONGITUDE         : -2.206198
+* ELEVATION         : 234.0
+* DEPTH             : 0.0
+* DIP               : 90.0
+* AZIMUTH           : 0.0
+* SAMPLE RATE       : 100.0
+* INPUT UNIT        : M
+* OUTPUT UNIT       : COUNTS
+* INSTTYPE          : T
+* INSTGAIN          : 5.973330e+03 (M/S)
+* COMMENT           : N/A
+* SENSITIVITY       : 1.860700e+09 (M/S)
+* A0                : 5.715720e+08
+* **********************************
+ZEROS	3
+	+0.000000e+00	+0.000000e+00	
+	+0.000000e+00	+0.000000e+00	
+	+0.000000e+00	+0.000000e+00	
+POLES	5
+	-3.700000e-02	+3.700000e-02	
+	-3.700000e-02	-3.700000e-02	
+	-1.130970e+03	+0.000000e+00	
+	-1.005310e+03	+0.000000e+00	
+	-5.026550e+02	+0.000000e+00	
+CONSTANT	1.063524e+18
+
+
+
+
