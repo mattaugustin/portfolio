@@ -16,21 +16,21 @@ Plotting the raw SAC signal for station.
 
 Plotting the SAC signal deconvolved from the station metadata.
 
-![mch1_hhe_deconvolved](https://user-images.githubusercontent.com/61290423/214099081-5c7b0ac0-0901-4965-97af-ece885c50325.PNG)
+![mch1_hhe_deconvolved](https://user-images.githubusercontent.com/61290423/214099639-337418d3-0b50-4ada-98d2-30a7f2b97a87.PNG)
  
 
 Plotting the SAC signal following filtering using a Butterworth bandpass.
 
-![mch1_hhe_decon_filtered](https://user-images.githubusercontent.com/61290423/214098508-2f1a8e05-606e-44e0-a7b9-82f3f4486f52.PNG)
+![mch1_hhe_decon_filtered](https://user-images.githubusercontent.com/61290423/214099684-0f6d3fdb-a89a-4533-b95d-574f035b6f70.PNG)
 
 
 Plotting velocity (post plot cosmetic improvements).
 
-![mch1_hhe_decon_filt_vel](https://user-images.githubusercontent.com/61290423/214098553-58e35561-92fe-4eb6-bb02-38ebee069f3f.PNG)
+![mch1_hhe_decon_filt_vel](https://user-images.githubusercontent.com/61290423/214099728-414a91e8-f56d-4163-92a2-b412d45bd5a9.PNG)
 
 
 Plotting acceleration (post plot cosmetic improvements).
 
-![mch1_hhe_decon_filt_acc](https://user-images.githubusercontent.com/61290423/214098599-8a5837b8-602b-41fc-ac94-ca2f7adcdc1d.PNG)
+![mch1_hhe_decon_filt_acc](https://user-images.githubusercontent.com/61290423/214099750-83829289-465d-434b-bb10-ad9dcf2b72d7.PNG)
 
 
