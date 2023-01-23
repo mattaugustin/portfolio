@@ -14,12 +14,12 @@ The signals are provided as recorded by seismic monitoring stations (including a
 ![mch1_hhe_raw](https://user-images.githubusercontent.com/61290423/214091098-6c2dfc43-76f2-4a15-bebe-90fa983a8db1.PNG)
 
 
-> Plotting the SAC signal deconvolved from the station metadata.
+> Plotting the SAC signal deconvolved from the station metadata (visual differences from previous plot highlighted in red).
 
 ![mch1_hhe_deconvolved](https://user-images.githubusercontent.com/61290423/214099639-337418d3-0b50-4ada-98d2-30a7f2b97a87.PNG)
  
 
-> Plotting the SAC signal following filtering using a Butterworth bandpass.
+> Plotting the SAC signal following filtering using a Butterworth bandpass (visual differences from previous plot highlighted in red).
 
 ![mch1_hhe_decon_filtered](https://user-images.githubusercontent.com/61290423/214099684-0f6d3fdb-a89a-4533-b95d-574f035b6f70.PNG)
 
