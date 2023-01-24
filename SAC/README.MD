@@ -4,9 +4,10 @@
 These signals are the first step towards extracting and/or deriving relevant engineering earthquake parameters commonly used as inputs in modern structural analysis. Suitable treatment of these earthquake signals is therefore paramount.
 The signals are provided as recorded by seismic monitoring stations (including amplification gain and sensitivity) and thus should be examined in association with seismic station metadata in order to obtain relevant units. Upon adequate processing of the SAC files, the user can then obtain relevant time-series data (acceleration, velocity...) that can be post-processed using different code solution (notably using R code on this Github, in portfolio/seismic_records).
   
-  The code routine in this SAC directory shows the detailed steps of SAC processing, including reading, deconvolving earthquake signal with station metadata, filtering, deriving other signals (e.g. acceleration) and plotting of seismic signals.
+  The code routine "sample.sac" in this SAC directory provides a glimpse in the steps of SAC processing, including reading, deconvolving earthquake signal with station metadata, filtering, deriving other signals (e.g. acceleration) and plotting of seismic signals.
+  In the directories /Bchan_25Hz and /Hchan_35Hz, macro SAC sequences "loopX.mac" using smaller sequences and similar commands as in sample.sac are available. The macro routines supply acceleration, velocity and displacement signals, as well as plots in pdf format, for an example set of SAC files associated to the 2018 Mw 4.3 Swansea earthquake used as reference.
   
-  This code mainly provides the SAC files serving as input in the routine shown in portfolio/seismic_records. Directories are structured based on the station recording channels (B or H, for broadband and high broadband) and upper frequency filtering (25Hz or 35Hz), which determined the same structure observed in portfolio/seismic_records. An example set of SAC files associated to the 2018 Mw 4.3 Swansea earthquake is supplied for reference.
+ SAC files produced by the macro routines serve as input in the routine shown in portfolio/seismic_records. Directories are structured based on the station recording channels (B or H, for broadband and high broadband) and upper frequency filtering (25Hz or 35Hz), which determined the same structure observed in portfolio/seismic_records. 
  
 
 > Plotting the raw SAC signal for station.
