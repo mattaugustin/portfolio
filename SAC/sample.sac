@@ -1,23 +1,35 @@
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+* *     THE SEQUENCE BELOW IS A GLIMPSE IN SAC CODE TO HANDLE EARTHQUAKE SIGNALS SAVED IN SAC FORMAT    * * 
+* *     THE PROMPTS READS A SAC FILE, PROCESSES IT (CONVOLUTION,FILTERING) AND DISPLAYS THE SIGNAL      * * 
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+
+* * PREPARE DIRECTORIES & ENVIRONMENT
+sc mkdir acceleration
+sc mkdir velocity
+sc rm *.sgf *.ps *.pdf
+
 
 * * READ A SAC SIGNAL AND PLOT 
-r ./Base_Hchan/SAC/MCH1.HHE.SAC
-p1
+r ../Base_Hchan/SAC/MCH1.HHE.SAC
+p1 
+* (picture 1: RAW signal)
 
 * * REMOVE NOISE, EDGE EFFECTS AND SIGNAL TREND and RE-PLOT TO REFLECT CHANGES
 rmean
 rtr
 taper
 p1
-
+* (picture 2: deconvolved signal)
 
 * * CONVOLVE SAC SIGNAL WITH STATION DEVICE METADATA and INSPECT HEADER
-transfer from polezero subtype ./Base_Hchan/PZ/SACPZ.MCH1.HHE to VEL freq 0.004 0.009 56 57
+transfer from polezero subtype ../Base_Hchan/PZ/SACPZ.MCH1.HHE to VEL freq 0.004 0.009 56 57
 listhdr
 
 
 * * APPLY BUTTERWORTH FILTERING at USER-DEFINED CORNER FREQ
 bp bu c 0.1 35 n 4 p 2
-
+p1
+* (picture 3: deconvolved and filtered signal)
 
 * * PREPARE PLOT SETTINGS (BASED ON HEADER) and PLOT
 mul 100
@@ -28,7 +40,7 @@ ylabel "Velocity @(cm/s@)"
 xdiv power off
 ydiv power off
 p1
-
+* (picture 4: velocity signal)
 
 * *  SAVE MODIFIED SAC SIGNAL TO DIRECTORY "VELOCITY" & SAVE PLOTS
 w dir velocity append .vel
@@ -41,11 +53,26 @@ bd sgf
 p1
 sc sgftops f001.sgf velocity.ps
 sc ps2pdf plotfile.ps velocity.pdf
-
-
-* * REACTIVATE PLOT WINDOW IF WILLING TO DISPLAY PLOT AGAIN
 bd x
-p1
+* (reactivate plot to display plot again)
 
+
+* * DERIVE TO ACCELERATION SIGNAL, PLOT & SAVE
+dif
+title on location top
+title "station &1,KSTNM& &1,KCMPNM&, epidistance =  &1,DIST& km "
+xlabel "Time @(s@)"
+ylabel "Acceleration @(cm/s2@)"
+xdiv power off
+ydiv power off
+p1
+* (picture 5: acceleration signal)
+
+w dir acceleration append .acc
+bd sgf
+p1
+sc sgftops f002.sgf acceleration.ps
+sc ps2pdf plotfile.ps acceleration.pdf
+bd x
 
 quit
