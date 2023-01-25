@@ -1,6 +1,4 @@
 # portfolio
-Examples of code I have written
-
 
 This directory provides select examples of code I have written in the last few years.
 
