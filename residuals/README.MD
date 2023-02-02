@@ -1,7 +1,7 @@
 This work may constitute the final part of analysing earthquake records, coming after 
-+ I) Processing SAC signals (portfolio/SAC/),
-+ II) Deriving earthquake parameters from SAC signals (portfolio/seismic_records/), and 
-+ III) Deriving parameters from NDSHA-based earthquake signals (portfolio/NDSHA/).
++ I) Processing SAC signals (*portfolio/SAC/*),
++ II) Deriving earthquake parameters from SAC signals (*portfolio/seismic_records/*), and 
++ III) Deriving parameters from NDSHA-based earthquake signals (*portfolio/NDSHA/*).
 
 In this work, the dataset of predictions from NDSHA signals (300 values for each engineering parameter, associated to the 99 realisations of fault rupture on each of the three directivity angles 0, 90 and 180) is aggregated to obtain the median and mean value of each parameter (e.g. Peak Ground Acceleration).
 The prediction dataset is then compared against the observation dataset (based on SAC signals) in order to calculate corresponding residuals.
