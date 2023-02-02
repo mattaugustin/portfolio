@@ -16,6 +16,5 @@ Plotting said residuals provides the user a glimpse about how performant the pre
 
 
 > Impact of geologies on residual distribution
-![Allgeo_vs_Rock_small](https://user-images.githubusercontent.com/61290423/216395988-8d45770c-1a09-4d4c-918b-b04b1aa471cf.png)
-
+![Allgeo_vs_Rock_small](https://user-images.githubusercontent.com/61290423/216396185-5f61cc88-0257-4a1a-a567-4463bf96e9c3.png)
 
