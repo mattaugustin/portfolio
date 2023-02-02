@@ -240,6 +240,9 @@ residual_table_bin  %>%   select(. , event , directivity , channel , station, st
                                                     site_type, groundmotion, groundmotion_bis,component, filtering, filtering_bis, observations_amplitude,distance_bin,distance_bin_centre )  %>% unique , .)
 
 
+## REMOVING UNNECESSARY COLUMNS BEFORE SAVING
+residual_NDSHA_SAC <- residual_NDSHA_SAC %>% select(., -prediction, -groundmotion, -structure , -station_id, -residual_bin , -filtering)
+
 write.csv(residual_NDSHA_SAC  , "portfolio/residuals/results/residuals_bin_NDSHA_SAC.csv", row.names = FALSE )
 
 # rm ( residual_table, residual_table_bin , residual_NDSHA_SAC , SAC_table , NDSHA_agg , NDSHAagg_SAC_long  )
