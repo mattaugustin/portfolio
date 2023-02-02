@@ -6,14 +6,16 @@ Plotting said residuals provides the user a glimpse about how performant the pre
 
 
 > PGA observations against median of all 3000 predicted values, using signals filtered at 35 Hz.
-![NDSHA_vs_SAC_median](https://user-images.githubusercontent.com/61290423/216394375-de324b97-fbf2-4c64-b71c-82f957c3bae4.png)
+![Allgeo_vs_Rock_small](https://user-images.githubusercontent.com/61290423/216395826-9f872cb6-6ad7-4892-9436-d39ce33c0843.png)
 
 
 
 > PGA Observations compared against full range of predicted values
-![NDSHA_vs_SAC_swarm](https://user-images.githubusercontent.com/61290423/216393809-783966d6-4c4c-45ce-8e4f-25359daeae7a.png)
+![NDSHA_vs_SAC_swarm_small](https://user-images.githubusercontent.com/61290423/216395890-a760919b-f907-4ec5-b0cd-57e6c432930a.png)
 
 
 
 > Impact of geologies on residual distribution
-![Allgeo_vs_Rock](https://user-images.githubusercontent.com/61290423/216394729-7627fa26-29b0-4237-a357-bcc7aa192590.png)
+![Allgeo_vs_Rock_small](https://user-images.githubusercontent.com/61290423/216395988-8d45770c-1a09-4d4c-918b-b04b1aa471cf.png)
+
+
