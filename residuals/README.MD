@@ -14,7 +14,7 @@ https://drive.google.com/drive/folders/14DTBeyYuI1QqDD22NuBmGvperO-_bVv_?usp=sha
 
 > PGA observations against median of all 3000 predicted values, using signals filtered at 35 Hz.
 
-![NDSHA_vs_SAC_median](https://user-images.githubusercontent.com/61290423/216590333-43dd5aa4-35cb-499e-9ca7-b1de92cc98bf.png)
+![NDSHA_vs_SAC_median_small](https://user-images.githubusercontent.com/61290423/216591405-43cf7ca1-270e-464e-b835-a6b0a4d3436c.png)
 
 
 > PGA Observations compared against full range of predicted values
