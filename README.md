@@ -23,5 +23,6 @@ This section is the final stage upon obtaining engineering parameters from seism
 + **Kriging**    
 Using earthquake acceleration data defined at the nodes of a regularly-spaced grid covering the United Kingdom, this project shows the steps leading to smoothing of said data over the land by means of kriging technique. This work combines dataframe reshaping and spatial objects (polygons, dataframe ...). The purpose is to obtain a higher resolution national hazard map covering the entire territory.
     
++ **Spectra**    
+A code written in GNU Octave to compute, plot and save spectral values (acceleration, velocity and displacement) based on an externally-read earthquake signal. This code served as a basis when ported into R when treating earthquake signals at scale (see Seismic_records or NDSHA folders).
 
-  
