@@ -1,7 +1,6 @@
 function plotSpectra_all(Period,amax,vmax, umax, fpath,fname)
 % Plot response spectra
-close all ;
-figure() ; clf ;
+figure(2) ; clf ;
 fsz = 16;
 lw = 2;
 set(gcf,'position', [50 200 1300 450]) ;
