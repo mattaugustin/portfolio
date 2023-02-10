@@ -82,6 +82,7 @@ sp_dis=data(:,5);
 printf( "\n\n Prepare for basic plotting ... " ) ;
 figure(1)
 plot(period,sp_acc)
+% semilogx( period, sp_acc)   % alternative with x-axis in logscale
 xlabel('Period [s]')
 ylabel('Pseudo Spectral acceleration [cm/s2]')
 xlim([min(period) max(period)])
