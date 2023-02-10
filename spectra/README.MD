@@ -3,7 +3,7 @@ In this project, the code computes spectral values (acceleration, velocity and d
 The code contains several options for the user to comment/uncomment (set of periods, plotting, saving...).
 Two plotting options are suggested, a "basic" one where only spectral accelerations are displayed, and an "enhanced" version where spectral accelerations, velocities and displacement are all plotted along with cosmetic plot improvements and then saved into jpg and pdf format.
 
-I "ported" the function for spectral value computation into R code, as can be seen in portfolio/NDSHA/earthquake_parameters.R  or portfolio/seismic_records/SAC_quake_parameters.R , in order to "keep all operations under the same roof". The Octave code however costs less in time and computer-resources, owing to Octave performance in matrix computing, and is therefore a great tool when computing spectral values for a large number of periods (typically more than two dozens periods based on user experience).
+I "ported" the function for spectral value computation into R code, as can be seen in portfolio/NDSHA/earthquake_parameters.R  or portfolio/seismic_records/SAC_quake_parameters.R , in order to "keep all operations under the same roof". The Octave code however costs less in time and computer-resources, owing to Octave performance in matrix computing, and is therefore a great tool when computing spectral values for a large number of periods.
 
 
 > Spectral amplitudes when using "enhanced" plotting option
