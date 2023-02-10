@@ -7,6 +7,6 @@ I "ported" the function for spectral value computation into R code, as can be se
 The Octave code however costs less in time and computer-resources, owing to Octave performance in matrix computing, and is therefore a great tool when computing spectral values for a large number of periods (typically more than two dozens periods based on user experience).
 
 
-> Spectral amplitudes when using "enhanced" plotting
+> Spectral amplitudes when using "enhanced" plotting option
 
 ![response_spectra](https://user-images.githubusercontent.com/61290423/218084123-997fb4d3-ff8f-43f0-aa08-ead55717604c.jpg)
