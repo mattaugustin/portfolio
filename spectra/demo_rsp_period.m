@@ -13,7 +13,7 @@ clc
 
 % Load acceleration file and prepare settings
     filename = sprintf('javak_ew_accel.txt');
-    savename = sprintf('spectra_javak_ns.txt');
+    savename = sprintf('results/spectra_javak_ew.txt');
     # data_a=load ("-ascii", filename);
     printf("\n\n Reading text file ... \n\n");
     [a, b] =  textread( filename , "%f %f" );
@@ -39,7 +39,7 @@ clc
 % Define set of periods for computation of response spectra (choose a desired set below)
     printf( "\n Set of structural periods (in s) for calculation of spectral values is \n") ;
     %period = [ 0.05 0.10 0.20 0.30 0.40 0.50 0.60 0.70 0.80 0.90 1.00 2.00 3.00]
-    period = logspace( -2 , 1 , 100 ) ;     % p = logspace(minPower,maxPower,nPeriod);
+    period = logspace( -2 , 1 , 100 )      % p = logspace(minPower,maxPower,nPeriod);
     % period = 0.01:0.01:10 ;
 
 % build response spectra (input: signal, signal duration and number of signal datapoints)
@@ -52,24 +52,40 @@ clc
     umax=100*transpose(umax);
     % tamax= [period f amax];       % save in csv format as period, frequency, value rsp spectra
     tamax= [period f amax vmax umax];
-    dlmwrite( savename , tamax);
-    printf("\n\n          Computation done. Now saving spectral values in %s\n" , savename);
 
-%% Plot the response spectra (basic)
-data= dlmread(  savename );
+%% Save results in subdirectory
+    [status, message, message_id] = mkdir("results");
+    if status ~= 1
+    disp("Error creating directory: " + message);
+    endif
 
+   printf("\n\n          Computation done. Now saving spectral values in %s\n" , savename);
+   dlmwrite( savename , tamax);
+   if exist(savename, "file") == 2
+      disp("File successfully written!");
+    else
+      disp("Error writing file!");
+    endif
+
+
+%% Prepare for plotting (basic)
+data = dlmread(  savename );
 period=data(:,1);
 frequency=data(:,2);
 sp_acc=data(:,3);
 sp_vel=data(:,4);
 sp_dis=data(:,5);
-% plot(period,sp_acc)
-% xlabel('Period [s]')
-% ylabel('Pseudo Spectral acceleration [g]')
-% xlim([0.01 max(period)])
+
+
+%% Plot the response spectra (basic)
+plot(period,sp_acc)
+xlabel('Period [s]')
+ylabel('Pseudo Spectral acceleration [cm/s2]')
+xlim([min(period) max(period)])
+
 
 %% Plot the response spectra (enhanced)
-plotSpectra_all(  period,sp_acc, sp_vel , sp_dis , 'martina/','martina_again'  )
-
+mkdir plots
+plotSpectra_all(  period,sp_acc, sp_vel , sp_dis , 'plots/','response_spectra'  )
 
 
