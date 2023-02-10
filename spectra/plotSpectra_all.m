@@ -6,18 +6,13 @@ fsz = 16;
 lw = 2;
 set(gcf,'position', [50 200 1300 450]) ;
 
+
 subplot_special(3,1, fsz ) ; hold;
-% set(gca,'FontSize',fsz);
 loglog(Period, amax ,'-k','LineWidth',lw); hold;
-% xlabel('Period (s)','FontSize',fsz,'FontWeight','normal','FontAngle','normal','fontname','times');
 ylabel('Pseudo spectral acceleration (cm/s^2)','FontSize',fsz,'FontWeight','normal','FontAngle','normal','fontname','times');
 title( sprintf( 'Spectal acceleration')) ;
 axis ("square") ; xlim([min(Period) max(Period)*1.25]); ylim([min(amax)/10 max(amax)*10]);
 box on; grid on;
-set(gca,'FontSize',fsz);
-set(gca,'Xtick',[0.01 0.1 1 10 100]);
-set(gca,'XTickLabel',{'0.01s','0.1s','1s','10s','100s'},'fontsize',fsz);
-set(gca,'fontsize',[fsz-1],'fontname','times');
 
 
 subplot_special(3,2, fsz ) ; hold ;
@@ -26,10 +21,6 @@ ylabel('Spectral velocity (cm/s)','FontSize',fsz,'FontWeight','normal','FontAngl
 title( sprintf( 'Spectal velocity')) ;
 axis square; xlim([min(Period) max(Period)*1.25]);  ylim([min(vmax)/10 max(vmax)*10]);
 box on; grid on;
-set(gca,'FontSize',fsz);
-set(gca,'Xtick',[0.01 0.1 1 10 100]);
-set(gca,'XTickLabel',{'0.01s','0.1s','1s','10s','100s'},'fontsize',fsz);
-set(gca,'fontsize',[fsz-1],'fontname','times');
 
 
 subplot_special(3 , 3 , fsz ) ; hold ;
@@ -38,10 +29,6 @@ ylabel('Spectral displacement (cm)','FontSize',fsz,'FontWeight','normal','FontAn
 title( sprintf( 'Spectal displacement')) ;
 axis square; xlim([min(Period) max(Period)*1.25]);  ylim([min(umax)/10 max(umax)*10]);
 box on; grid on;
-set(gca,'FontSize',fsz);
-set(gca,'Xtick',[0.01 0.1 1 10 100]);
-set(gca,'XTickLabel',{'0.01s','0.1s','1s','10s','100s'},'fontsize',fsz);
-set(gca,'fontsize',[fsz-1],'fontname','times');
 
 
 axes( 'Position', [0, 0.90 , 1, 0.05] ) ;
@@ -54,3 +41,4 @@ hFig = gcf() ;
 set ( hFig, "PaperType", "a4" ) ;
 print( hFig, strcat(fpath, fname) , "-landscape" , "-fillpage", "-color", "-dpdf") ;
 print( hFig, strcat(fpath, fname) , "-landscape" , "-color", "-djpg") ;
+
