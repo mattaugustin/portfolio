@@ -43,15 +43,18 @@ clc
     % period = 0.01:0.01:10 ;
 
 % build response spectra (input: signal, signal duration and number of signal datapoints)
-    printf( "\n Computation of spectral values starting ... ...  " ) ;
+ printf( "\n Computation of spectral values starting ... ... \n  " ) ;
+    tic;
    [period , f, umax, vmax, amax] = respSpectra_period(acceleration , time(end), nStep , period );
     period=transpose(period);
     f=transpose(f);
     amax=100*transpose(amax);
     vmax=100*transpose(vmax);
     umax=100*transpose(umax);
-    % tamax= [period f amax];       % save in csv format as period, frequency, value rsp spectra
     tamax= [period f amax vmax umax];
+    % tamax= [period f amax];       %  alternatively save only acceleration
+    time_elapsed = toc;
+    printf("\n Time taken to compute spectral values: %f seconds \n\n" , time_elapsed);
 
 %% Save results in subdirectory
     [status, message, message_id] = mkdir("results");
