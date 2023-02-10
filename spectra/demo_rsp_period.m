@@ -69,6 +69,7 @@ clc
 
 
 %% Prepare for plotting (basic)
+printf( "\n\n Prepare for plotting ... " ) ;
 data = dlmread(  savename );
 period=data(:,1);
 frequency=data(:,2);
@@ -78,6 +79,8 @@ sp_dis=data(:,5);
 
 
 %% Plot the response spectra (basic)
+printf( "\n\n Prepare for basic plotting ... " ) ;
+figure(1)
 plot(period,sp_acc)
 xlabel('Period [s]')
 ylabel('Pseudo Spectral acceleration [cm/s2]')
@@ -85,6 +88,7 @@ xlim([min(period) max(period)])
 
 
 %% Plot the response spectra (enhanced)
+printf( "\n\n Prepare for enhanced plotting ... " ) ;
 mkdir plots
 plotSpectra_all(  period,sp_acc, sp_vel , sp_dis , 'plots/','response_spectra'  )
 
