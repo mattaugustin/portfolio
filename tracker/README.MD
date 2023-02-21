@@ -1,5 +1,5 @@
 In high resolution spectrometry, the main challenge is to separate a beam of near-identical mass particles into several beams each composed of only one mass and hence one particle, thus ensuring "purity" of each beam for ensuing relevant experiments.
-As an example, a optical setup (made of multipoles, beam drifting tubes, magnet separators) able to separate particles with mass M=100 and M=100.0001 (i.e. a delta 0.0001) respectively would exhibit a corresponding resolution R = 1 / $\delta$ = 10 000.
+As an example, a optical setup (made of multipoles, beam drifting tubes, magnet separators) able to separate particles with mass M=100 and M=100.0001 (i.e. a $\delta$ = 0.0001) respectively would exhibit a corresponding resolution R = 1 / $\delta$ = 10 000.
 
 PIC : particle beam setup
 
