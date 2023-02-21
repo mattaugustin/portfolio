@@ -2,7 +2,7 @@ In high resolution spectrometry, the main challenge is to separate a beam of nea
 As an example, a optical setup (made of multipoles, beam drifting tubes, magnet separators) able to separate particles with mass M1=100 and M2=100.0001 (i.e. a $\delta$ = 0.0001) respectively would exhibit a corresponding resolution R = 1 / $\delta$ = 10 000.
 
 > beamline layout and corresponding beam trajectory modelling (modelled in CosyScript).
-![layoutoptic2](https://user-images.githubusercontent.com/126000617/220469030-a7c454ed-ab77-4073-858f-8bfd7c3e02a0.png)
+![layoutoptic2](https://user-images.githubusercontent.com/126000617/220470902-953ffa61-345b-4002-8071-e4e5f7ee08d7.png)
 
 
 Particle beam transport modelling software (i.e. SIMION, CosyScript ...) commonly show beam trajectories, track beam transformation including higher order effects owing to real-world optics challenges at user-selected locations along the optical setup, but do not provide a visually-clear insight on the separation ability of the optical setup for different particle mass beams. 
@@ -13,7 +13,6 @@ A beam is composed of N particles, each characterized by its size x (e.g mm) and
 
 > beam initial definition plotted in both horizontal and vertical planes.
 ![beamstart](https://user-images.githubusercontent.com/126000617/220470657-c73feaa1-bce4-4610-9f18-399615f7f661.png)
-
 
 
 The routine includes :
