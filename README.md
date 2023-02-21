@@ -27,4 +27,4 @@ The purpose is to obtain a higher resolution national hazard map covering the en
 A code written to compute, plot and save spectral values (acceleration, velocity and displacement) based on an externally-read earthquake signal. This code served as a basis when ported into R when treating earthquake signals at scale (see Seismic_records or NDSHA folders), but offers faster performance when working with many structural periods.
 
 + **Tracker** (Octave)            
-A particle tracker using transfer matrix and particle beam parameters for nearly-identical mass particles.
+A tracker which calculates and plots the projected position of beam particles across several user-defined locations along a beamline, ultimately providing insights on the performances of a high resolution mass spectrometry setup.
