@@ -26,3 +26,5 @@ The purpose is to obtain a higher resolution national hazard map covering the en
 + **Spectra**    
 A code written in GNU Octave to compute, plot and save spectral values (acceleration, velocity and displacement) based on an externally-read earthquake signal. This code served as a basis when ported into R when treating earthquake signals at scale (see Seismic_records or NDSHA folders), but offers faster performance when working with many structural periods.
 
++ **Tracker** 
+A particle tracker using transfer matrix and particle beam parameters for nearly-identical mass particles.
