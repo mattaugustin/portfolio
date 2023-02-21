@@ -12,7 +12,8 @@ This gap is filled with this project Octave code, as it shows whether, and if so
 A beam is composed of N particles, each characterized by its size x (e.g mm) and angle orientation a (e.g. mrad) in the horizontal plane, and size y and angle b in the vertical plane respectively. Each particle is then input to the location-relevant transfer matrix to calculate the parameters of the corresponding projected particle in both planes. Applying this operation to all particles of a set of beams with nearly identical mass, projected beams can be plotted to assess how well the optical setup performs in terms of separation ability.
 
 > beam initial definition plotted in both horizontal and vertical planes.
-![beamstart](https://user-images.githubusercontent.com/126000617/220470030-558668e7-5886-47b3-b9eb-222c7bf1c07a.png)
+![beamstart](https://user-images.githubusercontent.com/126000617/220470657-c73feaa1-bce4-4610-9f18-399615f7f661.png)
+
 
 
 The routine includes :
