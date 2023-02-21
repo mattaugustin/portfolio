@@ -4,7 +4,7 @@ As an example, a optical setup (made of multipoles, beam drifting tubes, magnet 
 Particle beam transport modelling software (i.e. SIMION, CosyScript ...) commonly show beam trajectories, track beam transformation including higher order effects owing to real-world optics challenges at user-selected locations along the optical setup, but do not provide a visually-clear insight on the separation ability of the optical setup for different particle mass beams. 
 
 > beamline layout and corresponding beam trajectory modelling (modelled in CosyScript).
-![layoutoptic2](https://user-images.githubusercontent.com/126000617/220470902-953ffa61-345b-4002-8071-e4e5f7ee08d7.png)
+![layoutoptic2](https://user-images.githubusercontent.com/126000617/220473302-49861c50-2d6f-4b53-886d-f97137688c2a.png)
 
 
 This gap is filled with this project Octave code, as it shows whether, and if so how well, a multimass particle beam can be separated into single mass smaller beams. Using the beam transformation data (i.e. transfer matrices) recorded across the optical setup, this Octave routine projects and displays a set of different beams at the several transfer matrix locations.       
