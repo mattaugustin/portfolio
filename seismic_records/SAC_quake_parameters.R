@@ -825,7 +825,7 @@ portfolio_parameters_style <- function() {
     panel.grid.major.y = element_line(colour = "grey80",linetype = "dotted"  ) ,
     panel.grid = ggplot2::element_line(linetype = "dotted", size=0.15), # 0.2
     
-    
+    #
     #Blank background
     #This sets the panel background as blank, removing the standard grey ggplot background colour from the plot
     panel.background = ggplot2::element_blank(),
