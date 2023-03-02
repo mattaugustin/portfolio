@@ -157,8 +157,7 @@ list_station            <-  list.files( path = file_list_station$path , recursiv
 ###   READ  POLE-ZERO FILES  FOR ALL EVENTS  AND STATIONS         ###
 #####################################################################
 
-##  Using "list_station", create a dataframe containing the different station names, instrumentation channels, earthquake names ...
-##      and use these to construct the path name of the PZ files 
+##  Using "file_list_station" (path column), list the PZ files contained in each directory and bind them to event & instrumentation channel ...
 
 ## (a) using "apply" method ...
 list_pz <- apply ( file_list_station , 1 , function(x){ if( length(list.files( path = x[3] , recursive = F))>0  ){ 
@@ -177,9 +176,10 @@ for(i in 1:nrow(file_list_station)){
     }
 }
 list_pz <- do.call("rbind", list_pz) %>% rename(. , "PZ"="." ,"event"="Var1","channel"="Var2","stem_path"="path")
-
-
 head(list_pz)
+
+##  create then a dataframe including the different station names, instrumentation channels, earthquake names ...
+##  to construct the path name of the PZ files 
 list_pz <- list_pz %>% mutate( . , PZ = PZ %>% as.character() ,
                                    station = str_sub(  PZ , 7 , nchar( PZ ) - 4 ) ,
                                    path_pz = paste0( stem_path , PZ  ) ,
@@ -561,6 +561,7 @@ for (i in 1:length(stacked_list)) {
               }
             # 
           }
+          # When dealing with acceleration signals, the set of spectral accelerations (Sa_***) need to be included in the final dataframe containing all parameters
           if ( names(stacked_tables)[i] == "accel"){
             # create Sa table
             Sa_max_table <- do.call("rbind", Sa_max)
@@ -574,7 +575,7 @@ for (i in 1:length(stacked_list)) {
               names(Sa_res_table)[n] <- paste0("Res_Sa_", sPeriod[n], "_s")   }
           }
           #
-          # fill them in a table
+          # Assemble all parameters in a table, and keep track of filtering frequency, instrumentation channel, earthquake event and signal type ("motion")
           #
           stacked_tables[[i]][[j]][[k]][[l]] <-  if ( names(stacked_tables)[i] == "accel"){ cbind.data.frame(  station, epidistance , stalat, stalon , maxHe , maxHn , maxEN , maxGM , maxRes, 
                                                                                                                Sa_max_table , Sa_gm_table , Sa_res_table,
@@ -596,6 +597,7 @@ for (i in 1:length(stacked_list)) {
   }
   parameters_table[[i]] <- do.call("rbind", parameters_table[[i]])
 }
+# Join acceleration-, velocity- and displacement-related parameters as a final table
 parameters_table <- left_join(  parameters_table[[1]] , parameters_table[[2]] ,   by = c("station","stalat","stalon", "epidistance", "event" , "filt" , "chan" ) ) %>%
                          left_join( . , parameters_table[[3]] ,by = c("station","stalat","stalon", "epidistance", "event" , "filt" , "chan" ) ) 
 endtime <- Sys.time()
