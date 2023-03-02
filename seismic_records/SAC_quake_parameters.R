@@ -180,14 +180,14 @@ list_pz <- do.call("rbind", list_pz) %>% rename(. , "PZ"="." ,"event"="Var1","ch
 
 
 head(list_pz)
-list_pz$PZ       <- list_pz$PZ %>% as.character()
-list_pz$station  <- str_sub(  list_pz$PZ , 7 , nchar(list_pz$PZ %>% as.character()) - 4 )
-list_pz$path_pz  <- paste0( list_pz$stem_path , list_pz$PZ )
-list_pz$exp_name <- paste( list_pz$event , list_pz$channel ,list_pz$station , 
-                           str_sub( list_pz$PZ , nchar(list_pz$PZ) - 2 ,  nchar(list_pz$PZ)  ) ,sep = "_" )
-
-list_pz$exists <- case_when(  file.exists( list_pz$path_pz) ~ TRUE,   TRUE ~ FALSE )
-list_pz <- list_pz[list_pz$exists == TRUE,]
+list_pz <- list_pz %>% mutate( . , PZ = PZ %>% as.character() ,
+                                   station = str_sub(  PZ , 7 , nchar( PZ ) - 4 ) ,
+                                   path_pz = paste0( stem_path , PZ  ) ,
+                                   exp_name = paste( event , channel , station ,
+                                                     str_sub( PZ , nchar( PZ ) - 2 ,  nchar( PZ)  ) ,sep = "_" ) ,
+                                   exists = case_when(  file.exists( path_pz) ~ TRUE,   TRUE ~ FALSE )   ) %>%
+                       
+                      filter ( . , .$exists == TRUE)
 
 # Read the PZ files and store them into the list "pzdata" by keeping track of which earthquake/station/channel they are associated
 pzdata <- list()
@@ -220,14 +220,13 @@ list_sac <- apply ( file_list_sac , 1 , function(x){ if( length(list.files( path
                                                "motion"="Var4","stem_path"="path")
 
 # Complete the dataframe by extracting station name, building the file path (export name) and verifying existence
-list_sac$SAC       <- list_sac$SAC %>% as.character()
-list_sac$station   <- str_sub(  list_sac$SAC ,  1 ,  nchar(list_sac$SAC %>% as.character()) - 4 )
-list_sac$path_sac  <- paste0( list_sac$stem_path , "/" , list_sac$SAC )
-list_sac$exp_name  <- paste0( list_sac$event   , "_"  , list_sac$channel , "_" , list_sac$filtering , "Hz_" , list_sac$motion , "_" , 
-                              list_sac$station , "_"  , str_sub( list_sac$SAC , nchar(list_sac$SAC) - 2 ,  nchar(list_sac$SAC)  )  )
-
-list_sac$exists <- case_when(  file.exists( list_sac$path_sac) ~ TRUE,   TRUE ~ FALSE )
-list_sac <- list_sac[list_sac$exists == TRUE,]
+list_sac <- list_sac %>% mutate( . , SAC = SAC %>% as.character()  ,
+                                     station  =  str_sub(  SAC ,  1 ,  nchar( SAC ) - 4 ) ,
+                                     path_sac =  paste0(  stem_path , "/" ,   SAC ) ,
+                                     exp_name =  paste0(  event   , "_"  , channel , "_" , filtering , "Hz_" ,  motion , "_" , 
+                                                          station , "_"  , str_sub( SAC , nchar( SAC) - 2 ,  nchar( SAC)  )  ) ,
+                                     exists   =  case_when(  file.exists(  path_sac) ~ TRUE,   TRUE ~ FALSE )  ) %>%
+                         filter( . , .$exists == TRUE )
 
 # Read the SAC files and store them into a list with their export name
 sacdata <- list()
@@ -322,6 +321,7 @@ for(i in 1:length(sacdata)){
   }
 df_test_new <- data.frame(  time_sac = df_test_time %>% as.POSIXlt()  , name =  df_test_name )
 df_test_new$event <- str_split_fixed(  df_test_new$name , fixed("_") , n = 6)[,1]
+
 df_test_new <- left_join( df_test_new , earthquakes_info[ , c("event","date_bis") ] %>% unique() ) %>% rename( . , "date_event"="date_bis")
 df_test_new$time_difference <-  difftime(  df_test_new$time_sac  ,  df_test_new$date_event , units = "mins") %>% as.numeric() %>% round ( . , digits = 2)
 head(df_test_new , 4 )
@@ -391,7 +391,7 @@ dev.off()
 ###    RETRIEVE METADATA FROM POLE ZERO FILES DUE TO INCOMPLETENESS OF SAC META         ###
 ###########################################################################################
 
-
+# Use the PZ files previously read into a list to retrieve: station name, latitude & longitude, event name and instrumentation channels.
 station_name = c() ; station_latitude = c() ; station_longitude = numeric() ; event = c() ; sampling = c()
 for (i in 1:length(pzdata)){
   station_name[i] <- str_split_fixed(names(pzdata)[[i]] , pattern = "_" , n = 4)[,3]
@@ -414,7 +414,7 @@ head(station_info, 4)
 ###########################################################################################
 
 
-##  Metadata in SAC files are sometimes incomplete, hence the need  to assign POLEZERO (PZ) metadata to SAC metadata
+##  Metadata in SAC files are sometimes incomplete, hence the need  to assign POLEZERO (PZ) metadata to SAC metadata, using the routine below
 for(i in 1:length(sacdata_clip) ){
     #
     eventi  <- str_split_fixed(  names(sacdata_clip)[[i]] , "_" , n = 6 )[,1]
@@ -432,10 +432,12 @@ for(i in 1:length(sacdata_clip) ){
 #####    ORGANIZE SAC DATA IN A TREE STRUCTURE AS STACKED LISTS                     #######
 ###########################################################################################
 
-
+# The Tree Structure, keeping track of signal type (ex: acc), earthquake event names, instrumentation channels (ex: HH or BH), filtering frequency, is
+# created here after using the "exp name" of the clipped SAC files
 
 # create list of acceleration and velocity
 stacked_list <-  rep( list( list() ) , levels(earthquakes_info$motion) %>% length  ) %>% setNames( . , levels(earthquakes_info$motion ))  
+
 # fill each item of the list with event names
 for (i in 1:length(stacked_list)) {
   stacked_list[[i]] <- rep( list( list() ) , unique(earthquakes_info$event ) %>% length  ) %>% setNames( . , unique(earthquakes_info$event) )
@@ -470,6 +472,8 @@ for (i in 1:length(stacked_list)) {
 #####    CALCULATE EARTHQUAKE PARAMETERS ON SAC FILES POPULATING THE TREE           #######
 ###########################################################################################
 
+# Using the previous Tree Structure, multiple parameters are extracted from earthquake signals which are always considered in pair (EW & NS component)
+# These parameters include notably Arias parameters, Peak amplitudes etc ...
 
 stacked_tables    <-  rep( list( list() ) , levels(earthquakes_info$motion) %>% length  ) %>% setNames( . , levels(earthquakes_info$motion ))     
 parameters_table  <-  rep( list( list() ) , levels(earthquakes_info$motion) %>% length  ) %>% setNames( . , levels(earthquakes_info$motion ))       
