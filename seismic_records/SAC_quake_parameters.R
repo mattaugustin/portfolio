@@ -26,40 +26,42 @@ arias_parameters   <- function(step , accel_1 , accel_2){
   time_vec <- data.frame(seq(0,step*(length(accel_1)-1), step))
   arias_df <- cbind (  time_vec , data.frame(accel_1) , data.frame(accel_2))
   names(arias_df) <- c("time","acc_ew","acc_ns")
+  G_const <- 9.80665
   #
-  arias_ew_g <- c() ; arias_ns_g <- c()  ;arias_ew_m <- c() ; arias_ns_m <- c() ; arias_stats <- data.frame() ;
+  arias_ew_g <- c()  ;  arias_ns_g <- c()   ;  arias_ew_m <- c() ;  arias_ns_m <- c()   ;   
+  ew_m_time_5 <- c() ;  ew_m_time_95 <- c() ; ns_m_time_5 <- c() ;  ns_m_time_95 <- c() ; ew_m_time_diff <- c() ; ew_m_time_diff <- c() ;
   #
-  arias_ew_g    <- cumsum((arias_df[,2]/980.665 )^2)*pi*step/2/G_const
-  arias_ns_g    <- cumsum((arias_df[,3]/980.665 )^2)*pi*step/2/G_const
-  arias_ew_m    <- cumsum((arias_df[,2]/100     )^2)*pi*step/2/G_const
-  arias_ns_m    <- cumsum((arias_df[,3]/100     )^2)*pi*step/2/G_const      
-  #
-  arias_df <- cbind( arias_df , data.frame(arias_ew_g) , data.frame(arias_ns_g) , data.frame(arias_ew_m),data.frame(arias_ns_m)  )
-  ew_g_5pct  <- 0.05*max( arias_df$arias_ew_g  )
-  ew_g_time_5 <-  arias_df[abs(arias_df$arias_ew_g - ew_g_5pct) == min(abs(arias_df$arias_ew_g - ew_g_5pct)),"time"]
-  ew_g_95pct  <-  0.95*max( arias_df$arias_ew_g  )
-  ew_g_time_95 <-  arias_df[abs(arias_df$arias_ew_g - ew_g_95pct) == min(abs(arias_df$arias_ew_g - ew_g_95pct)),"time"]
-  ew_g_time_diff <- ew_g_time_95 - ew_g_time_5
-  #
-  ns_g_5pct   <-  0.05*max( arias_df$arias_ns_g  )
-  ns_g_time_5 <-  arias_df[abs(arias_df$arias_ns_g - ns_g_5pct) == min(abs(arias_df$arias_ns_g - ns_g_5pct)),"time"]
-  ns_g_95pct  <-  0.95*max( arias_df$arias_ns_g  )
-  ns_g_time_95 <-  arias_df[abs(arias_df$arias_ns_g - ns_g_95pct) == min(abs(arias_df$arias_ns_g - ns_g_95pct)),"time"]
-  ns_g_time_diff <- ns_g_time_95 - ns_g_time_5
-  #
-  ew_m_5pct   <-  0.05*max( arias_df$arias_ew_m  )
-  ew_m_time_5 <-  arias_df[abs(arias_df$arias_ew_m - ew_m_5pct) == min(abs(arias_df$arias_ew_m - ew_m_5pct)),"time"]
-  ew_m_95pct  <-  0.95*max( arias_df$arias_ew_m  )
-  ew_m_time_95 <-  arias_df[abs(arias_df$arias_ew_m - ew_m_95pct) == min(abs(arias_df$arias_ew_m - ew_m_95pct)),"time"]
+  arias_df <-  arias_df %>% mutate ( . , arias_ew_g = cumsum(( acc_ew /980.665 )^2)*pi*step/2/G_const ,
+                                         arias_ns_g = cumsum(( acc_ns /980.665 )^2)*pi*step/2/G_const ,
+                                         arias_ew_m = cumsum(( acc_ew /100     )^2)*pi*step/2/G_const ,
+                                         arias_ns_m = cumsum(( acc_ns /100     )^2)*pi*step/2/G_const  )
+  
+  arias_values <- function( x ){
+    arias_max       <-  max(x)
+    nrg_5pct        <- 0.05*max(x) ;
+    nrg_5pct_pos    <- which.min( (abs(x - nrg_5pct)) )
+    nrg_95pct       <- 0.95*max(x) ;
+    nrg_95pct_pos   <- which.min( (abs(x - nrg_95pct)) )
+    list( arias_max, nrg_5pct_pos , nrg_95pct_pos )
+  }
+  
+  time_arias <- apply ( arias_df[, 4:7] , 2 , arias_values ) %>% unlist
+  
+  arias_ew_g <- time_arias[[1]]
+  arias_ns_g <- time_arias[[4]]
+  arias_ew_m <- time_arias[[7]]
+  arias_ns_m <- time_arias[[10]]
+  
+  ew_m_time_5   <- arias_df[ time_arias[[8]]  , "time" ] 
+  ew_m_time_95  <- arias_df[ time_arias[[9]]  , "time" ] 
+  
+  ns_m_time_5   <- arias_df[ time_arias[[11]]  , "time" ] 
+  ns_m_time_95  <- arias_df[ time_arias[[12]]  , "time" ] 
+  
   ew_m_time_diff <- ew_m_time_95 - ew_m_time_5
-  #
-  ns_m_5pct   <-  0.05*max( arias_df$arias_ns_m  )
-  ns_m_time_5 <-  arias_df[abs(arias_df$arias_ns_m - ns_m_5pct) == min(abs(arias_df$arias_ns_m - ns_m_5pct)),"time"]
-  ns_m_95pct  <-  0.95*max( arias_df$arias_ns_m  )
-  ns_m_time_95 <-  arias_df[abs(arias_df$arias_ns_m - ns_m_95pct) == min(abs(arias_df$arias_ns_m - ns_m_95pct)),"time"]
   ns_m_time_diff <- ns_m_time_95 - ns_m_time_5
-  #
-  parameters <- list ( max(arias_ew_g),max(arias_ns_g),max(arias_ew_m), max(arias_ns_m) , ew_m_time_diff, ns_m_time_diff , ew_m_time_5 ,ew_m_time_95 , ns_m_time_5 ,ns_m_time_95   )
+  
+  parameters <- list ( arias_ew_g, arias_ns_g , arias_ew_m ,  arias_ns_m , ew_m_time_diff, ns_m_time_diff , ew_m_time_5 ,ew_m_time_95 , ns_m_time_5 ,ns_m_time_95   )
   names(parameters) <- c("arias_ew_g","arias_ns_g","arias_ew_m","arias_ns_m","ew_m_time_diff","ns_m_time_diff","ew_m_time_5" ,"ew_m_time_95" , "ns_m_time_5" ,"ns_m_time_95")
   return(parameters)
 }
