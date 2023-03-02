@@ -138,7 +138,7 @@ resp_spectra_harsh <- function( acceleration , duration , nStep, per ){
 earthquakes_info <- read_csv("portfolio/seismic_records/earthquakes_info.csv", trim_ws = FALSE)  %>% as.data.frame()
 head(earthquakes_info)
 
-
+# To be defined by the user: instrumentation channel, filtering upper corner frequencies, type of signals (acc...), orientation EW("E") & NS ("N") 
 data_directory   <- "portfolio/seismic_records/"
 channel          <- c("Bchan","Hchan")
 filtering        <- c(10,25,35)
@@ -157,7 +157,10 @@ list_station            <-  list.files( path = file_list_station$path , recursiv
 ###   READ  POLE-ZERO FILES  FOR ALL EVENTS  AND STATIONS         ###
 #####################################################################
 
-## using "apply" method
+##  Using "list_station", create a dataframe containing the different station names, instrumentation channels, earthquake names ...
+##      and use these to construct the path name of the PZ files 
+
+## (a) using "apply" method ...
 list_pz <- apply ( file_list_station , 1 , function(x){ if( length(list.files( path = x[3] , recursive = F))>0  ){ 
                                #
                                list.files( path = x[3] , recursive = F) %>% data.frame() %>% 
@@ -166,7 +169,7 @@ list_pz <- apply ( file_list_station , 1 , function(x){ if( length(list.files( p
 
 
 
-##  using "loop for" method
+## or (b) using "loop for" method
 list_pz <- list()
 for(i in 1:nrow(file_list_station)){
   if( length( list.files( path = file_list_station$path[i] , recursive = F)) > 0  ){
@@ -177,7 +180,7 @@ list_pz <- do.call("rbind", list_pz) %>% rename(. , "PZ"="." ,"event"="Var1","ch
 
 
 head(list_pz)
-list_pz$PZ       <-  list_pz$PZ %>% as.character()
+list_pz$PZ       <- list_pz$PZ %>% as.character()
 list_pz$station  <- str_sub(  list_pz$PZ , 7 , nchar(list_pz$PZ %>% as.character()) - 4 )
 list_pz$path_pz  <- paste0( list_pz$stem_path , list_pz$PZ )
 list_pz$exp_name <- paste( list_pz$event , list_pz$channel ,list_pz$station , 
@@ -186,7 +189,7 @@ list_pz$exp_name <- paste( list_pz$event , list_pz$channel ,list_pz$station ,
 list_pz$exists <- case_when(  file.exists( list_pz$path_pz) ~ TRUE,   TRUE ~ FALSE )
 list_pz <- list_pz[list_pz$exists == TRUE,]
 
-
+# Read the PZ files and store them into the list "pzdata" by keeping track of which earthquake/station/channel they are associated
 pzdata <- list()
 for (i in 1:nrow(list_pz)){
   pzdata[[i]] <- read.csv(list_pz$path_pz[[i]], stringsAsFactors = FALSE)
@@ -201,11 +204,12 @@ View(pzdata)
 ###   READ  SAC-DATA  FROM FOLDERS                                ###
 #####################################################################
 
-
+# Create a dataframe of all possible directories that could contain SAC signals, using earthquake, instrumentation channel, filtering frequencies, signal types (ex: acc) ...
 file_list_sac       <- expand.grid(  earthquakes_info$event %>% unique , channel , filtering , motion ) 
 file_list_sac$path  <- paste0(  data_directory , file_list_sac$Var1, "/", file_list_sac$Var2 , "_" , 
                                 file_list_sac$Var3 , "Hz/" , file_list_sac$Var4 )
 
+# ... and for each directory, store in a dataframe the names of SAC signals possibly existing into it
 ## using "apply" method
 list_sac <- apply ( file_list_sac , 1 , function(x){ if( length(list.files( path = x[5] , recursive = F))>0  ){ 
             #
@@ -215,6 +219,7 @@ list_sac <- apply ( file_list_sac , 1 , function(x){ if( length(list.files( path
             do.call("rbind", .) %>% rename(. , "SAC"="." ,"event"="Var1","channel"="Var2","filtering"="Var3",
                                                "motion"="Var4","stem_path"="path")
 
+# Complete the dataframe by extracting station name, building the file path (export name) and verifying existence
 list_sac$SAC       <- list_sac$SAC %>% as.character()
 list_sac$station   <- str_sub(  list_sac$SAC ,  1 ,  nchar(list_sac$SAC %>% as.character()) - 4 )
 list_sac$path_sac  <- paste0( list_sac$stem_path , "/" , list_sac$SAC )
@@ -224,7 +229,7 @@ list_sac$exp_name  <- paste0( list_sac$event   , "_"  , list_sac$channel , "_" ,
 list_sac$exists <- case_when(  file.exists( list_sac$path_sac) ~ TRUE,   TRUE ~ FALSE )
 list_sac <- list_sac[list_sac$exists == TRUE,]
 
-
+# Read the SAC files and store them into a list with their export name
 sacdata <- list()
 start_sac <- Sys.time()
 for (i in 1:nrow(list_sac)){
@@ -248,11 +253,13 @@ earthquakes_info <- left_join(earthquakes_info , sac_features ) %>% relocate( . 
 ###                     VIEW  SIGNAL FOR A GIVEN SAC FILE                               ###
 ###########################################################################################
 
-## choose an i index between 1 and length(sacdata) to plot the signals
+## To plot an earthquake signal associated to a SAC file, choose an i index between 1 and length(sacdata)
+
 i <- 1  
 main_title_sac <-  paste0( str_split_fixed( names(sacdata)[i] , "_", n=6)[,1] %>% toupper(), "  " ,
                            str_split_fixed( names(sacdata)[i] , pattern = "_" , n =6)[,4] , 
                            "  signal recorded at station  " ,  sacdata[[i]]$meta$station )
+
 plot_signal( data = sacdata[[i]]  , col = "darkred" ,  lwd = 0.5 ,
              main  = main_title_sac  ,
              xlab = "time of event" , ylab = "amplitude"  )
@@ -273,6 +280,8 @@ abline(v=seq(sacdata[[i]]$meta$starttime,
 ###  Hence, find out which SAC files includes inconsistent "start times", aka "start times" more than 1 day before or after the earthquake occurrence date and time. 
 df_test_time <- as.POSIXct(x = "2000-01-01 10:00:00" , tz = "UTC" )
 df_test_name <- as.character()
+
+# Store the "start time" of SAC files as registered in their metadata in a dataframe, along with the associated event name
 for(i in 1:length(sacdata)){
   #
   df_test_time[i]  <-   sacdata[[i]]$meta$starttime %>% as.POSIXlt()
@@ -280,13 +289,16 @@ for(i in 1:length(sacdata)){
 }
 df_test   <-   data.frame(  time_sac = df_test_time %>% as.POSIXlt()  , name =  df_test_name )
 df_test$event <- str_split_fixed(  df_test$name , fixed("_") , n = 6)[,1]
+
+# Join with the "earthquakes info" dataframe which contains earthquake occurrence date, compare the SAC "startime" and earthquake occurrence date.
+# Any result more than 24h long is a inconsistency
 df_test <- left_join( df_test , earthquakes_info[ , c("event","date_bis") ] %>% unique()  ) %>% rename( . , "date_event"="date_bis")
 df_test$time_difference <-  difftime(  df_test$time_sac  ,  df_test$date_event , units = "mins") %>% as.numeric() %>% round ( . , digits = 2)
 head(df_test , 4 )
 max( abs(df_test$time_difference)  ) < 24*60  ## 1 day converted in minutes
 
 
-##  For these time-inconsistent SAC files, redefine start-times shortly before earthquake occurrence
+##  For these time-inconsistent SAC files, redefine start-times in SAC metadata shortly before actual earthquake occurrence
 for(i in 1:length(sacdata)){
   #
   sac_event <- str_split_fixed(names(sacdata)[i],pattern = "_",n = 6)[,1]
@@ -300,7 +312,7 @@ for(i in 1:length(sacdata)){
 
 
 
-##   Verify using time difference values between SAC metadata and earthquake occurrence times that NO SAC metadata is containing errors.
+##   Verify now using time difference values between SAC metadata and earthquake occurrence times that NO SAC metadata is containing errors.
 df_test_time <- as.POSIXct(x = "2000-01-01 10:00:00" , tz = "UTC" )
 df_test_name <- as.character()
 for(i in 1:length(sacdata)){
@@ -324,8 +336,10 @@ max( abs(df_test_new$time_difference)  ) < 24*60  ## 1 day in minute
 ###########################################################################################
 
 
+## SAC signals can have a corresponding duration anywhere between a few minutes up to one hour, although the duration of interest (when the signal contains the
+## significant amplitudes) is only a few minutes. SAC signals should be clipped (=reduced) to their portion of physical interest.
+## Clip signals to 15 seconds before and 5 minutes after earthquake occurrence time.
 
-## clip signals to 15 seconds before and 5 minutes after earthquake occurrence time
 sacdata_clip <- list()
 for( i in 1:length(sacdata) ){
   #
@@ -343,7 +357,7 @@ names(sacdata_clip) <- names(sacdata)
 ###      PLOT SAC AND CLIPPED SAC SIGNALS  TO  VISUALIZE CLIPPING EFFECT                ###
 ###########################################################################################
 
-## choose an i index between 1 and length(sacdata) to plot the signal and the corresponding clipped version
+## To plot the original SAC signal and its corresponding clipped version, choose an i index between 1 and length(sacdata) 
 i <- 5  
 main_title_sac     <-  paste0( str_split_fixed( names(sacdata)[i] , pattern = "_" , n =6)[,1]  %>% toupper(), "  " ,
                                str_split_fixed( names(sacdata)[i] , pattern = "_" , n =6)[,4] , 
