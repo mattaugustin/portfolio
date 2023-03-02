@@ -19,8 +19,9 @@ library(eseis)    ; library(expm)
 library(scales)   ; library(lubridate)
 
 
-
-## accel1 and accel2 defined in cm/s2
+## "arias_parameters" takes a pair of seismograms (EW & NS) and corresponding time step to calculate Arias intensities & Arias Significant Time Duration
+## Arias STD <> time taken for the earthquake to release 90% of its energy, defined as T(A95) - T(A05), times to reach 95% and 5% of entire energy respectively. 
+## accel1 and accel2 defined in cm/s2, step in s
 arias_parameters   <- function(step , accel_1 , accel_2){
   #
   time_vec <- data.frame(seq(0,step*(length(accel_1)-1), step))
@@ -31,7 +32,8 @@ arias_parameters   <- function(step , accel_1 , accel_2){
   arias_ew_g <- c()  ;  arias_ns_g <- c()   ;  arias_ew_m <- c() ;  arias_ns_m <- c()   ;   
   ew_m_time_5 <- c() ;  ew_m_time_95 <- c() ; ns_m_time_5 <- c() ;  ns_m_time_95 <- c() ; ew_m_time_diff <- c() ; ew_m_time_diff <- c() ;
   #
-  arias_df <-  arias_df %>% mutate ( . , arias_ew_g = cumsum(( acc_ew /980.665 )^2)*pi*step/2/G_const ,
+  # calculate Arias cumulated release energy across the earthquake duration time steps
+  arias_df <-  arias_df %>% mutate ( . , arias_ew_g = cumsum(( acc_ew /980.665 )^2)*pi*step/2/G_const ,  
                                          arias_ns_g = cumsum(( acc_ns /980.665 )^2)*pi*step/2/G_const ,
                                          arias_ew_m = cumsum(( acc_ew /100     )^2)*pi*step/2/G_const ,
                                          arias_ns_m = cumsum(( acc_ns /100     )^2)*pi*step/2/G_const  )
@@ -47,6 +49,7 @@ arias_parameters   <- function(step , accel_1 , accel_2){
   
   time_arias <- apply ( arias_df[, 4:7] , 2 , arias_values ) %>% unlist
   
+  # Record earthquake Arias intensity for the pair of signals, using two different units (g.s and m/s)
   arias_ew_g <- time_arias[[1]]
   arias_ns_g <- time_arias[[4]]
   arias_ew_m <- time_arias[[7]]
@@ -58,6 +61,7 @@ arias_parameters   <- function(step , accel_1 , accel_2){
   ns_m_time_5   <- arias_df[ time_arias[[11]]  , "time" ] 
   ns_m_time_95  <- arias_df[ time_arias[[12]]  , "time" ] 
   
+  # Arias STD
   ew_m_time_diff <- ew_m_time_95 - ew_m_time_5
   ns_m_time_diff <- ns_m_time_95 - ns_m_time_5
   
@@ -66,7 +70,8 @@ arias_parameters   <- function(step , accel_1 , accel_2){
   return(parameters)
 }
 
-
+# "resp_spectra_harsh" serves to calculate spectral accelerations experienced by a device of natural structural period T when subject to an earthquake excitation. 
+# the function takes in the earthquake acceleration signal, its duration, number of signal datapoints and the set of T periods for which spectral amplitudes are sought
 resp_spectra_harsh <- function( acceleration , duration , nStep, per ){ 
   #
   #
@@ -96,6 +101,7 @@ resp_spectra_harsh <- function( acceleration , duration , nStep, per ){
     m <- (per[j]/(2*pi))^2  * k
     c <- 2*damp*(k*m)^(0.5)
     #
+    # check whether signal contains even or odd nb of datapoints, adapt frequency domain calculations accordingly 
     if(schoolmath::is.odd(nStep) == TRUE ){ nStep = nStep - 1  }
     for (l in 1:(nStep/2+1)){
       H[l] <- 1/(-m*w[l]*w[l] + sqrt(as.complex(-1))*c*w[l] + k) 
@@ -109,6 +115,7 @@ resp_spectra_harsh <- function( acceleration , duration , nStep, per ){
     }
     #
     #
+    # Calculate Pseudo Spectral Acceleration, Velocity and Displacement (PSA, PSV & PSD)
     utime <- Re(signal::ifft(u))
     umax[j] = max (abs(utime))
     vmax[j] = (2*pi/per[j])*umax[j]
