@@ -11,6 +11,7 @@ Particle beam transport modelling software (i.e. SIMION, CosyScript ...) commonl
 This gap is filled by means of external software, such as with this Octave code. The code output shows whether, and if so, how well, a multimass particle beam can be separated into single mass smaller beams. Using the beam transformation data (i.e. transfer matrices) recorded across the optical setup, the Octave routine projects and displays the beams spatial distribution in all planes where beam characteristics were recorded (via transfer matrices).       
 A beam is composed of N particles, each characterized by its size x (e.g mm) and angle orientation a (e.g. mrad) in the horizontal plane, and size y and angle b in the vertical plane respectively.
 
+
 > beam initial definition plotted in both horizontal and vertical planes.
 ![beamstart](https://user-images.githubusercontent.com/126000617/220470657-c73feaa1-bce4-4610-9f18-399615f7f661.png)
 
@@ -25,9 +26,11 @@ The routine includes :
 + setting and plotting beam particles across **selected** planes with tailored axes, using either beam horizontal or vertical component.
 
 
+
 > Three beams of nearly-identical mass particles projected across all observation planes, along with a corresponding particle count histogram. Axes are common to all planes.       
       
 ![partrack_enh_horiplane](https://user-images.githubusercontent.com/126000617/222761048-fbfbc6c2-f85b-40b5-a097-b44310533fd7.png)
+
 
 > Beams plotted in selected planes worthy of interest to the user. Axes are suited to each individual plane.      
       
