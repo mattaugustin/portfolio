@@ -3,7 +3,7 @@
 Welcome !     
 This directory provides select examples of code I have written in the last few years. This covers manipulating of small and large datasets, deriving diverse physics-related parameters, conducting data analysis, visualizing results in a clear and eye-appealing fashion, as well as producing maps and manipulating several spatial objects. Most of the code is written in R, but sequences in Octave (~Matlab) and SAC (Seismic Analysis Code) are also available.
 
-+ ** Predictions vs Observations I : SAC**  (R code)      
++ **Predictions vs Observations I : SAC**  (R code)      
 Earthquake signals recorded by seismic monitoring stations are frequently made available in so-called SAC format, requiring the use of Seismic Analysis Code (SAC) for their handling. Using RAW seismic data from stations operated during a recent earthquake, this work shows code routines for reading, identifying, treating, plotting and exporting suitably processed SAC signals and could be easily modified to handle additional settings (station number, filtering, different earthquakes).
   
 
