@@ -1,14 +1,13 @@
 close all ; clear all ; clc ;
 pkg load statistics;
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% IDENTIFY NUMBER OF PLANES FOR WHICH BEAM CHARACTERISTICS WERE RECORDED
 function [nb_plane] = plane_scanning( fn )
 
   fid = fopen (fn,"r");
-  % nb_plane = plane_scanning(fh);
-  % nb_plane = nb_plane / 2 ;
-
-  nb_plane = 0 ;
+  
 % Read the file line by line
 while ~feof(fid)
     line = fgetl(fid);
@@ -25,7 +24,7 @@ nb_plane = nb_plane / 2 ;
 endfunction
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% READ MATRIX
+% READ BEAM TRANSFER MATRICES
 function [m,n,i]=scanning(fid)
   i=0;
   while (1)
@@ -38,8 +37,8 @@ function [m,n,i]=scanning(fid)
     break
   endif
   i++;
-  m(i,:)=v(1:5)';
-  n(i,:)=v(6:11)';
+  m(i,:)=v(1:5)';   % store transformation coefficients associated to x, a, y, b and t
+  n(i,:)=v(6:11)';  % store the power coefficients associated to x, a, y and b, reflecting contribution of higher order effects
   endwhile
   fscanf(fid,"%s",1);
   % printf("Read transformation matrix \n" );
@@ -58,7 +57,7 @@ endfunction
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-% TRANSFORM PARTICLE BEAM USING TRANSFER MATRIX
+% TRANSFORM PARTICLE BEAM USING PREVIOUSLY-READ TRANSFER MATRIX
 function p=transform(p0,ps,m,n,l);
 %transforms rays accoridng to transfer matrix
   t0 = time ;
@@ -79,130 +78,7 @@ endfunction
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-% CALCULATE FULL WIDTH HALF MAXIMUM FOR 3 NEAR-MASS BEAMS
-function [fwhm,fwhm2,fwhm3,sp1,sp2]=histo_ens(v1,v2,v3,bin,pn);
-%generate histogram from 'vec' into 'bin' bins
-  x1=min(v1); x2=max(v1);
-  y1=min(v2); y2=max(v2);
-  z1=min(v3); z2=max(v3);
-
-% set binsizes
-  dx=(x2-x1)/bin;
-  dxexp=floor(log10(dx)); % exponent    (b in n=a*10^b)
-  dxsig=dx*10^-dxexp;     % significant (a in n=a*10^b)
-  sig=[1,2,5]; % allowed factors for binsizes
-  dx=max(sig(find(dxsig>=sig)))*10^dxexp;
-% meme ope pour y et z
-  dy=(y2-y1)/bin;
-  dyexp=floor(log10(dy));
-  dysig=dy*10^-dyexp;
-  sig=[1,2,5];
-  dy=max(sig(find(dysig>=sig)))*10^dyexp;
-%
-  dz=(z2-z1)/bin;
-  dzexp=floor(log10(dz));
-  dzsig=dz*10^-dzexp;
-  sig=[1,2,5];
-  dz=max(sig(find(dzsig>=sig)))*10^dzexp;
-
-% convert vec into bin indices
-  veci=(v1-(x1+x2)/2)/dx;
-  veci=floor(veci);
-  veci0=1-min(veci);
-  veci+=veci0;
-  binxn=max(veci);
-%
-  vecj=(v2-(y1+y2)/2)/dy;
-  vecj=floor(vecj);
-  vecj0=1-min(vecj);
-  vecj+=vecj0;
-  binyn=max(vecj);
- %
-  veck=(v3-(z1+z2)/2)/dz;
-  veck=floor(veck);
-  veck0=1-min(veck);
-  veck+=veck0;
-  binzn=max(veck);
-%
-% generate bin coordinates (LH side of bin)
-  binx=1:binxn;
-  binx-=veci0;
-  binx*=dx;
-  binx+=(x1+x2)/2;
-%
-  biny=1:binyn;
-  biny-=vecj0;
-  biny*=dy;
-  biny+=(y1+y2)/2;
- %
-  binz=1:binzn;
-  binz-=veck0;
-  binz*=dz;
-  binz+=(z1+z2)/2;
-%
-  % fill bins
-  for i=1:binxn
-    binxy(i)=sum(veci==i);
-  endfor
-
-  for j=1:binyn
-    binyy(j)=sum(vecj==j);
-  endfor
-
-  for k=1:binzn
-    binzy(k)=sum(veck==k);
-  endfor
-
-% find the FWHM
-  hmax=max(binxy)/2;
-  tmp=find(binxy>1.2*hmax);
-  xl1=binx(tmp(1)); xr2=binx(tmp(length(tmp)));
-  tmp=find(binxy>0.8*hmax);
-  xl2=binx(tmp(1)); xr1=binx(tmp(length(tmp)));
-  xl=(xl1+xl2+dx)/2; xr=(xr1+xr2+dx)/2;
-  fwhm=xl-xr;
-
-  hmax2=max(binyy)/2;
-  tmp2=find(binyy>1.2*hmax2);
-  yl1=biny(tmp2(1)); yr2=biny(tmp2(length(tmp2)));
-  tmp2=find(binyy>0.8*hmax2);
-  yl2=biny(tmp2(1)); yr1=biny(tmp2(length(tmp2)));
-  yl=(yl1+yl2+dy)/2; yr=(yr1+yr2+dy)/2;
-  fwhm2=yl-yr;
-
-  hmax3=max(binzy)/2;
-  tmp3=find(binzy>1.2*hmax3);
-  zl1=binz(tmp3(1)); zr2=binz(tmp3(length(tmp3)));
-  tmp3=find(binzy>0.8*hmax3);
-  zl2=binz(tmp3(1)); zr1=binz(tmp3(length(tmp3)));
-  zl=(zl1+zl2+dz)/2; zr=(zr1+zr2+dz)/2;
-  fwhm3=zl-zr;
-
-  % spread between curves regarding fwhm
-  sp1=abs(xl-yr) %spread between M- and Mo
-  sp2=abs(zl-xr) %spread between M- and Mo
-
-% plot profile
-  if (pn!=-1)
-    subplot (2,2,2+pn); hold on ;
-	grid on;
-	set(gca, 'GridLineStyle', '-');
-    grid(gca,'minor') ;
-	%stairs( [binx,binx(binxn)+dx], [binxy,binxy(binxn)],"k",[biny,biny(binyn)+dy], [binyy,binyy(binyn)],"b",[binz,binz(binzn)+dz], [binzy,binzy(binzn)],"r" );
-	[xs,xys]=stairs([binx,binx(binxn)+dx], [binxy,binxy(binxn)]);
-	[ys,yys]=stairs([biny,biny(binyn)+dy], [binyy,binyy(binyn)]);
-	[zs,zys]=stairs([binz,binz(binzn)+dz], [binzy,binzy(binzn)]);
-	plot(xs,xys,"k",ys,yys,"b",zs,zys,"r");
-	axis("labelx","ticx"); % axis([-5 5]) ;
-  axis("labely","ticy"); axis([-5 5 0 1e4]) ;
-	xlabel("particle horizontal position x"); ylabel("particle count") ;
-	% hold off ;
-  endif
-endfunction
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-% CALCULATE HISTOGRAM STEP
+% CALCULATE BIN STEP REQUIRED FOR BUILDING THE PARTICLE COUNT HISTOGRAM
 function [ dx ] = histogram_step_enhanced( beam , component , nb_bin) ;
 
 %  Prepare settings based on "vertical" or "horizontal"
@@ -232,15 +108,11 @@ endfunction
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-% CREATE HISTOGRAMS (BIN OPTIMIZED) FROM ORIGINAL AND TRANSFORMED BEAM
+% CREATE HISTOGRAMS ASSOCIATED TO PARTICLE COUNT FOR A GIVEN BEAM
 function [stairs_histo_beam] = set_histogram_beam_enhanced( beam , component , nb_plane , nb_bin , dx );
 %
 %generate histogram from 'vec' into 'bin' bins
-  % x1 = min(beam{1}(:,1))        ; x2 = max(beam{1}(:,1)) ;         % original    beam
-  % y1 = min(beam{nb_plane}(:,1)) ; y2 = max(beam{nb_plane}(:,1)) ;  % final transformed beam
-  % x_min = min ( x1 , y1 ) ;
-  % x_max = max ( x2 , y2 ) ;
-
+  
   if ( strncmpi(component , "horizontal" , 3 )    )
       comp_col = 1 ;
   else ( strncmpi( component , "vertical" , 3)   )
@@ -281,8 +153,6 @@ endfor
 for beam_plane=1:nb_plane
       x = [histo_beam{beam_plane}(1,1)-dx , histo_beam{beam_plane}(1,:) , histo_beam{beam_plane}(1,end)+dx ] ;
       y = [ 0 , histo_beam{beam_plane}(2,:) , 0 ] ;
-      %xy = stairs( x , y ) ;
-      %stairs_histo_beam{beam_plane} = xy ;
       [x_stairs , y_stairs]         =  stairs ( x , y ) ;
       stairs_histo_beam{beam_plane} = [x_stairs , y_stairs] ;
      % clear x ; clear y ; clear x_stairs ; clear y_stairs ;
@@ -293,10 +163,10 @@ endfunction
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-% PLOT BEAMS & HISTOGRAMS FROM ORIGINAL AND TRANSFORMED BEAM
+% PLOT PROJECTED BEAMS & HISTOGRAMS FOR USER-SELECTED PLANES
 function plot_selected_beam_enhanced( beam , component , beam_plane , nb_bin , colour_name ) ;  % red, black, blue, green, magenta, cyan
 
-% Prepare axis labels
+% Prepare axis labels depending on which beam components are desired (horizontal/vertical)
   if ( strncmpi(component , "horizontal" , 3 )    )
       label_x_axis = "particle horizontal position x (mm)" ;   label_y_axis = ("particle horizontal angle a (mrad)") ;
       comp_col = 1 ;
@@ -306,23 +176,6 @@ function plot_selected_beam_enhanced( beam , component , beam_plane , nb_bin , c
   endif
 %
 
-% Prepare axis boundaries
-  %beam = beam_delta  ;
-  %component = "horizontal" ;
-  % beam_plane = 5 ;
-  %beam_plane = [2 4] ;
-  % nb_part  = 50000 ;
-  % dx = bin_step ;
-  %colour_name = "black" ;
-  % n_part = rows( beam{1} );
-
-  % index_plane = 2 ;
-
-
-  % Calculate bin_step for each plane
-  % calculate boundaries on x , y and count number on each plane
-  % recalculate histogram for each plane
-  % plot for each plane
 
 for index_plane=1:length(beam_plane)
 
@@ -336,9 +189,7 @@ for index_plane=1:length(beam_plane)
 %
 
 % Calculate bin_step for plot horizontal axis
-  % x_min = min( beam{beam_plane(index_plane)}(:,comp_col) )  ;  %  selected beam
-  % x_max = max( beam{beam_plane(index_plane)}(:,comp_col) )  ;  %  selected beam
-
+  
   dx=(x_max - x_min )/ nb_bin;
   dxexp=floor(log10(dx));   % exponent    (b in n=a*10^b)
   dxsig=dx*10^-dxexp;       % significant (a in n=a*10^b)
@@ -347,9 +198,7 @@ for index_plane=1:length(beam_plane)
 
 
 % Prepare histogram values/settings prior to plotting
-  %  x1 = min_beams_x  ;  % min(beam{beam_plane(index_plane)}(:,comp_col))  ;
-  % x2 = max_beams_x  ;  % max(beam{beam_plane(index_plane)}(:,comp_col))  ;         % original    beam
-
+ 
 % convert vec into bin indices for for beams in all planes
   veci  = (beam{beam_plane(index_plane)}(:,comp_col) - (x_min+x_max)/2)/dx;
   veci  = floor(veci)  ;
@@ -362,7 +211,7 @@ for index_plane=1:length(beam_plane)
   binx-=veci0;      % binx = binx - veci0 ;
   binx = binx*dx ;
   binx+=(x_min+x_max)/2;  % binx = binx + (x1+x2)/2;    % adjust beam indices if beam not centered at x=0
-  binx = round(binx*100)/100 ;                    % round at 2 digits precision to ensure "round" values for bin coordinates <> -0.03
+  binx = round(binx*100)/100 ;                          % round at 2 digits precision to ensure "round" values for bin coordinates <> -0.03
   ## instead of -0.030008
 
 % fill bins
@@ -373,8 +222,6 @@ for index_plane=1:length(beam_plane)
   %histo_beam{index_plane} = [binx ; biny] ;
   histo_beam  = [binx ; biny] ;
 
-  %x = [histo_beam{index_plane}(1,1)-dx , histo_beam{index_plane}(1,:) , histo_beam{index_plane}(1,end)+dx ] ;
-  %y = [ 0 , histo_beam{index_plane}(2,:) , 0 ] ;
   x = [histo_beam(1,1)-dx , histo_beam(1,:) , histo_beam(1,end)+dx ] ;
   y = [ 0 , histo_beam(2,:) , 0 ] ;
 
@@ -389,24 +236,11 @@ for index_plane=1:length(beam_plane)
 endfor
 %%%
 
-% x_boundary
-% y_boundary
-% count_boundary
-% stairs_histo_beam{1}
-
-
-%%  Plot beams in all plane !
-
-  %figure(1) ; pause (0.1) ;
-  %clf ; set(gcf,'position', [20 100 300*col_nb 450]) ;
-  %fsz = 12 ;
-  %lw = 2;
-  col_nb = length( beam_plane ) ;
+col_nb = length( beam_plane ) ;
 
 
 for index_plane=1:col_nb
 
-  %  subplot_special( nb_plane, 1 , beam_plane , fsz ) ; hold on ;                 % subplot(nb_plane, rowId (1 if beam, 2 if histo) , plotId , fontsize )
   subplot( 2 , col_nb , index_plane ) ; hold on ;
   plot([-x_boundary(index_plane) x_boundary(index_plane) ],[0 0] , '--', "color",[0 0 0] + 0.5 ) ;        % Zero horizontal dashed grey (0.7)line
   plot([0 0],[-y_boundary(index_plane) y_boundary(index_plane) ] , '--', "color",[0 0 0] + 0.5 ) ;        %      vertical
@@ -419,7 +253,6 @@ for index_plane=1:col_nb
 
 % Plot corresponding histogram
 
-  % subplot_special( nb_plane, 2 , beam_plane , fsz ) ; hold on ;                 %    subplot(nb_plane, rowId (1 if beam, 2 if histo) , plotId , fontsize )
   subplot( 2 , col_nb , index_plane + col_nb ) ; hold on ;
   plot([-x_boundary(index_plane) x_boundary(index_plane) ],[0 0] , '--', "color",[0 0 0] + 0.5 ) ;        %    Zero horizontal dashed grey (0.7)line
   plot([0 0],[-y_boundary(index_plane) y_boundary(index_plane) ] , '--', "color",[0 0 0] + 0.5 ) ;        %         vertical
@@ -434,10 +267,10 @@ endfor
 %
 
 endfunction
-%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-% PLOT BEAMS & HISTOGRAMS FROM ORIGINAL AND TRANSFORMED BEAM
+% PLOT PROJECTED BEAMS & HISTOGRAMS FOR ALL PLANES
 function plot_beam_enhanced( beam , component , nb_plane , nb_bin , bin_step , colour_name ) ;  % red, black, blue, green, magenta, cyan
 
 % Prepare axis labels
@@ -451,13 +284,7 @@ function plot_beam_enhanced( beam , component , nb_plane , nb_bin , bin_step , c
 %
 
 % Prepare axis boundaries
-  % beam = beam_delta ;
-  % nb_plane = 5 ;
-  % n_part  = 5000 ;
   dx = bin_step ;
-  % colour_name = "red" ;
-
-  % n_part = rows( beam{1} );
   min_beams_x  = min( min(beam{1}(:,comp_col)) , min(beam{nb_plane}(:,comp_col)) ) ;
   max_beams_x  = max( max(beam{1}(:,comp_col)) , max(beam{nb_plane}(:,comp_col)) ) ;
   x_boundary   = max( abs(min_beams_x)  , max_beams_x  ) *1.1  ;
@@ -475,8 +302,6 @@ function plot_beam_enhanced( beam , component , nb_plane , nb_bin , bin_step , c
 
 %%  Plot beams in all plane
 
-  % figure(1) ;  % pause (0.1) ; % clf ;
-  % set(gcf,'position', [20 100 1350 450]) ;
   fsz = 12 ;
   lw = 2;
 
@@ -510,50 +335,23 @@ endfunction
 %%%%%%%%%%%%%
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-% CALCULATE BEAM STATISTICS
-function [v_min,v_max,mean_v,v_sigma]=stats(v,npart)
-	mean_v=0 ;
-	for i=1:npart
-		mean_v+=v(i,1)/npart;
-	endfor
-	v_min=min(v(:,1)) ;
-	v_max=max(v(:,1)) ;
-	v_mean=v(:,1)-mean_v*ones(rows(v),1) ;
-	v_mean_sq=v_mean.*v_mean ;
-	v_sigma =sqrt(sum(v_mean_sq)/npart) ;
-endfunction
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
- % READ MATRIX, GENERATE & TRANSFORM BEAM
+ % SUB-ROUTINE : READ MATRICES, GENERATE & TRANSFORM BEAMS
 function [beam] = plane_particles( fn ,npart, nb_plane ,delta );
 
-  % printf( "Analysing output from <%s>\n", fn );
-  % fn = [dn,file_output]
-  % fh=fopen (fn,"r");
-  % nb_plane = plane_scanning(fh);
-  % nb_plane = nb_plane / 2 ;
-  % fclose(fh);
-  %
   fh=fopen (fn,"r");
   [m,n,l]=scanning(fh);
   em0=[abs(m(1,1)),abs(m(2,2)),abs(m(3,3)),abs(m(4,4)),0,delta];
   %
   t0 = time ;
   p0=origine(em0,npart);
-  % beam{pt} = origine(em0, npart) ;  %
   pt = 1 ;
   beam{pt} = p0 ;
   % printf("Generated %i particles in %fs\n", npart, time-t0);
   %
   [m,n,l]=scanning(fh);
   %
-  pt++ ; % pt = 1 ;
+  pt++ ;
     while ( pt <= nb_plane )
-      % pt++;
       [m,n,l] = scanning(fh) ;
       [m,n,l] = scanning(fh) ;
 	    if ( l==-1 ) break; endif
@@ -579,7 +377,7 @@ endfunction
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-dn='C:/Octave-7.3.0/cosy/mine/';               % directory
+dn='portfolio/tracker/';               % directory
 fn='output_ms120_mc90_wienfil.txt';
 
 printf( "*********************************\n");
@@ -591,9 +389,9 @@ printf( "Analysing output from <%s>\n\n", fn );
 
 % 1) DEFINE NB OF PARTICLES TO SIMULATE AND MASS DIFFERENCE W.R.T REFERENCE MASS (EX. M=100)
 nb_part  = 50000 ;
-delta = 0 ;
-delta1= -0.0001 ;
-delta2=  0.0001 ;
+delta = 0 ;           % delta mass = 0       
+delta1= -0.0001 ;     % delta mass = -0.0001 meaning mass  99.9999 for a reference mass M=100
+delta2=  0.0001 ;     % delta mass = -0.0001 meaning mass 100.0001 for a reference mass M=100
 
 % 2) SIMULATE AND CALCULATE PROJECTED PARTICLES ACROSS ALL OBSERVATION PLANES
 time_start = time ;
@@ -605,7 +403,7 @@ printf("\n => The file contains %i observations planes \n\n", nb_plane ) ;
 printf("\n => All beams of %i particles ready in %fs\n\n", nb_part, time-time_start) ;
 
 
-% CONVERT FROM M to MM and FROM RAD to MRAD
+% CONVERT BEAM DIMENSIONS FROM M to MM and FROM RAD to MRAD
 for i=1:length(beam_delta)
     beam_delta{i} = beam_delta{i} * 1000 ;
 endfor
@@ -667,7 +465,7 @@ plot_beam_enhanced( beam_delta_minus , "vertical" , nb_plane , nb_bin , bin_step
 
 % 5)  INSPECT SPECIFIC PLANES, USING PLANE INDIVIDUAL AXIS SCALE (instead of axis scale common to all planes)
 
-% Select beam of interest (ex: beam_delta) and select index # of specific planes to look at (ex. #2 and #4 )
+% Select beam of interest (ex: beam_delta) and select index # of specific planes to look at (ex. #2 and #4 ), insert these into "plot_selected_beam_enhanced"
 beam_plane = [2 4] ;
 
 printf("horizontal plane for user-selected beams on figure (3) ... \n" )   ;
@@ -675,25 +473,6 @@ printf("horizontal plane for user-selected beams on figure (3) ... \n" )   ;
 figure(3); clf ; % Select and plot on vertical plane
 pause (0.1) ; set(gcf,'position', [20 100 300*length(beam_plane) 400]) ;
 plot_selected_beam_enhanced( beam_delta , "horizontal" , beam_plane , nb_bin  , "black" ) ;
-
-
-
-
-
-
-
-#{
-figure(1);  % Select and plot on horizontal plane
-pause (0.1) ; set(gcf,'position', [20 100 1350 450]) ;
-plot_single_beam_enhanced( beam_delta         , "horizontal" , nb_plane , nb_bin , bin_step , "black" ); hold ; % pause(0.3) ;
-plot_single_beam_enhanced( beam_delta_plus  , "horizontal" , nb_plane , nb_bin , bin_step , "red"   ); hold on ; pause(0.3) ;
-plot_single_beam_enhanced( beam_delta_minus , "horizontal" , nb_plane , nb_bin , bin_step , "blue"  );
-#}
-
-
-
-% beam_delta_selected = {beam_delta{2}, beam_delta{4}}   ;
-
 
 
 
