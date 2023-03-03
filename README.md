@@ -24,7 +24,7 @@ Earthquake signals recorded by seismic monitoring stations are frequently made a
   
 
 + **Predictions vs Observations II : Seismic_records** (R code)       
-This project is the next logical step upon pre-processing the SAC signals. Such SAC signals are read into R code in order to extract common engineering earthquake parameters such as PGA and PGV or to derive more complex parameter such as spectral accelerations over a range of structural periods and Arias intensity, with relevant plots illustrating the entire sequence.
+This work is the completion step in obtaining parameters associated to earthquake observations, and comes upon pre-processing the SAC signals. Such SAC signals are read into R code in order to extract common engineering earthquake parameters such as PGA and PGV or to derive more complex parameter such as spectral accelerations over a range of structural periods and Arias intensity, with relevant plots illustrating the entire sequence.
 This routine can directly follow from the SAC-based codes presented in directory /SAC, or be applied to other (already processed) SAC files.
 
 
