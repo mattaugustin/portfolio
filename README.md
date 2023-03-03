@@ -10,11 +10,12 @@ The purpose is to obtain a higher resolution national hazard map covering the en
 #### **Spectra** (Octave)          
 A code written to compute, plot and save spectral values (acceleration, velocity and displacement) based on an externally-read earthquake signal. This code served as a basis when ported into R when treating earthquake signals at scale (see Seismic_records or NDSHA folders), but offers faster performance when working with many structural periods.
 
-### **Tracker** (Octave)            
+#### **Tracker** (Octave)            
 A tracker which calculates and plots the projected position of beam particles across several user-defined locations along a beamline, ultimately providing insights on the performances of a high resolution mass spectrometry setup.
 
 
-"Predictions vs Observations" : this 4-part project aims at assessing the performance of the NDSHA, a technique that generates artificial earthquake signals (=seismograms) tailored to a region of interest (ex: UK) using the physics of seismic fault rupture and wave propagation. To this end, the work shows how faithfully the artificial earthquake signals can imitate signals actually recorded during earthquakes that struck the UK land. In other words, how well the artificial signals compare to real signals, based on several engineering metrics associated to earthquake-induced ground shaking ?
+### Predictions vs Observations   
+this 4-part project aims at assessing the performance of the NDSHA, a technique that generates artificial earthquake signals (=seismograms) tailored to a region of interest (ex: UK) using the physics of seismic fault rupture and wave propagation. To this end, the work shows how faithfully the artificial earthquake signals can imitate signals actually recorded during earthquakes that struck the UK land. In other words, how well the artificial signals compare to real signals, based on several engineering metrics associated to earthquake-induced ground shaking ?
 
 + **Predictions vs Observations I : SAC**  (R code)      
 Earthquake signals recorded by seismic monitoring stations are frequently made available in so-called SAC format, requiring the use of Seismic Analysis Code (SAC) for their handling. Using RAW seismic data from stations operated during a recent earthquake, this work shows code routines for reading, identifying, treating, plotting and exporting suitably processed SAC signals and could be easily modified to handle additional settings (station number, filtering, different earthquakes).
