@@ -65,12 +65,12 @@ function p=transform(p0,ps,m,n,l);
   v0=ones(ps,l);
   for j=1:l
     for i=1:6
-      v0(:,j)=v0(:,j).*(p0(:,i).^n(j,i)); 
+    	v0(:,j)=v0(:,j).*(p0(:,i).^n(j,i)); 
     endfor
   endfor
   for j=1:l
     for i=1:5
-      p(:,i)+=m(j,i)*v0(:,j);
+    	p(:,i)+=m(j,i)*v0(:,j);
     endfor
   endfor
   % printf("Transformed %i particles from original beam in %fs\n", ps, time-t0);
