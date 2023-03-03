@@ -21,10 +21,16 @@ The routine includes :
 + generating a beam of N particles within the boundaries of the beam size,
 + calculating projected particles using the transfer matrix file provided by the beam transport modelling software,
 + creating and adequately parametrizing a histogram associated to the particle spatial distribution,
-+ setting and plotting beam particles across all planes.
++ setting and plotting beam particles across **all** planes with common axes, using either beam horizontal or vertical component,
++ setting and plotting beam particles across **selected** planes with tailored axes, using either beam horizontal or vertical component.
 
 
 > Three beams of nearly-identical mass particles projected across all observation planes, along with a corresponding particle count histogram.    
       
 ![partrack_enh_horiplane](https://user-images.githubusercontent.com/126000617/222761048-fbfbc6c2-f85b-40b5-a097-b44310533fd7.png)
+
+> Beams plotted in selected planes worthy of interest to the user.    
+      
+![partrack_enh_horiplane_selected](https://user-images.githubusercontent.com/126000617/222767353-1f7fc1f0-1ca4-436c-a614-0ec0daa4f662.png)
+
 
