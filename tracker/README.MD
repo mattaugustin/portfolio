@@ -25,12 +25,12 @@ The routine includes :
 + setting and plotting beam particles across **selected** planes with tailored axes, using either beam horizontal or vertical component.
 
 
-> Three beams of nearly-identical mass particles projected across all observation planes, along with a corresponding particle count histogram.    
+> Three beams of nearly-identical mass particles projected across all observation planes, along with a corresponding particle count histogram. Axes are common to all planes.       
       
 ![partrack_enh_horiplane](https://user-images.githubusercontent.com/126000617/222761048-fbfbc6c2-f85b-40b5-a097-b44310533fd7.png)
 
-> Beams plotted in selected planes worthy of interest to the user.    
+> Beams plotted in selected planes worthy of interest to the user. Axes are suited to each individual plane.      
       
-![partrack_enh_horiplane_selected](https://user-images.githubusercontent.com/126000617/222767585-6037a324-5c78-469c-9859-aed533aad35d.png)
+![partrack_enh_horiplane_selected](https://user-images.githubusercontent.com/126000617/222768657-dc6456c4-f714-4b37-9114-f8a1eca77f7f.png)
 
 
