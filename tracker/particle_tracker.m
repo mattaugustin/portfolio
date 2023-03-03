@@ -26,8 +26,8 @@ endfunction
 function p=origine(em0,ps);
   t0 = time ;
   for i=1:5
-    p(:,i)=em0(i)*(betarnd(2,2,ps,1)*2-1);
-   endfor
+    p(:,i)=em0(i)*(betarnd(2,2,ps,1)*2-1) ;
+  endfor
   p(:,6)=em0(6);%*round(betarnd(2,2,ps,1)*2-1);
   % printf("Generated %i particles in %fs\n", ps, time-t0);
 endfunction
