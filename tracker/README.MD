@@ -26,4 +26,5 @@ The routine includes :
 
 > Three beams of nearly-identical mass particles projected across all observation planes, along with a corresponding particle count histogram.    
       
- ![partrack_enh_horiplane](https://user-images.githubusercontent.com/126000617/222760335-35e3bf8e-2427-408f-8b61-b4ae83046586.png)
+![partrack_enh_horiplane](https://user-images.githubusercontent.com/126000617/222761048-fbfbc6c2-f85b-40b5-a097-b44310533fd7.png)
+
