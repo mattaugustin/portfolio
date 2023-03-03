@@ -3,7 +3,8 @@ As an example, a optical setup (made of multipoles, beam drifting tubes, magnet 
 
 Particle beam transport modelling software (i.e. SIMION, CosyScript ...) commonly show beam trajectories , track beam transformation coefficients at user-selected locations along the optical setup, can account higher order effects owing to real-world optics challenges, but do not provide a visually-clear insight on the separation ability of the optical setup for different particle mass beams. 
 
-> beamline layout (3D Autocad) and corresponding beam trajectory modelling (modelled in CosyScript).
+> beamline layout (3D Autocad) and corresponding beam trajectory modelling (modelled in CosyScript).     
+      
 ![layoutoptic2](https://user-images.githubusercontent.com/126000617/220473800-5e5050ef-093c-494b-91ca-4d4fc37dbc20.png)
 
 
@@ -21,3 +22,8 @@ The routine includes :
 + calculating projected particles using the transfer matrix file provided by the beam transport modelling software,
 + creating and adequately parametrizing a histogram associated to the particle spatial distribution,
 + setting and plotting beam particles across all planes.
+
+
+> Three beams of nearly-identical mass particles projected across all observation planes, along with a corresponding particle count histogram.    
+      
+ ![partrack_enh_horiplane](https://user-images.githubusercontent.com/126000617/222760335-35e3bf8e-2427-408f-8b61-b4ae83046586.png)
