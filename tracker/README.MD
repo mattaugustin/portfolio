@@ -3,7 +3,7 @@ As an example, a optical setup (made of multipoles, beam drifting tubes, magnet 
 
 Particle beam transport modelling software (i.e. SIMION, CosyScript ...) commonly show beam trajectories , track beam transformation coefficients at user-selected locations along the optical setup, can account higher order effects owing to real-world optics challenges, but do not provide a visually-clear insight on the separation ability of the optical setup for different particle mass beams. 
 
-> beamline layout (3D Autocad) and corresponding beam trajectory modelling (modelled in CosyScript).     
+> beamline layout (3D Autocad) and corresponding beam trajectory modelling in the horizontal plane (modelled in CosyScript).     
       
 ![layoutoptic2](https://user-images.githubusercontent.com/126000617/220473800-5e5050ef-093c-494b-91ca-4d4fc37dbc20.png)
 
@@ -12,7 +12,8 @@ This gap is filled by means of external software, such as with this Octave code.
 A beam is composed of N particles, each characterized by its size x (e.g mm) and angle orientation a (e.g. mrad) in the horizontal plane, and size y and angle b in the vertical plane respectively.
 
 
-> beam initial definition plotted in both horizontal and vertical planes.
+> beam initial definition plotted in both horizontal and vertical planes.    
+
 ![beamstart](https://user-images.githubusercontent.com/126000617/220470657-c73feaa1-bce4-4610-9f18-399615f7f661.png)
 
 
