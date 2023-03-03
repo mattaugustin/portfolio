@@ -4,13 +4,13 @@ Welcome !
 This directory provides select examples of code I have written in the last few years. This covers manipulating of small and large datasets, deriving diverse physics-related parameters, conducting data analysis, visualizing results in a clear and eye-appealing fashion, as well as producing maps and manipulating several spatial objects. Most of the code is written in R, but sequences in Octave (~Matlab) and SAC (Seismic Analysis Code) are also available.
 
 
-### **Kriging** (R code)   
+### Kriging (R code)   
 The purpose is to obtain a higher resolution national hazard map covering the entire territory. Using earthquake acceleration data defined at the nodes of a regularly-spaced grid covering the United Kingdom, this project shows the steps leading to smoothing of said data over the land by means of kriging technique. This work combines reshaping dataframes and manipulating spatial objects (polygons, dataframe ...).
     
 ### Spectra (Octave)          
-A code written to compute, plot and save spectral values (acceleration, velocity and displacement) based on an externally-read earthquake signal. This code served as a basis when ported into R when treating earthquake signals at scale (see Seismic_records or NDSHA folders), but offers faster performance when working with many structural periods.
+A code written to compute, plot and save earthquake response spectral values (acceleration, velocity and displacement) associated to an earthquake signal. This code served as a basis when ported into R when treating earthquake signals at scale (see "Seismic_records" or "NDSHA" folders), but offers faster performance when working with many structural periods.
 
-### **Tracker** (Octave)            
+### Tracker (Octave)            
 A tracker which calculates and plots the projected position of beam particles across several user-defined locations along a beamline, ultimately providing insights on the performances of a high resolution mass spectrometry setup.
 
 
