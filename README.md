@@ -17,7 +17,7 @@ A tracker which calculates and plots the projected position of beam particles ac
 ### Predictions vs Observations   
 this 4-part project aims at assessing the performance of the NDSHA, a technique that generates artificial earthquake signals (=seismograms) tailored to a region of interest (ex: UK) using the physics of seismic fault rupture and wave propagation. To this end, the work shows how faithfully the artificial earthquake signals can imitate signals actually recorded during earthquakes that struck the UK land. In other words, how well the artificial signals compare to real signals, based on several engineering metrics associated to earthquake-induced ground shaking ?
 
-+ **Predictions vs Observations I : SAC**  (R code)      
++ **Predictions vs Observations I : SAC**  (SAC code)      
 Earthquake signals recorded by seismic monitoring stations are frequently made available in so-called SAC format, requiring the use of Seismic Analysis Code (SAC) for their handling. Using RAW seismic data from stations operated during a recent earthquake, this work shows code routines for reading, identifying, treating, plotting and exporting suitably processed SAC signals and could be easily modified to handle additional settings (station number, filtering, different earthquakes).
   
 
