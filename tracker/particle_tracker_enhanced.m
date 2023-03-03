@@ -49,8 +49,8 @@ endfunction
 function p=origine(em0,ps);
   t0 = time ;
   for i=1:5
-    p(:,i)=em0(i)*(betarnd(2,2,ps,1)*2-1);
-   endfor
+    p(:,i) = em0(i)*(betarnd(2,2,ps,1)*2-1) ;
+  endfor
   p(:,6)=em0(6);%*round(betarnd(2,2,ps,1)*2-1);
   % printf("Generated %i particles in %fs\n", ps, time-t0);
 endfunction
@@ -68,7 +68,7 @@ function p=transform(p0,ps,m,n,l);
       v0(:,j)=v0(:,j).*(p0(:,i).^n(j,i));
     endfor
   endfor
-    for j=1:l
+  for j=1:l
     for i=1:5
       p(:,i)+=m(j,i)*v0(:,j);
     endfor
