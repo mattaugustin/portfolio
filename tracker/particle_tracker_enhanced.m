@@ -65,7 +65,7 @@ function p=transform(p0,ps,m,n,l);
   v0=ones(ps,l);
   for j=1:l
     for i=1:6
-      v0(:,j)=v0(:,j).*(p0(:,i).^n(j,i));
+      v0(:,j)=v0(:,j).*(p0(:,i).^n(j,i)); 
     endfor
   endfor
   for j=1:l
