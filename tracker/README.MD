@@ -10,15 +10,16 @@ In evaluating the performance of an optical setup, particle beam transport model
 
 This gap is filled by means of external software, such as with this Octave code. The code output shows whether, and if so, how well, a multimass particle beam can be separated into single mass smaller beams. Using the beam transformation data (i.e. transfer matrices) recorded across the optical setup, the Octave routine projects and displays the beams spatial distribution in all planes where beam characteristics were recorded (via transfer matrices). 
        
-Each particle of the beam is characterized by its position x and y (usually expressed in mm) in the horizontal and vertical plane respectively, but also by its angular orientation (in mrad) in each plane that indicate "where" in the plane the particle is heading. Together, all particles form a beam whose boundaries are thus defined by the outermost particle position (Figure 2), and the beam boundaries are most often referred to as beam emittance. A beam with boundaries of 0.3 mm and 10 mrad thus has an emittance 3 $\pi$.mm.mrad .
-As the beam travels through the optical setup, particles behave differently based on their respective mass. By "recording" the beam transfer matrix at selected places (=planes), aka the coefficients whose linear combination allow to calculate the position of a given particle, the user can determine the projected beam of particles in these planes.      
+Each particle of the beam is characterized by its position x and y (usually expressed in mm) in the horizontal and vertical plane respectively, but also by its angular orientation (in mrad) in each plane that indicate "where" in the plane the particle is heading. Together, all particles form a beam whose boundaries are thus defined by the outermost particle position (Figure 2), and the beam boundaries are most often referred to as beam emittance. A beam with boundaries of 0.3 mm and 10 mrad thus has an emittance 3 $\pi$.mm.mrad .    
 
 
 > Figure 2. Beam initial definition plotted in both horizontal and vertical planes.  
 
 ![beamstart](https://user-images.githubusercontent.com/126000617/220470657-c73feaa1-bce4-4610-9f18-399615f7f661.png)
 
-      
+
+The COSY software simulated the beam envelope particle trajectory through the setup for a reference mass M=100, running optimization routines on few setup parameters (voltages, distances...). As the beam undergoes transformations resulting from the setup configuration, the user can select locations at which the software "records" such transformation in a matrix, the coefficients of which could be applied to any particle from the starting beam to calculate its position in the "recording" plane. Besides the transformation coefficients, the actual particle characteristics can also be recorded by the software (Figure 3).
+As the beam travels through the optical setup, particles behave differently depending on their respective mass and hence see their flying path altered.
 Each particle is indeed input to the location-relevant transfer matrix to calculate the parameters of the corresponding projected particle in both horizontal and vertical planes. Applying this operation to all particles of a beam means that projected beams can be plotted to assess how well the optical setup performs in terms of separation ability, i.e. the resolution of the optical setup.
        
           
