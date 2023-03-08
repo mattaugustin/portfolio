@@ -1,9 +1,9 @@
 In high resolution spectrometry, one main challenge is to separate a beam of near-identical mass particles into several beams each composed of only one mass and hence one single particle type, thus ensuring "purity" of each beam for ensuing relevant experiments.
-As an example, a optical setup (made of multipoles, beam drifting tubes, magnet separators) able to separate particles with mass M1=100 and M2=100.0001 (i.e. a $\delta$ = 0.0001) respectively would exhibit a corresponding resolution R = 1 / $\delta$ = 10 000.
+As an example, an optical setup  (made of multipoles, beam drifting tubes, magnet separators) as pictured in Figure 1 is able to separate particles with mass M1=100 and M2=100.0001 (i.e. a $\delta$ = 0.0001) respectively. This means the setup has a resolution R = 1 / $\delta$ = 10 000.
 
-Particle beam transport modelling software (i.e. SIMION, CosyScript ...) commonly show beam trajectories , track beam transformation coefficients at user-selected locations along the optical setup, can account higher order effects owing to real-world optics challenges, but do not provide a visually-clear insight on the separation ability of the optical setup for different particle mass beams. 
+In evaluating the performance of an optical setup, particle beam transport modelling software (i.e. SIMION, CosyScript ...) commonly show beam trajectories (Figure 1), track beam transformation coefficients at user-selected locations along the optical setup, can account higher order effects owing to real-world optics challenges, but do not provide a visually-clear insight on the separation ability of the optical setup for different particle mass beams. 
 
-> beamline layout example (3D Autocad) and corresponding beam trajectory modelling in the horizontal plane (modelled in CosyScript).     
+> Figure 1. Left: beamline layout example (3D Autocad). Right: corresponding beam trajectory modelling in the horizontal plane (modelled in CosyScript).     
       
 ![layoutoptic2](https://user-images.githubusercontent.com/126000617/220473800-5e5050ef-093c-494b-91ca-4d4fc37dbc20.png)
 
