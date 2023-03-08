@@ -1,23 +1,24 @@
 In high resolution spectrometry, one main challenge is to separate a beam of near-identical mass particles into several beams each composed of only one mass and hence one single particle type, thus ensuring "purity" of each beam for ensuing relevant experiments.
 As an example, an optical setup  (made of multipoles, beam drifting tubes, magnet separators) as pictured in Figure 1 is able to separate particles with mass M1=100 and M2=100.0001 (i.e. a $\delta$ = 0.0001) respectively. This means the setup has a resolution R = 1 / $\delta$ = 10 000.
 
-In evaluating the performance of an optical setup, particle beam transport modelling software (i.e. SIMION, CosyScript ...) commonly show beam trajectories (Figure 1), track beam transformation coefficients at user-selected locations along the optical setup, can account higher order effects owing to real-world optics challenges, but do not provide a visually-clear insight on the separation ability of the optical setup for different particle mass beams. 
+In evaluating the performance of an optical setup, particle beam transport modelling software (i.e. SIMION, CosyScript ...) commonly show beam trajectories (Figure 1), calculate beam transformations (compared to the original beam profile) along the optical setup, model complex optical abberations inherent to the setup, but do not provide a visually-clear insight on the separation ability of the optical setup for different particle mass beams. 
 
 > Figure 1. Left: beamline layout example (3D Autocad). Right: corresponding beam trajectory modelling in the horizontal plane (modelled in CosyScript).     
       
 ![layoutoptic2](https://user-images.githubusercontent.com/126000617/220473800-5e5050ef-093c-494b-91ca-4d4fc37dbc20.png)
 
 
-This gap is filled by means of external software, such as with this Octave code. The code output shows whether, and if so, how well, a multimass particle beam can be separated into single mass smaller beams. Using the beam transformation data (i.e. transfer matrices) recorded across the optical setup, the Octave routine projects and displays the beams spatial distribution in all planes where beam characteristics were recorded (via transfer matrices).       
-A beam is composed of N particles, each characterized by its size x (e.g mm) and angle orientation a (e.g. mrad) in the horizontal plane, and size y and angle b in the vertical plane respectively.
+This gap is filled by means of external software, such as with this Octave code. The code output shows whether, and if so, how well, a multimass particle beam can be separated into single mass smaller beams. Using the beam transformation data (i.e. transfer matrices) recorded across the optical setup, the Octave routine projects and displays the beams spatial distribution in all planes where beam characteristics were recorded (via transfer matrices). 
+       
+Each particle of the beam is defined by its position x and y (usually expressed in mm) in the horizontal and vertical plane respectively, but also by its angular orientation (in mrad) in each plane that indicate "where" in the plane the particle is heading. Together, all particles form a beam which is ....
+As the beam travels through the optical setup, particles behave differently based on their respective mass. By "recording" the beam transfer matrix at selected places (=planes), aka the coefficients whose linear combination allow to calculate the position of a given particle, the user can determine the projected beam of particles in these planes.      
 
 
-> beam initial definition plotted in both horizontal and vertical planes.    
+> Figure 2. Beam initial definition plotted in both horizontal and vertical planes.  
 
 ![beamstart](https://user-images.githubusercontent.com/126000617/220470657-c73feaa1-bce4-4610-9f18-399615f7f661.png)
 
-As the beam travels through the optical setup, particles behave differently based on their respective mass. By "recording" the beam transfer matrix at selected places (=planes), aka the coefficients whose linear combination allow to calculate the position of a given particle, the user can determine the projected beam of particles in
-these planes.      
+      
 Each particle is indeed input to the location-relevant transfer matrix to calculate the parameters of the corresponding projected particle in both horizontal and vertical planes. Applying this operation to all particles of a beam means that projected beams can be plotted to assess how well the optical setup performs in terms of separation ability, i.e. the resolution of the optical setup.
        
           
