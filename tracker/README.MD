@@ -19,20 +19,27 @@ Each particle of the beam is characterized by its position x and y (usually expr
 ![beamstart](https://user-images.githubusercontent.com/126000617/220470657-c73feaa1-bce4-4610-9f18-399615f7f661.png)
 
 
-The COSY software simulated the beam envelope particle trajectory through the setup for a reference mass M=100, running optimization routines on few setup parameters (voltages, distances...). As the beam undergoes transformations resulting from the setup configuration, the user can select locations at which the software "records" such transformation in a matrix, the coefficients of which could be applied to any particle from the starting beam to calculate its position in the "recording" plane. Besides the transformation coefficients, the actual particle characteristics can also be recorded by the software (Figure 3).       
-Beam characteristics in any recording plane "n" can be calculated using the transformation matrix M of the relevant plane as per Figure 4 formula. Coefficients of each column of M relate to one of the beam characteristics, and each line is associated to different order effects. As an example, for a particle defined in plane 0, the horizontal position x in plane n=1 is expressed using matrix coefficients in column 1 and beam order coefficients in column 6, as follows:
+The COSY software simulated the beam envelope particle trajectory through the setup for a reference mass M=100, running optimization routines on few setup parameters (voltages, distances...). As the beam undergoes transformations resulting from the setup configuration, the user can select locations at which the software "records" such transformation in a matrix, the coefficients of which could be applied to any particle from the starting beam to calculate its position in the "recording" plane. Besides the transformation coefficients, the actual particle characteristics can also be recorded by the software (Figure 3). Beam characteristics in any recording plane "n" can be calculated using the transformation matrix M of the relevant plane as per Figure 4 formula.     
+
+
+> Figure 3. Example of beam characteristics and beam transformation matrices, as recorded by CosyScript.
+
+![transfomatrix](https://user-images.githubusercontent.com/126000617/224123551-8a8780b9-9e76-4610-a656-ce0839431cee.PNG){width=75%}
+
+
+> Figure 4. Relation between initial beam and beam projected in plane n.
+
+![matrix_formula](https://user-images.githubusercontent.com/126000617/224123502-1712f2fa-1449-4c21-b9fb-584b9188374c.png){width=50%}
+
+
+Coefficients of each column of M relate to one of the beam characteristics, and each line is associated to different order effects. As an example, for a particle defined in plane 0, the horizontal position x in plane n=1 is expressed using matrix coefficients in column 1 and beam order coefficients in column 6 (blue boxes Figure 3), as follows:
 
 x(n) =    1 x $x_{0}^{1}.a_{0}^{0} . y_{0}^{0} . b_{0}^{0} . t_{0}^{0} . m_{0}^{0}$        ( 1st row)       
 &nbsp; &nbsp; &nbsp; &nbsp;+  0 x $x_{0}^{0}.a_{0}^{1} . y_{0}^{0} . b_{0}^{0} . t_{0}^{0} . m_{0}^{0}$        ( 2nd row)             
 &nbsp; &nbsp; &nbsp; &nbsp;+  0 x $x_{0}^{0}.a_{0}^{0} . y_{0}^{1} . b_{0}^{0} . t_{0}^{0} . m_{0}^{0}$        ( 3rd row)            
 &nbsp; &nbsp; &nbsp; &nbsp;+  0 x $x_{0}^{0}.a_{0}^{0} . y_{0}^{0} . b_{0}^{1} . t_{0}^{0} . m_{0}^{0}$        ( 4th row)      
 &nbsp; &nbsp; &nbsp; &nbsp;+  1 x $x_{0}^{0}.a_{0}^{0} . y_{0}^{0} . b_{0}^{0} . t_{0}^{1} . m_{0}^{0}$        ( 5th row)      
-&nbsp; &nbsp; &nbsp; &nbsp;+  1 x $x_{0}^{0}.a_{0}^{0} . y_{0}^{0} . b_{0}^{0} . t_{0}^{0} . m_{0}^{1}$        ( 6th row) 
-
-
-> Figure 3. Example of beam characteristics and beam transformation matrices, as recorded by CosyScript.
-
-![transfomatrix](https://user-images.githubusercontent.com/126000617/224098629-1b9227f3-21d4-43bd-9b0c-3e45ca2af1db.PNG)
+&nbsp; &nbsp; &nbsp; &nbsp;+  1 x $x_{0}^{0}.a_{0}^{0} . y_{0}^{0} . b_{0}^{0} . t_{0}^{0} . m_{0}^{1}$        ( 6th row)     
 
 
 As the beam travels through the optical setup, particles behave differently depending on their respective mass and hence see their flying path altered. Using the transfer matrices obtained when simulating the beamline for the reference mass M=100, a beam containing 50 000 particles of near-identical masses ( 99.9999, 100, 100.0001) was input into the transfer matrices defined in all recording planes in order to calculate the respective beam projections in both horizontal and vertical planes. In effect, components of each particle (positions x, y and plane orientation angles a, b, time of flight t and mass difference $\delta$) are multiplied by the matrix coefficients according to the relation (1) to obtain the coordinates of the projected particle in the selected plane.         
