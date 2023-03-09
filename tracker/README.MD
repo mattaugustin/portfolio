@@ -22,7 +22,7 @@ Each particle of the beam is characterized by its position x and y (usually expr
 The COSY software simulated the beam envelope particle trajectory through the setup for a reference mass M=100, running optimization routines on few setup parameters (voltages, distances...). As the beam undergoes transformations resulting from the setup configuration, the user can select locations at which the software "records" such transformation in a matrix, the coefficients of which could be applied to any particle from the starting beam to calculate its position in the "recording" plane. Besides the transformation coefficients, the actual particle characteristics can also be recorded by the software (Figure 3).       
 Beam characteristics in any recording plane "n" can be calculated using the transformation matrix M of the relevant plane as per Figure 4 formula. Coefficients of each column of M relate to one of the beam characteristics, and each line is associated to different order effects. As an example, for a particle defined in plane 0, the horizontal position x in plane n=1 is expressed using matrix coefficients in column 1 and beam order coefficients in column 6, as follows:
 
-x(n) =    $1.x^{1}_{0}.a^{0}_{0}.y^{0}_{0}.b^{0}_{0}.t^{0}_{0}.m^{0}_{0}$     ( 1st row)
+x(n) =    $ 1.x^{1}_{0}.a^{0}_{0}.y^{0}_{0}.b^{0}_{0}.t^{0}_{0}.m^{0}_{0} $     ( 1st row)       
        +  0 x $x^{0}_{0}.a^{1}_{0}.y^{0}_{0}.b^{0}_{0}.t^{0}_{0}.m^{0}_{0}$   ( 2nd row)          
        +  $0.x^{0}_{0}.a^{0}_{0}.y^{1}_{0}.b^{0}_{0}.t^{0}_{0}.m^{0}_{0}$     ( 3rd row)       
        +  $0.x^{0}_{0}.a^{0}_{0}.y^{0}_{0}.b^{1}_{0}.t^{0}_{0}.m^{0}_{0}$     ( 4th row)      
