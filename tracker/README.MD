@@ -1,5 +1,5 @@
 In high resolution spectrometry, one main challenge is to separate a beam of near-identical mass particles into several beams each composed of only one mass and hence one single particle type, thus ensuring "purity" of each beam for ensuing relevant experiments.
-As an example, an optical setup  (made of multipoles, beam drifting tubes, magnet separators) as pictured in Figure 1 is able to separate particles with mass M1=100 and M2=100.0001 (i.e. a $\delta$ = 0.0001) respectively. This means the setup has a resolution R = 1 / $\delta$ = 10 000.
+As an example, an optical setup  (made of multipoles, beam drifting tubes, magnet separators) as pictured in Figure 1 is able to separate particles with mass $M_{1}$ = 100 and $M_{2}$ = 100.0001 (i.e. a $\delta$ = 0.0001) respectively. This means the setup has a resolution R = 1 / $\delta$ = 10 000.
 
 In evaluating the performance of an optical setup, particle beam transport modelling software (i.e. SIMION, CosyScript ...) commonly show beam trajectories (Figure 1), calculate beam transformations (compared to the original beam profile) along the optical setup, model complex optical abberations inherent to the setup.
 
@@ -24,25 +24,24 @@ The COSY software simulated the beam envelope particle trajectory through the se
 
 > Figure 3. Example of beam characteristics and beam transformation matrices, as recorded by CosyScript.
 
-<img src="https://user-images.githubusercontent.com/126000617/224123551-8a8780b9-9e76-4610-a656-ce0839431cee.PNG" alt="transfomatrix" width="850"/>
+<img src="https://user-images.githubusercontent.com/126000617/224133563-25504a2a-1161-4aa1-9b54-9c1ca6fcd5a9.PNG" alt="transfomatrix" width="850"/>
 
 
 > Figure 4. Relation between initial beam and beam projected in plane n, using beam transformation matrix M.
 
-<img src="https://user-images.githubusercontent.com/126000617/224126530-c48b926c-c1d6-4e38-a465-3e7e71d245c5.png" alt="matrix formula" width="295"/>
+<img src="https://user-images.githubusercontent.com/126000617/224133742-31d27ae2-eee7-41c6-b131-07086fa98738.png" alt="matrix formula" width="250"/>
 
 
 Coefficients of each column of M relate to one of the beam characteristics, and each line is associated to different order effects. As an example, for a particle defined in plane 0, the horizontal position x in plane n=1 is expressed using matrix coefficients in column 1 and beam order coefficients in column 6 (blue boxes Figure 3), as follows :
 
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; x(n) =    1 x $x_{0}^{1}.a_{0}^{0} . y_{0}^{0} . b_{0}^{0} . t_{0}^{0} . m_{0}^{0}$        ( 1st row)       
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;+  0 x $x_{0}^{0}.a_{0}^{1} . y_{0}^{0} . b_{0}^{0} . t_{0}^{0} . m_{0}^{0}$        ( 2nd row)             
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;+  0 x $x_{0}^{0}.a_{0}^{0} . y_{0}^{1} . b_{0}^{0} . t_{0}^{0} . m_{0}^{0}$        ( 3rd row)            
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;+  0 x $x_{0}^{0}.a_{0}^{0} . y_{0}^{0} . b_{0}^{1} . t_{0}^{0} . m_{0}^{0}$        ( 4th row)      
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;+  0 x $x_{0}^{0}.a_{0}^{0} . y_{0}^{0} . b_{0}^{0} . t_{0}^{1} . m_{0}^{0}$        ( 5th row)      
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;+  0 x $x_{0}^{0}.a_{0}^{0} . y_{0}^{0} . b_{0}^{0} . t_{0}^{0} . m_{0}^{1}$        ( 6th row)     
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; x(n) =    1 x $x_{0}^{1}.a_{0}^{0} . y_{0}^{0} . b_{0}^{0} . t_{0}^{0} . m_{0}^{0}$ &nbsp; &nbsp;       ( 1st row)       
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;+  0 x $x_{0}^{0}.a_{0}^{1} . y_{0}^{0} . b_{0}^{0} . t_{0}^{0} . m_{0}^{0}$ &nbsp; &nbsp;       ( 2nd row)             
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;+  0 x $x_{0}^{0}.a_{0}^{0} . y_{0}^{1} . b_{0}^{0} . t_{0}^{0} . m_{0}^{0}$ &nbsp; &nbsp;       ( 3rd row)            
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;+  0 x $x_{0}^{0}.a_{0}^{0} . y_{0}^{0} . b_{0}^{1} . t_{0}^{0} . m_{0}^{0}$ &nbsp; &nbsp;       ( 4th row)      
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;+  0 x $x_{0}^{0}.a_{0}^{0} . y_{0}^{0} . b_{0}^{0} . t_{0}^{1} . m_{0}^{0}$ &nbsp; &nbsp;       ( 5th row)         
 
 
-As the beam travels through the optical setup, particles behave differently depending on their respective mass and hence see their flying path altered. Using the transfer matrices obtained when simulating the beamline for the reference mass M=100, a beam containing 50 000 particles of near-identical masses ( M_1_ = 99.9999, M_0_ = 100, M_2_ = 100.0001) was input into the transfer matrices defined in all recording planes in order to calculate the respective beam projections in both horizontal and vertical planes. In effect, components of each particle (positions x & y and plane orientation angles a & b, time of flight t and mass difference $\delta$) are multiplied by the matrix coefficients according to the previous relation to obtain the coordinates of the projected particle in the selected plane.         
+As the beam travels through the optical setup, particles behave differently depending on their respective mass and hence see their flying path altered. Using the transfer matrices obtained when simulating the beamline for the reference mass M=100, a beam containing 50 000 particles of near-identical masses ( $M_{1}$ = 99.9999, $M_{0}$ = 100, $M_{2}$ = 100.0001 ) was input into the transfer matrices defined in all recording planes in order to calculate the respective beam projections in both horizontal and vertical planes. In effect, components of each particle ( positions x & y and plane orientation angles a & b, time of flight t and mass difference $\delta$ ) are multiplied by the matrix coefficients according to the previous relation to obtain the coordinates of the projected particle in the selected plane.         
 Plotting the projected particles in all planes, in particular the last one reflecting the impact of the entire beamline, reveals how well the optical setup performs in terms of separation ability, i.e. the resolution of the optical setup.
 
           
