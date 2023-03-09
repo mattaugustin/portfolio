@@ -32,7 +32,7 @@ The COSY software simulated the beam envelope particle trajectory through the se
 <img src="https://user-images.githubusercontent.com/126000617/224133742-31d27ae2-eee7-41c6-b131-07086fa98738.png" alt="matrix formula" width="250"/>
 
 
-Coefficients of each column of M relate to one of the beam characteristics, and each line is associated to different order effects. As an example, for a particle defined in plane 0, the horizontal position x in plane n=1 is expressed using matrix coefficients in column 1 and beam order coefficients in column 6 (blue boxes Figure 3), as follows :
+Coefficients of each column of M relate to one of the beam characteristics, and each line is associated to different order effects. As an example, for a particle defined in plane 0 (i.e. a particle within boundaries of the beam depicted in Figure 2), the horizontal position x in plane n=1 is expressed using matrix coefficients in column 1 and beam order coefficients in column 6 (blue boxes Figure 3), as follows :
 
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; x(n) =    1 x $x_{0}^{1}.a_{0}^{0} . y_{0}^{0} . b_{0}^{0} . t_{0}^{0} . m_{0}^{0}$ &nbsp; &nbsp;       ( 1st row)       
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;+  0 x $x_{0}^{0}.a_{0}^{1} . y_{0}^{0} . b_{0}^{0} . t_{0}^{0} . m_{0}^{0}$ &nbsp; &nbsp;       ( 2nd row)             
@@ -41,26 +41,26 @@ Coefficients of each column of M relate to one of the beam characteristics, and 
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;+  0 x $x_{0}^{0}.a_{0}^{0} . y_{0}^{0} . b_{0}^{0} . t_{0}^{1} . m_{0}^{0}$ &nbsp; &nbsp;       ( 5th row)         
 
 
-As the beam travels through the optical setup, particles behave differently depending on their respective mass and hence see their flying path altered. Using the transfer matrices obtained when simulating the beamline for the reference mass M=100, a beam containing 50 000 particles of near-identical masses ( $M_{1}$ = 99.9999, $M_{0}$ = 100, $M_{2}$ = 100.0001 ) was input into the transfer matrices defined in all recording planes in order to calculate the respective beam projections in both horizontal and vertical planes. In effect, components of each particle ( positions x & y and plane orientation angles a & b, time of flight t and mass difference $\delta$ ) are multiplied by the matrix coefficients according to the previous relation to obtain the coordinates of the projected particle in the selected plane.         
-Plotting the projected particles in all planes, in particular the last one reflecting the impact of the entire beamline, reveals how well the optical setup performs in terms of separation ability, i.e. the resolution of the optical setup.
+
+&nbsp; &nbsp; &nbsp; As the beam travels through the optical setup, particles behave differently depending on their respective mass and hence see their flying path altered. Using the transfer matrices obtained when simulating the beamline for the reference mass M=100, a beam containing 50 000 particles of near-identical masses ( $M_{1}$ = 99.9999, $M_{0}$ = 100, $M_{2}$ = 100.0001 ) was input into the transfer matrices defined in all recording planes in order to calculate the respective beam projections in both horizontal and vertical planes. In effect, components of each particle ( positions x & y and plane orientation angles a & b, time of flight t and mass difference $\delta$ ) are multiplied by the matrix coefficients according to the previous relation to obtain the coordinates of the projected particle in the selected plane.         
+Plotting the projected particles in all planes (Figure 5), in particular the last one reflecting the impact of the entire beamline, reveals how well the optical setup performs in terms of separation ability, i.e. the resolution of the optical setup.
 
           
+> Figure 5. Three beams of nearly-identical mass particles projected across all observation planes (using this project Octave code), along with a corresponding particle count histogram. Axes are common to all planes.       
+      
+![partrack_enh_horiplane](https://user-images.githubusercontent.com/126000617/222761048-fbfbc6c2-f85b-40b5-a097-b44310533fd7.png)
+
+
+> Figure 6. Beams plotted in selected planes of interest to the user. Axes are suited to each individual plane.      
+      
+![partrack_enh_horiplane_selected](https://user-images.githubusercontent.com/126000617/222768657-dc6456c4-f714-4b37-9114-f8a1eca77f7f.png)
+
+
+
 The Octave routine includes :
 + generating a beam of N particles within the boundaries of the beam size,
 + calculating projected particles using the transfer matrix file provided by the beam transport modelling software,
 + creating and adequately parametrizing a histogram associated to the particle spatial distribution,
 + setting and plotting beam particles across **all** planes with common axes, using either beam horizontal or vertical component,
 + setting and plotting beam particles across **selected** planes with tailored axes, using either beam horizontal or vertical component.
-
-
-
-> Three beams of nearly-identical mass particles projected across all observation planes, along with a corresponding particle count histogram. Axes are common to all planes.       
-      
-![partrack_enh_horiplane](https://user-images.githubusercontent.com/126000617/222761048-fbfbc6c2-f85b-40b5-a097-b44310533fd7.png)
-
-
-> Beams plotted in selected planes worthy of interest to the user. Axes are suited to each individual plane.      
-      
-![partrack_enh_horiplane_selected](https://user-images.githubusercontent.com/126000617/222768657-dc6456c4-f714-4b37-9114-f8a1eca77f7f.png)
-
 
