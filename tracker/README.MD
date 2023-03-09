@@ -32,7 +32,7 @@ Each particle of the beam is characterized by its position x and y (usually expr
 <img src="https://user-images.githubusercontent.com/126000617/224133742-31d27ae2-eee7-41c6-b131-07086fa98738.png" alt="matrix formula" width="250"/>
 
 
-Coefficients of each column of M relate to one of the beam characteristics, and each line is associated to different order effects. As an example, for a particle defined in plane 0 (i.e. a particle within boundaries of the beam depicted in Figure 2), the horizontal position x in plane n=1 is expressed using matrix coefficients in column 1 and beam order coefficients in column 6 (blue boxes Figure 3), as follows :
+Coefficients of each column of M relate to one of the beam characteristics, and each line is associated to different order effects. As an example, for a particle defined in plane 0 (i.e. a particle within boundaries of the beam depicted in Figure 2), the horizontal position x in plane n=1 is expressed using matrix coefficients in column 1 and power coefficients (to apply to beam characteristics) in column 6 (blue boxes Figure 3), as follows :
 
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; x(n) =    1 x $x_{0}^{1}.a_{0}^{0} . y_{0}^{0} . b_{0}^{0} . t_{0}^{0} . m_{0}^{0}$ &nbsp; &nbsp;       ( 1st row)       
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;+  0 x $x_{0}^{0}.a_{0}^{1} . y_{0}^{0} . b_{0}^{0} . t_{0}^{0} . m_{0}^{0}$ &nbsp; &nbsp;       ( 2nd row)             
