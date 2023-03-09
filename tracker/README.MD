@@ -29,6 +29,7 @@ x(n) =    $ 1.x^{1}_{0}.a^{0}_{0}.y^{0}_{0}.b^{0}_{0}.t^{0}_{0}.m^{0}_{0} $     
        +  $0.x^{0}_{0}.a^{1}_{0}.y^{0}_{0}.b^{0}_{0}.t^{1}_{0}.m^{0}_{0}$     ( 5th row)      
        +  $0.x^{0}_{0}.a^{1}_{0}.y^{0}_{0}.b^{0}_{0}.t^{0}_{0}.m^{1}_{0}$     ( 6th row)     
 
+$0.x^{0}_{0}.a^{1}_{0}.y^{0}_{0}.b^{0}_{0}.t^{0}_{0}.m^{0}_{0}$
 
 > Figure 3. Example of beam characteristics and beam transformation matrices, as recorded by CosyScript.
 
