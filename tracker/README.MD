@@ -23,11 +23,11 @@ The COSY software simulated the beam envelope particle trajectory through the se
 Beam characteristics in any recording plane "n" can be calculated using the transformation matrix M of the relevant plane as per Figure 4 formula. Coefficients of each column of M relate to one of the beam characteristics, and each line is associated to different order effects. As an example, for a particle defined in plane 0, the horizontal position x in plane n=1 is expressed using matrix coefficients in column 1 and beam order coefficients in column 6, as follows:
 
 x(n) =    $1.x^{1}_{0}.a^{0}_{0}.y^{0}_{0}.b^{0}_{0}.t^{0}_{0}.m^{0}_{0}$     ( 1st row)
-       +  0 x $x^{0}_{0}.a^{1}_{0}.y^{0}_{0}.b^{0}_{0}.t^{0}_{0}.m^{0}_{0}$   ( 2nd row)   
-       +  $0.x^{0}_{0}.a^{0}_{0}.y^{1}_{0}.b^{0}_{0}.t^{0}_{0}.m^{0}_{0}$     ( 3rd row) 
-       +  $0.x^{0}_{0}.a^{0}_{0}.y^{0}_{0}.b^{1}_{0}.t^{0}_{0}.m^{0}_{0}$     ( 4th row) 
-       +  $0.x^{0}_{0}.a^{1}_{0}.y^{0}_{0}.b^{0}_{0}.t^{1}_{0}.m^{0}_{0}$     ( 5th row) 
-       +  $0.x^{0}_{0}.a^{1}_{0}.y^{0}_{0}.b^{0}_{0}.t^{0}_{0}.m^{1}_{0}$     ( 6th row)
+       +  0 x $x^{0}_{0}.a^{1}_{0}.y^{0}_{0}.b^{0}_{0}.t^{0}_{0}.m^{0}_{0}$   ( 2nd row)          
+       +  $0.x^{0}_{0}.a^{0}_{0}.y^{1}_{0}.b^{0}_{0}.t^{0}_{0}.m^{0}_{0}$     ( 3rd row)       
+       +  $0.x^{0}_{0}.a^{0}_{0}.y^{0}_{0}.b^{1}_{0}.t^{0}_{0}.m^{0}_{0}$     ( 4th row)      
+       +  $0.x^{0}_{0}.a^{1}_{0}.y^{0}_{0}.b^{0}_{0}.t^{1}_{0}.m^{0}_{0}$     ( 5th row)      
+       +  $0.x^{0}_{0}.a^{1}_{0}.y^{0}_{0}.b^{0}_{0}.t^{0}_{0}.m^{1}_{0}$     ( 6th row)     
 
 
 > Figure 3. Example of beam characteristics and beam transformation matrices, as recorded by CosyScript.
