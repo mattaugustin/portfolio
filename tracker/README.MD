@@ -29,7 +29,7 @@ The COSY software simulated the beam envelope particle trajectory through the se
 
 > Figure 4. Relation between initial beam and beam projected in plane n.
 
-![matrix_formula](https://user-images.githubusercontent.com/126000617/224123502-1712f2fa-1449-4c21-b9fb-584b9188374c.png){width=50%}
+![matrix_formula](https://user-images.githubusercontent.com/126000617/224123502-1712f2fa-1449-4c21-b9fb-584b9188374c.png){out.width = "50%"}     
 
 
 Coefficients of each column of M relate to one of the beam characteristics, and each line is associated to different order effects. As an example, for a particle defined in plane 0, the horizontal position x in plane n=1 is expressed using matrix coefficients in column 1 and beam order coefficients in column 6 (blue boxes Figure 3), as follows:
