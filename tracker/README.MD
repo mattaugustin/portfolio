@@ -63,6 +63,6 @@ The Octave routine includes :
 + generating beams of N particles within the boundaries of the beam size,
 + calculating projected particles using the transfer matrix file provided by the beam transport modelling software,
 + creating and adequately parametrizing a histogram associated to the particle spatial distribution,
-+ setting and plotting beam particles across **all** planes with common axes, using either beam horizontal or vertical component,
-+ setting and plotting beam particles across **selected** planes with tailored axes, using either beam horizontal or vertical component.
++ setting and plotting beam particles across *all* planes with common axes, using either beam horizontal or vertical component,
++ setting and plotting beam particles across *selected* planes with tailored axes, using either beam horizontal or vertical component.
 
