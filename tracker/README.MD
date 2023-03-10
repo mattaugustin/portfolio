@@ -51,7 +51,7 @@ Coefficients of each column of M relate to one of the beam characteristics, and 
 ![partrack_enh_horiplane](https://user-images.githubusercontent.com/126000617/222761048-fbfbc6c2-f85b-40b5-a097-b44310533fd7.png)
 
 
-> Figure 6. Beams plotted in selected planes of interest to the user (#2, #4 & #5). Axes are suited to each individual plane.      
+> Figure 6. Beams plotted in selected planes of interest to the user. Axes are suited to each individual plane.      
       
 ![partrack_enh_horiplane_selected](https://user-images.githubusercontent.com/126000617/222768657-dc6456c4-f714-4b37-9114-f8a1eca77f7f.png)
 
