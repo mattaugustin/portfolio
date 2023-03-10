@@ -336,6 +336,96 @@ endfunction
 %%%%%%%%%%%%%
 
 
+% PLOT ZOOMS : BEAMS & HISTOGRAMS FROM ORIGINAL AND TRANSFORMED BEAM
+function plot_selected_beam_zoomed( beam , component , beam_plane , nb_bin , beam_interval , colour_name ) ;  % red, black, blue, green, magenta, cyan
+
+% Prepare axis labels
+  if ( strncmpi(component , "horizontal" , 3 )    )
+      label_x_axis = "particle horizontal position x (mm)" ;   label_y_axis = ("particle horizontal angle a (mrad)") ;
+      comp_col = 1 ;
+  elseif ( strncmpi( component , "vertical" , 3)   )
+      label_x_axis = "particle vertical position y (mm)"   ;   label_y_axis = ("particle vertical angle b (mrad)")   ;
+       comp_col = 3 ;
+  endif
+%
+
+  x_min  = beam_interval(1) ;
+  x_max  = beam_interval(2) ;
+  x_boundary = max( abs(x_min)  , x_max  ) *1.1  ;
+
+  min_beams_y  = beam_interval(3) ;
+  max_beams_y  = beam_interval(4) ;
+  y_boundary   = max( abs(min_beams_y)  , max_beams_y  ) *1.1  ;
+%
+
+% Calculate bin_step for plot horizontal axis
+  dx=(x_max - x_min )/ nb_bin;
+  dxexp=floor(log10(dx));   % exponent    (b in n=a*10^b)
+  dxsig=dx*10^-dxexp;       % significant (a in n=a*10^b)
+  sig=[1,2,3,4,5];          % allowed factors for binsizes
+  dx=max(sig(find(dxsig>=sig)))*10^dxexp;
+
+
+% Prepare histogram values/settings prior to plotting
+
+% convert vec into bin indices for for beams in all planes
+  veci  = (beam{beam_plane}(:,comp_col) - (x_min+x_max)/2)/dx;
+  veci  = floor(veci)  ;
+  veci0 = 1 - min(veci);
+  veci+=veci0 ;
+  binxn = max(veci) + 1  ;     % add 1 to ensure symetry later of bin coordinates at the right-side
+
+  % generate bin coordinates (LH side of bin)
+  binx = 1:(binxn);
+  binx-=veci0;      % binx = binx - veci0 ;
+  binx = binx*dx ;
+  binx+=(x_min+x_max)/2;  % binx = binx + (x1+x2)/2;    % adjust beam indices if beam not centered at x=0
+  binx = round(binx*100)/100 ;                    % round at 2 digits precision to ensure "round" values for bin coordinates <> -0.03
+  ## instead of -0.030008
+
+% fill bins
+  for i=1:(binxn)
+    biny(i) = sum( veci==i );
+  endfor
+
+  histo_beam  = [binx ; biny] ;
+
+  x = [histo_beam(1,1)-dx , histo_beam(1,:) , histo_beam(1,end)+dx ] ;
+  y = [ 0 , histo_beam(2,:) , 0 ] ;
+
+  [x_stairs , y_stairs]  =   stairs ( x , y )     ;
+  stairs_histo_beam = [x_stairs , y_stairs] ;
+
+  count_boundary =  max( stairs_histo_beam(:,2) )*1.2  ;
+
+
+  subplot( 2 , 1 , 1 ) ; hold on ;
+  plot([-x_boundary x_boundary],[0 0] , '--', "color",[0 0 0] + 0.5 ) ;        % Zero horizontal dashed grey (0.7)line
+  plot([0 0],[-y_boundary y_boundary] , '--', "color",[0 0 0] + 0.5 ) ;        %      vertical
+  plot( beam{beam_plane}(:,comp_col) , beam{beam_plane}(:,comp_col+1) , ".","color", colour_name );
+
+  xlabel( label_x_axis ) ; ylabel( label_y_axis ) ;
+  title( sprintf( 'Beam in plane %i', beam_plane ) ) ;
+  axis("label","tic") ; % axis("labely","ticy") ;
+  axis( [-x_boundary x_boundary -y_boundary y_boundary] ) ;
+
+% Plot corresponding histogram
+
+  subplot( 2 , 1 , 2 ) ; hold on ;
+  plot([-x_boundary x_boundary],[0 0] , '--', "color",[0 0 0] + 0.5 ) ;        %    Zero horizontal dashed grey (0.7)line
+  plot([0 0],[-y_boundary y_boundary] , '--', "color",[0 0 0] + 0.5 ) ;        %         vertical
+  plot( stairs_histo_beam(:,1) , stairs_histo_beam(:,2) , "color" , colour_name );
+
+  xlabel ( label_x_axis ) ; ylabel( "Particle count" ) ;
+  title( ' {\fontsize{11}\it associated histogram} ') ;
+  axis("label","tic") ; % axis("labely","ticy") ;
+  axis([-x_boundary x_boundary 0 count_boundary]) ;
+%
+
+endfunction
+%%%%%%%%%%%%%
+
+
  % SUB-ROUTINE : READ MATRICES, GENERATE & TRANSFORM BEAMS
 function [beam] = plane_particles( fn ,npart, nb_plane ,delta );
 
@@ -476,4 +566,19 @@ pause (0.1) ; set(gcf,'position', [20 100 300*length(beam_plane) 400]) ;
 plot_selected_beam_enhanced( beam_delta , "horizontal" , beam_plane , nb_bin  , "black" ) ;
 
 
+% 6)  INSPECT SPECIFIC PLANES, USING PLANE INDIVIDUAL AXIS SCALE WITH USER-DEFINED BOUNDARIES
+
+% Select beam of interest (ex: beam_delta) and select index # of specific planes to look at (ex. #5 )
+% one beam only in beam_plane !
+
+printf("horizontal plane for user-selected beams on figure (4) ... \n" )   ;
+
+beam_plane = 5 ;
+beam_interval = [-2 2 -30 30] ;
+figure(4); clf ; % Select and plot on vertical plane
+pause (0.1) ; set(gcf,'position', [20 100 300*length(beam_plane) 400]) ;
+
+plot_selected_beam_zoomed( beam_delta , "horizontal" , beam_plane , nb_bin , beam_interval , "black" ) ;  hold on ;
+plot_selected_beam_zoomed( beam_delta_minus , "horizontal" , beam_plane , nb_bin , beam_interval , "blue" ) ;  hold on ;
+plot_selected_beam_zoomed( beam_delta_plus  , "horizontal" , beam_plane , nb_bin , beam_interval , "red" ) ;  hold on ;
 
