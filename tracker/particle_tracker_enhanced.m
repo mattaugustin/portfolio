@@ -303,9 +303,6 @@ function plot_beam_enhanced( beam , component , nb_plane , nb_bin , bin_step , c
 
 %%  Plot beams in all plane
 
-  fsz = 12 ;
-  lw = 2;
-
 for beam_plane=1:nb_plane
 
   subplot( 2 , nb_plane , beam_plane ) ; hold on ;                              %  subplot ( rows ,col , index )  read L to R , T to B
@@ -315,7 +312,7 @@ for beam_plane=1:nb_plane
 
   xlabel( label_x_axis ) ; ylabel( label_y_axis ) ;
   title( sprintf( 'Beam in plane %i', beam_plane )) ;
-  axis("label","tic") ; % axis("labely","ticy") ;
+  axis("label","tic") ; 
   axis( [-x_boundary x_boundary -y_boundary y_boundary] ) ;
 
 % Plot corresponding histogram
@@ -406,7 +403,7 @@ function plot_selected_beam_zoomed( beam , component , beam_plane , nb_bin , bea
 
   xlabel( label_x_axis ) ; ylabel( label_y_axis ) ;
   title( sprintf( 'Beam in plane %i', beam_plane ) ) ;
-  axis("label","tic") ; % axis("labely","ticy") ;
+  axis("label","tic") ; 
   axis( [-x_boundary x_boundary -y_boundary y_boundary] ) ;
 
 % Plot corresponding histogram
@@ -509,11 +506,7 @@ endfor
 printf("Now preparing beam plots ... \n\n") ;
 
 
-% close all ;
-
 nb_bin = 100 ;
-
-
 
 % 3) HORIZONTAL PLANE PLOTS
 
@@ -531,7 +524,6 @@ plot_beam_enhanced( beam_delta_plus  , "horizontal" , nb_plane , nb_bin , bin_st
 plot_beam_enhanced( beam_delta_minus , "horizontal" , nb_plane , nb_bin , bin_step , "blue"  );
 
 % print('mine/partracker_horiplane_start.png','-dpng','-S1000,750');
-
 
 
 % 4)  VERTICAL PLANE PLOTS
@@ -561,7 +553,7 @@ beam_plane = [2 4] ;
 
 printf("horizontal plane for user-selected beams on figure (3) ... \n" )   ;
 
-figure(3); clf ; % Select and plot on vertical plane
+figure(3); clf ; 
 pause (0.1) ; set(gcf,'position', [20 100 300*length(beam_plane) 400]) ;
 plot_selected_beam_enhanced( beam_delta , "horizontal" , beam_plane , nb_bin  , "black" ) ;
 
@@ -575,7 +567,7 @@ printf("horizontal plane for user-selected beams on figure (4) ... \n" )   ;
 
 beam_plane = 5 ;
 beam_interval = [-2 2 -30 30] ;
-figure(4); clf ; % Select and plot on vertical plane
+figure(4); clf ;
 pause (0.1) ; set(gcf,'position', [20 100 300*length(beam_plane) 400]) ;
 
 plot_selected_beam_zoomed( beam_delta , "horizontal" , beam_plane , nb_bin , beam_interval , "black" ) ;  hold on ;
