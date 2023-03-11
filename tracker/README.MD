@@ -48,12 +48,17 @@ Coefficients of each column of M relate to one of the beam characteristics, and 
           
 > Figure 5. Three beams of nearly-identical mass particles projected across all observation planes (using this project Octave code), along with a corresponding particle count histogram. Axes are common to all planes. In plane #2 and #4, low numbers of particle count across the bins flattened the plots.        
       
-![partrack_enh_horiplane](https://user-images.githubusercontent.com/126000617/222761048-fbfbc6c2-f85b-40b5-a097-b44310533fd7.png)
+<img src="https://user-images.githubusercontent.com/126000617/222761048-fbfbc6c2-f85b-40b5-a097-b44310533fd7.png" alt="horiplane all" width="1000" height="400"/>
 
 
 > Figure 6. Beams plotted in selected planes of interest to the user. Axes are suited to each individual plane.      
       
-![partrack_enh_horiplane_selected](https://user-images.githubusercontent.com/126000617/222768657-dc6456c4-f714-4b37-9114-f8a1eca77f7f.png)
+<img src="https://user-images.githubusercontent.com/126000617/224505467-72f64f7b-aa41-46a0-8573-1bd099e01e3a.png" alt="horiplane selected" width="750"/>
+
+
+> Figure 7. Beams plotted in the final plane. Axes are input by the user as in using a zooming function.      
+      
+<img src="https://user-images.githubusercontent.com/126000617/224505892-fd3ba133-33cb-48f2-9d05-a18bd32defa6.png" alt="horiplane zoomed" width="300"/>
 
 
 
