@@ -552,7 +552,7 @@ plot_beam_basic( beam_delta_minus , "vertical" , nb_plane , nb_bin , bin_step_ve
 
 % 5)  INSPECT SPECIFIC PLANES, USING PLANE INDIVIDUAL AXIS SCALE (instead of axis scale common to all planes)
 
-% Select beam of interest (ex: beam_delta) and select index # of specific planes to look at (ex. #2 and #4 ), insert these into "plot_selected_beam_enhanced"
+% Select beam of interest (ex: beam_delta) and insert index # of specific planes to look at (ex. #2, #3 and #4 ) into "beam_planes"
 beam_plane = [2 3 4] ;
 
 printf("horizontal plane for user-selected beams on figure (3) ... \n" )   ;
@@ -567,11 +567,10 @@ plot_selected_beam_enhanced( beam_delta_minus , "horizontal" , beam_plane , nb_b
 
 % 6)  INSPECT SPECIFIC PLANES, USING PLANE INDIVIDUAL AXIS SCALE WITH USER-DEFINED BOUNDARIES
 
-% Select beam of interest (ex: beam_delta) and select index # of specific planes to look at (ex. #5 )
-% one beam only in beam_plane !
-
 printf("horizontal plane for ZOOMED user-selected beam on figure (4) ... \n" )   ;
 
+% Select beam of interest (ex: beam_delta) and select index # of ONE specific plane to look at (ex. #5 )
+% Define interval [xmin xmax ymin ymax] to use as a zoom window
 beam_plane = 5 ;
 beam_interval = [-1 1 -30 30] ;
 figure(4); clf ;
