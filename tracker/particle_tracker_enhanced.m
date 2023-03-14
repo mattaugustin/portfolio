@@ -109,16 +109,20 @@ endfunction
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-% CREATE HISTOGRAMS ASSOCIATED TO PARTICLE COUNT FOR A GIVEN BEAM
-function [stairs_histo_beam] = set_histogram_beam_enhanced( beam , component , nb_plane , nb_bin , dx );
+
+
+% CREATE HISTOGRAMS (BIN OPTIMIZED) FROM ORIGINAL AND TRANSFORMED BEAM
+function [histo_beam] = set_histogram_beam_basic( beam , component  , nb_bin , dx );
 %
 %generate histogram from 'vec' into 'bin' bins
-  
+
   if ( strncmpi(component , "horizontal" , 3 )    )
       comp_col = 1 ;
   else ( strncmpi( component , "vertical" , 3)   )
       comp_col = 3 ;
   endif
+
+  nb_plane = length(beam) ;
 
 for beam_plane=1:nb_plane
 
@@ -150,18 +154,10 @@ for beam_plane=1:nb_plane
 endfor
 %
 
-% Create the histogram staircase
-for beam_plane=1:nb_plane
-      x = [histo_beam{beam_plane}(1,1)-dx , histo_beam{beam_plane}(1,:) , histo_beam{beam_plane}(1,end)+dx ] ;
-      y = [ 0 , histo_beam{beam_plane}(2,:) , 0 ] ;
-      [x_stairs , y_stairs]         =  stairs ( x , y ) ;
-      stairs_histo_beam{beam_plane} = [x_stairs , y_stairs] ;
-     % clear x ; clear y ; clear x_stairs ; clear y_stairs ;
-endfor
-%
-
 endfunction
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#########################
+
+
 
 
 % PLOT PROJECTED BEAMS & HISTOGRAMS FOR USER-SELECTED PLANES
@@ -230,8 +226,7 @@ for index_plane=1:length(beam_plane)
   stairs_histo_beam{index_plane} = [x_stairs , y_stairs] ;
 
   clear x ; clear y ; clear x_stairs ; clear y_stairs ; clear binx ; clear biny ; clear x_min ; clear x_max ; clear histo_beam ;
-  % clear count_boundary ; clear histo_beam ; clear x_boundary ; clear y_boundary ;
-
+  
   count_boundary(index_plane) =  max( stairs_histo_beam{index_plane}(:,2) )*1.2  ;
 
 endfor
@@ -249,7 +244,7 @@ for index_plane=1:col_nb
 
   xlabel( label_x_axis ) ; ylabel( label_y_axis ) ;
   title( sprintf( 'Beam in plane %i', beam_plane(index_plane) ) ) ;
-  axis("label","tic") ; % axis("labely","ticy") ;
+  axis("label","tic") ;
   axis( [-x_boundary(index_plane) x_boundary(index_plane) -y_boundary(index_plane) y_boundary(index_plane)] ) ;
 
 % Plot corresponding histogram
@@ -261,7 +256,7 @@ for index_plane=1:col_nb
 
   xlabel ( label_x_axis ) ; ylabel( "Particle count" ) ;
   title( ' {\fontsize{11}\it associated histogram} ') ;
-  axis("label","tic") ; % axis("labely","ticy") ;
+  axis("label","tic") ; 
   axis([-x_boundary(index_plane) x_boundary(index_plane) 0 count_boundary(index_plane)]) ;
 
 endfor
@@ -271,8 +266,9 @@ endfunction
 %%%%%%%%%%%%%%%%%%%%%%%%
 
 
-% PLOT PROJECTED BEAMS & HISTOGRAMS FOR ALL PLANES
-function plot_beam_enhanced( beam , component , nb_plane , nb_bin , bin_step , colour_name ) ;  % red, black, blue, green, magenta, cyan
+% PLOT BEAMS & HISTOGRAMS FROM ORIGINAL AND TRANSFORMED BEAM
+function plot_beam_basic( beam , component , nb_plane , nb_bin , dx , colour_name ) ;  % red, black, blue, green, magenta, cyan
+
 
 % Prepare axis labels
   if ( strncmpi(component , "horizontal" , 3 )    )
@@ -285,7 +281,6 @@ function plot_beam_enhanced( beam , component , nb_plane , nb_bin , bin_step , c
 %
 
 % Prepare axis boundaries
-  dx = bin_step ;
   min_beams_x  = min( min(beam{1}(:,comp_col)) , min(beam{nb_plane}(:,comp_col)) ) ;
   max_beams_x  = max( max(beam{1}(:,comp_col)) , max(beam{nb_plane}(:,comp_col)) ) ;
   x_boundary   = max( abs(min_beams_x)  , max_beams_x  ) *1.1  ;
@@ -297,12 +292,21 @@ function plot_beam_enhanced( beam , component , nb_plane , nb_bin , bin_step , c
 
 % Prepare histogram values/settings prior to plotting
 
-  [ stairs_histo_beam ] = set_histogram_beam_enhanced( beam , component , nb_plane , nb_bin , dx ) ;  % bin_step = dx
-  count_boundary = max(  max(stairs_histo_beam{1}(:,2) ) , max( stairs_histo_beam{nb_plane}(:,2) )  )*1.2  ;
+  [histo_beam] = set_histogram_beam_basic( beam , component  , nb_bin , dx ) ;  
+  count_boundary = max(  max(histo_beam{1}(2,:) ) , max( histo_beam{nb_plane}(2,:) )  )*1.2  ;
 
 
-%%  Plot beams in all plane
+% Create the histogram staircase
+for beam_plane=1:nb_plane
+      x = [histo_beam{beam_plane}(1,1)-dx , histo_beam{beam_plane}(1,:) , histo_beam{beam_plane}(1,end)+dx ] ;
+      y = [ 0 , histo_beam{beam_plane}(2,:) , 0 ] ;
+      [x_stairs , y_stairs]         =  stairs ( x , y ) ;
+      stairs_histo_beam{beam_plane} = [x_stairs , y_stairs] ;
+      clear x ; clear y ; clear x_stairs ; clear y_stairs ;
+endfor
+%
 
+% Plot beams in all plane
 for beam_plane=1:nb_plane
 
   subplot( 2 , nb_plane , beam_plane ) ; hold on ;                              %  subplot ( rows ,col , index )  read L to R , T to B
@@ -312,11 +316,11 @@ for beam_plane=1:nb_plane
 
   xlabel( label_x_axis ) ; ylabel( label_y_axis ) ;
   title( sprintf( 'Beam in plane %i', beam_plane )) ;
-  axis("label","tic") ; 
+  axis("label","tic") ; % axis("labely","ticy") ;
   axis( [-x_boundary x_boundary -y_boundary y_boundary] ) ;
 
 % Plot corresponding histogram
-%
+
   subplot( 2 , nb_plane , beam_plane + nb_plane ) ; hold on ;
   plot([-x_boundary x_boundary ],[0 0] , '--', "color",[0 0 0] + 0.5 ) ;        %    Zero horizontal dashed grey (0.7)line
   plot([0 0],[-y_boundary y_boundary ] , '--', "color",[0 0 0] + 0.5 ) ;        %         vertical
@@ -326,15 +330,15 @@ for beam_plane=1:nb_plane
   title( ' {\fontsize{11}\it associated histogram} ') ;
   axis("label","tic") ; % axis("labely","ticy") ;
   axis([-x_boundary x_boundary 0 count_boundary]) ;
-
 endfor
 %
 endfunction
-%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 
 % PLOT ZOOMS : BEAMS & HISTOGRAMS FROM ORIGINAL AND TRANSFORMED BEAM
-function plot_selected_beam_zoomed( beam , component , beam_plane , nb_bin , beam_interval , colour_name ) ;  % red, black, blue, green, magenta, cyan
+function plot_selected_beam_zoomed( beam , component , beam_plane , bin_step , beam_interval , colour_name ) ;  % red, black, blue, green, magenta, cyan
 
 % Prepare axis labels
   if ( strncmpi(component , "horizontal" , 3 )    )
@@ -346,6 +350,8 @@ function plot_selected_beam_zoomed( beam , component , beam_plane , nb_bin , bea
   endif
 %
 
+% Prepare axis boundaries
+
   x_min  = beam_interval(1) ;
   x_max  = beam_interval(2) ;
   x_boundary = max( abs(x_min)  , x_max  ) *1.1  ;
@@ -353,17 +359,9 @@ function plot_selected_beam_zoomed( beam , component , beam_plane , nb_bin , bea
   min_beams_y  = beam_interval(3) ;
   max_beams_y  = beam_interval(4) ;
   y_boundary   = max( abs(min_beams_y)  , max_beams_y  ) *1.1  ;
-%
+  
+  dx = bin_step ;
 
-% Calculate bin_step for plot horizontal axis
-  dx=(x_max - x_min )/ nb_bin;
-  dxexp=floor(log10(dx));   % exponent    (b in n=a*10^b)
-  dxsig=dx*10^-dxexp;       % significant (a in n=a*10^b)
-  sig=[1,2,3,4,5];          % allowed factors for binsizes
-  dx=max(sig(find(dxsig>=sig)))*10^dxexp;
-
-
-% Prepare histogram values/settings prior to plotting
 
 % convert vec into bin indices for for beams in all planes
   veci  = (beam{beam_plane}(:,comp_col) - (x_min+x_max)/2)/dx;
@@ -396,6 +394,7 @@ function plot_selected_beam_zoomed( beam , component , beam_plane , nb_bin , bea
   count_boundary =  max( stairs_histo_beam(:,2) )*1.2  ;
 
 
+%%  Plot beams
   subplot( 2 , 1 , 1 ) ; hold on ;
   plot([-x_boundary x_boundary],[0 0] , '--', "color",[0 0 0] + 0.5 ) ;        % Zero horizontal dashed grey (0.7)line
   plot([0 0],[-y_boundary y_boundary] , '--', "color",[0 0 0] + 0.5 ) ;        %      vertical
@@ -403,11 +402,10 @@ function plot_selected_beam_zoomed( beam , component , beam_plane , nb_bin , bea
 
   xlabel( label_x_axis ) ; ylabel( label_y_axis ) ;
   title( sprintf( 'Beam in plane %i', beam_plane ) ) ;
-  axis("label","tic") ; 
+  axis("label","tic") ;
   axis( [-x_boundary x_boundary -y_boundary y_boundary] ) ;
 
 % Plot corresponding histogram
-
   subplot( 2 , 1 , 2 ) ; hold on ;
   plot([-x_boundary x_boundary],[0 0] , '--', "color",[0 0 0] + 0.5 ) ;        %    Zero horizontal dashed grey (0.7)line
   plot([0 0],[-y_boundary y_boundary] , '--', "color",[0 0 0] + 0.5 ) ;        %         vertical
@@ -415,12 +413,13 @@ function plot_selected_beam_zoomed( beam , component , beam_plane , nb_bin , bea
 
   xlabel ( label_x_axis ) ; ylabel( "Particle count" ) ;
   title( ' {\fontsize{11}\it associated histogram} ') ;
-  axis("label","tic") ; % axis("labely","ticy") ;
+  axis("label","tic") ; 
   axis([-x_boundary x_boundary 0 count_boundary]) ;
 %
 
 endfunction
-%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 
  % SUB-ROUTINE : READ MATRICES, GENERATE & TRANSFORM BEAMS
@@ -515,13 +514,17 @@ printf("horizontal plane on figure (1) ... \n") ;
 [ temp_delta ]       = histogram_step_enhanced( beam_delta       , "horizontal" , nb_bin )  ;
 [ temp_delta_minus ] = histogram_step_enhanced( beam_delta_minus , "horizontal" , nb_bin ) ;
 [ temp_delta_plus ]  = histogram_step_enhanced( beam_delta_plus  , "horizontal" , nb_bin )  ;
-bin_step     = max( [temp_delta , temp_delta_minus , temp_delta_plus ] ) ;
+bin_step_horizontal     = max( [temp_delta , temp_delta_minus , temp_delta_plus ] ) ;
 
 figure(1);  % Select and plot on horizontal plane
 pause (0.1) ; set(gcf,'position', [20 250 1350 400]) ;
-plot_beam_enhanced( beam_delta       , "horizontal" , nb_plane , nb_bin , bin_step , "black" ); pause(0.3) ;
-plot_beam_enhanced( beam_delta_plus  , "horizontal" , nb_plane , nb_bin , bin_step , "red"   ); pause(0.3) ;
-plot_beam_enhanced( beam_delta_minus , "horizontal" , nb_plane , nb_bin , bin_step , "blue"  );
+
+plot_beam_basic( beam_delta       , "horizontal" , nb_plane , nb_bin , bin_step_horizontal , "black" ); pause(0.2) ;
+plot_beam_basic( beam_delta_minus , "horizontal" , nb_plane , nb_bin , bin_step_horizontal , "blue"  ); pause(0.2) ;
+plot_beam_basic( beam_delta_plus  , "horizontal" , nb_plane , nb_bin , bin_step_horizontal , "red"   );  ;
+
+
+
 
 % print('mine/partracker_horiplane_start.png','-dpng','-S1000,750');
 
@@ -533,14 +536,15 @@ printf("vertical plane on figure (2) ... \n")   ;
 [ temp_delta ]       = histogram_step_enhanced( beam_delta       , "vertical" , nb_bin )  ;
 [ temp_delta_minus ] = histogram_step_enhanced( beam_delta_minus , "vertical" , nb_bin ) ;
 [ temp_delta_plus ]  = histogram_step_enhanced( beam_delta_plus  , "vertical" , nb_bin )  ;
-bin_step     = max( [temp_delta , temp_delta_minus , temp_delta_plus ] ) ;
+bin_step_vertical     = max( [temp_delta , temp_delta_minus , temp_delta_plus ] ) ;
 
 
 figure(2);  % Select and plot on vertical plane
 pause (0.1) ; set(gcf,'position', [20 50 1350 400]) ;
-plot_beam_enhanced( beam_delta       , "vertical" , nb_plane , nb_bin , bin_step , "black" ); pause(0.3) ;
-plot_beam_enhanced( beam_delta_plus  , "vertical" , nb_plane , nb_bin , bin_step , "red"   ); pause(0.3) ;
-plot_beam_enhanced( beam_delta_minus , "vertical" , nb_plane , nb_bin , bin_step , "blue"  );
+plot_beam_basic( beam_delta       , "vertical" , nb_plane , nb_bin , bin_step_vertical , "black" ); pause(0.2) ;
+plot_beam_basic( beam_delta_plus  , "vertical" , nb_plane , nb_bin , bin_step_vertical , "red"   ); pause(0.2) ;
+plot_beam_basic( beam_delta_minus , "vertical" , nb_plane , nb_bin , bin_step_vertical , "blue"  );
+
 
 % print('mine/partracker_vertiplane_start.png','-dpng','-S1000,750');
 
@@ -549,13 +553,16 @@ plot_beam_enhanced( beam_delta_minus , "vertical" , nb_plane , nb_bin , bin_step
 % 5)  INSPECT SPECIFIC PLANES, USING PLANE INDIVIDUAL AXIS SCALE (instead of axis scale common to all planes)
 
 % Select beam of interest (ex: beam_delta) and select index # of specific planes to look at (ex. #2 and #4 ), insert these into "plot_selected_beam_enhanced"
-beam_plane = [2 4] ;
+beam_plane = [2 3 4] ;
 
 printf("horizontal plane for user-selected beams on figure (3) ... \n" )   ;
 
 figure(3); clf ; 
 pause (0.1) ; set(gcf,'position', [20 100 300*length(beam_plane) 400]) ;
-plot_selected_beam_enhanced( beam_delta , "horizontal" , beam_plane , nb_bin  , "black" ) ;
+plot_selected_beam_enhanced( beam_delta       , "horizontal" , beam_plane , nb_bin  , "black" ) ; hold on ;
+plot_selected_beam_enhanced( beam_delta_plus  , "horizontal" , beam_plane , nb_bin  , "red" ) ;   hold on ;
+plot_selected_beam_enhanced( beam_delta_minus , "horizontal" , beam_plane , nb_bin  , "blue" ) ;
+
 
 
 % 6)  INSPECT SPECIFIC PLANES, USING PLANE INDIVIDUAL AXIS SCALE WITH USER-DEFINED BOUNDARIES
@@ -563,14 +570,14 @@ plot_selected_beam_enhanced( beam_delta , "horizontal" , beam_plane , nb_bin  , 
 % Select beam of interest (ex: beam_delta) and select index # of specific planes to look at (ex. #5 )
 % one beam only in beam_plane !
 
-printf("horizontal plane for user-selected beams on figure (4) ... \n" )   ;
+printf("horizontal plane for ZOOMED user-selected beam on figure (4) ... \n" )   ;
 
 beam_plane = 5 ;
-beam_interval = [-2 2 -30 30] ;
+beam_interval = [-1 1 -30 30] ;
 figure(4); clf ;
 pause (0.1) ; set(gcf,'position', [20 100 300*length(beam_plane) 400]) ;
 
-plot_selected_beam_zoomed( beam_delta , "horizontal" , beam_plane , nb_bin , beam_interval , "black" ) ;  hold on ;
-plot_selected_beam_zoomed( beam_delta_minus , "horizontal" , beam_plane , nb_bin , beam_interval , "blue" ) ;  hold on ;
-plot_selected_beam_zoomed( beam_delta_plus  , "horizontal" , beam_plane , nb_bin , beam_interval , "red" ) ;  hold on ;
+plot_selected_beam_zoomed( beam_delta       , "horizontal" , beam_plane , bin_step_horizontal , beam_interval , "black" ) ;  hold on ;
+plot_selected_beam_zoomed( beam_delta_plus  , "horizontal" , beam_plane , bin_step_horizontal , beam_interval , "red" ) ;  hold on ;
+plot_selected_beam_zoomed( beam_delta_minus , "horizontal" , beam_plane , bin_step_horizontal , beam_interval , "blue" ) ;  hold on ;
 
