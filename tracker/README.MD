@@ -46,7 +46,7 @@ Coefficients of each column of M relate to one of the beam characteristics, and 
 
 
 &nbsp; &nbsp; &nbsp; As the beam travels through the optical setup, particles behave differently depending on their respective mass and hence see their flying path altered. Using the transfer matrices obtained when simulating the beamline for the reference mass M=100, a beam containing 50 000 particles of near-identical masses ( $M_{1}$ = 99.9999, $M_{0}$ = 100, $M_{2}$ = 100.0001 ) was input into the transfer matrices defined in all recording planes in order to calculate the respective beam projections in both horizontal and vertical planes. In effect, components of each particle ( positions x & y and plane orientation angles a & b, time of flight t and mass difference $\delta$ ) are multiplied by the matrix coefficients according to the previous relation to obtain the coordinates of the projected particle in the selected plane.         
-&nbsp; &nbsp; &nbsp; Plotting the projected particles in all planes (Figure 5), in particular the last one reflecting the impact of the entire beamline (Figure 7), reveals how well the optical setup performs in terms of separation ability, i.e. the resolution of the optical setup. If required, planes of interest can be selected to observe projected beams in more details (Figure 6).
+&nbsp; &nbsp; &nbsp; Plotting the projected particles in all planes (Figure 5) reveals how well the optical setup performs in terms of mass separation ability across several setup locations, hence showing the mass resolution of the optical setup. If required, planes of interest can be selected to observe projected beams in more details (Figure 6).
 
           
 > Figure 5. Three beams of nearly-identical mass particles projected across all observation planes (using this project Octave code), along with a corresponding particle count histogram. Axis system is by default common to all planes, and can be set (using a dedicated function) to display full beam projections in all planes (e.g. planes #2 and #3).
@@ -60,6 +60,7 @@ Coefficients of each column of M relate to one of the beam characteristics, and 
 <img src="https://user-images.githubusercontent.com/126000617/225335503-5c3fffd5-193b-4f4c-a5c7-2c68f4607ca3.png" alt="horiplane selected" width="550"/>
 
 
+A "zooming" function finally permits to inspect a plane of interest to the user, by providing the axis window as a input. This function, when applied to plane #6 where the near mass beams went through both separation stages (via 2 magnets), visually reveals the performance of the entire beamline. All beams are clearly separated, showing the mass resolution for M=100 calculated including 3rd order optical aberrations is superior to 10 000.
 
 > Figure 7. Beams plotted in the final plane (plane #6). Axes are input by the user as if using a zooming function.      
       
