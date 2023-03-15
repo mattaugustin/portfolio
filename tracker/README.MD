@@ -46,20 +46,21 @@ Coefficients of each column of M relate to one of the beam characteristics, and 
 &nbsp; &nbsp; &nbsp; Plotting the projected particles in all planes (Figure 5), in particular the last one reflecting the impact of the entire beamline (Figure 7), reveals how well the optical setup performs in terms of separation ability, i.e. the resolution of the optical setup. If required, planes of interest can be selected to observe projected beams in more details (Figure 6).
 
           
-> Figure 5. Three beams of nearly-identical mass particles projected across all observation planes (using this project Octave code), along with a corresponding particle count histogram. Axes are common to all planes. In plane #2 and #4, low numbers of particle count across the bins flattened the plots.        
+> Figure 5. Three beams of nearly-identical mass particles projected across all observation planes (using this project Octave code), along with a corresponding particle count histogram. Axis system is by default common to all planes, and can be set (using a dedicated function) to display full beam projections in all planes (e.g. planes #2 and #3).
 
 <img src="https://user-images.githubusercontent.com/126000617/225326940-19a9593e-3187-4aeb-aff4-728ad0c9573b.png" alt="design1bis_separation" width="1100"/>
 
 
+
 > Figure 6. Beams plotted in selected planes of interest to the user. Axes are suited to each individual plane.      
       
-<img src="https://user-images.githubusercontent.com/126000617/224505467-72f64f7b-aa41-46a0-8573-1bd099e01e3a.png" alt="horiplane selected" width="750"/>
+<img src="https://user-images.githubusercontent.com/126000617/225335503-5c3fffd5-193b-4f4c-a5c7-2c68f4607ca3.png" alt="horiplane selected" width="550"/>
 
 
-> Figure 7. Beams plotted in the final plane. Axes are input by the user as in using a zooming function.      
+
+> Figure 7. Beams plotted in the final plane (plane #6). Axes are input by the user as if using a zooming function.      
       
-<img src="https://user-images.githubusercontent.com/126000617/224505892-fd3ba133-33cb-48f2-9d05-a18bd32defa6.png" alt="horiplane zoomed" width="300"/>
-
+<img src="https://user-images.githubusercontent.com/126000617/225336406-bf061b5c-e13a-465b-9e76-801155c921b3.png" alt="horiplane zoomed" width="300"/>
 
 
 The Octave routine includes :
