@@ -1,3 +1,5 @@
+***In a nutshell:*** *this Octave code routine relates to mass spectrometry matters. It reads an external file containing beam transport-related transfer matrices and calculates projection of beam of N particles across several locations of a beamline setup. Multiple plotting possibilities are proposed to visualize different beams, which informs the user of the separation ability of the beam optical setup.*
+
 &nbsp; &nbsp; &nbsp; &nbsp; In high resolution spectrometry, one main challenge is to separate a beam of near-identical mass particles into several beams each composed of only one mass and hence one single particle type, thus ensuring "purity" of each beam for ensuing relevant experiments.
 As an example, an optical setup (made of multipoles, beam drifting tubes, magnet separators) as pictured in Figure 1 is able to separate particles with mass $M_{1}$ = 100 and $M_{2}$ = 100.0001 (i.e. a $\delta$ = 0.0001) respectively. This means the setup has a resolution R = 1 / $\delta$ = 10 000.
 
@@ -5,13 +7,14 @@ In evaluating the performance of an optical setup, particle beam transport model
 
 > Figure 1. Left: beamline layout example (3D Autocad). Right: corresponding beam trajectory modelling in the horizontal plane (modelled in CosyScript), where the beam is represented using a few rays and beam envelope (outermost ray).     
       
-<img src="https://user-images.githubusercontent.com/126000617/225327475-183ef376-1b09-48ce-8e27-01e281b9687e.png" alt="design1bis_layout" width="1100"/>
+<img src="https://user-images.githubusercontent.com/126000617/225346232-d413d1a8-9165-4562-8509-4b9c17eda6d1.png" alt="design1bis_layout" width="1100"/>
+
 
 
 &nbsp; &nbsp; Particle transport modelling software do not however provide a visually-clear insight on the separation ability of the optical setup for different particle mass beams, since only one beam can be simulated in a transport and optimization routine. This gap is filled by means of external software, such as with this project Octave code. The code output shows whether, and if so, how well, a multimass particle beam can be separated into single mass smaller beams.
 
        
-Each particle of the beam is characterized by its position x and y (usually expressed in mm) in the horizontal and vertical plane respectively, but also by its angular orientation (in mrad) in each plane that indicate "where" in the plane the particle is heading. Together, all particles form a beam whose boundaries are thus defined by the outermost particle position (Figure 2), and the beam boundaries are most often referred to as beam emittance. A beam with boundaries of 0.3 mm and 10 mrad thus has an emittance 3 $\pi$.mm.mrad .    
+Each particle of the beam is characterized by its position x and y (usually expressed in mm) in the horizontal and vertical plane respectively, but also by its angular orientation (in mrad) in each plane that indicate "where" in the plane the particle is heading. Together, all particles form a beam whose boundaries are thus defined by the outermost particle position (Figure 2), and the beam boundaries are most often referred to as beam emittance. A beam with boundaries of 0.3 mm and 10 mrad thus has an emittance 3 \pi$.mm.mrad .    
 
 
 > Figure 2. Beam initial definition plotted in both horizontal and vertical planes.  
