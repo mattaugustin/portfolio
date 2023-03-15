@@ -5,7 +5,7 @@ In evaluating the performance of an optical setup, particle beam transport model
 
 > Figure 1. Left: beamline layout example (3D Autocad). Right: corresponding beam trajectory modelling in the horizontal plane (modelled in CosyScript), where the beam is represented using a few rays and beam envelope (outermost ray).     
       
-![layoutoptic2](https://user-images.githubusercontent.com/126000617/220473800-5e5050ef-093c-494b-91ca-4d4fc37dbc20.png)
+<img src="https://user-images.githubusercontent.com/126000617/225327475-183ef376-1b09-48ce-8e27-01e281b9687e.png" alt="design1bis_layout" width="1100"/>
 
 
 &nbsp; &nbsp; Particle transport modelling software do not however provide a visually-clear insight on the separation ability of the optical setup for different particle mass beams, since only one beam can be simulated in a transport and optimization routine. This gap is filled by means of external software, such as with this project Octave code. The code output shows whether, and if so, how well, a multimass particle beam can be separated into single mass smaller beams.
@@ -47,8 +47,8 @@ Coefficients of each column of M relate to one of the beam characteristics, and 
 
           
 > Figure 5. Three beams of nearly-identical mass particles projected across all observation planes (using this project Octave code), along with a corresponding particle count histogram. Axes are common to all planes. In plane #2 and #4, low numbers of particle count across the bins flattened the plots.        
-      
-<img src="https://user-images.githubusercontent.com/126000617/222761048-fbfbc6c2-f85b-40b5-a097-b44310533fd7.png" alt="horiplane all" width="1000" height="400"/>
+
+<img src="https://user-images.githubusercontent.com/126000617/225326940-19a9593e-3187-4aeb-aff4-728ad0c9573b.png" alt="design1bis_separation" width="1100"/>
 
 
 > Figure 6. Beams plotted in selected planes of interest to the user. Axes are suited to each individual plane.      
