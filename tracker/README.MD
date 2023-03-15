@@ -1,5 +1,6 @@
-***In a nutshell:*** *this Octave code routine relates to mass spectrometry matters. It reads an external file containing beam transport-related transfer matrices and calculates projection of beam of N particles across several locations of a beamline setup. Multiple plotting possibilities are proposed to visualize different beams, which informs the user of the separation ability of the beam optical setup.*
+***In a nutshell:*** *I created this Octave code routine to visualize the mass resolution power of a beamline, in relation to mass spectrometry challenges. The code reads an external file containing beam transport-related transfer matrices and uses them to calculate the projection of beams of N particles across several locations of a beamline setup. To understand how the beam is impacted across the setup, I created multiple plotting functions to visualize the different beams, which ultimately informs the user of the separation ability of the beam optical setup.*
 
+#### Background    
 &nbsp; &nbsp; &nbsp; &nbsp; In high resolution spectrometry, one main challenge is to separate a beam of near-identical mass particles into several beams each composed of only one mass and hence one single particle type, thus ensuring "purity" of each beam for ensuing relevant experiments.
 As an example, an optical setup (made of multipoles, beam drifting tubes, magnet separators) as pictured in Figure 1 is able to separate particles with mass $M_{1}$ = 100 and $M_{2}$ = 100.0001 (i.e. a $\delta$ = 0.0001) respectively. This means the setup has a resolution R = 1 / $\delta$ = 10 000.
 
@@ -13,7 +14,7 @@ In evaluating the performance of an optical setup, particle beam transport model
 
 &nbsp; &nbsp; Particle transport modelling software do not however provide a visually-clear insight on the separation ability of the optical setup for different particle mass beams, since only one beam can be simulated in a transport and optimization routine. This gap is filled by means of external software, such as with this project Octave code. The code output shows whether, and if so, how well, a multimass particle beam can be separated into single mass smaller beams.
 
-       
+#### Calculations        
 Each particle of the beam is characterized by its position x and y (usually expressed in mm) in the horizontal and vertical plane respectively, but also by its angular orientation (in mrad) in each plane that indicate "where" in the plane the particle is heading. Together, all particles form a beam whose boundaries are thus defined by the outermost particle position (Figure 2), and the beam boundaries are most often referred to as beam emittance. A beam with boundaries of 0.3 mm and 10 mrad thus has an emittance 3 $\pi$.mm.mrad .    
 
 
@@ -46,6 +47,8 @@ Coefficients of each column of M relate to one of the beam characteristics, and 
 
 
 &nbsp; &nbsp; &nbsp; As the beam travels through the optical setup, particles behave differently depending on their respective mass and hence see their flying path altered. Using the transfer matrices obtained when simulating the beamline for the reference mass M=100, a beam containing 50 000 particles of near-identical masses ( $M_{1}$ = 99.9999, $M_{0}$ = 100, $M_{2}$ = 100.0001 ) was input into the transfer matrices defined in all recording planes in order to calculate the respective beam projections in both horizontal and vertical planes. In effect, components of each particle ( positions x & y and plane orientation angles a & b, time of flight t and mass difference $\delta$ ) are multiplied by the matrix coefficients according to the previous relation to obtain the coordinates of the projected particle in the selected plane.         
+
+#### Plotting the beams
 &nbsp; &nbsp; &nbsp; Plotting the projected particles in all planes (Figure 5) reveals how well the optical setup performs in terms of mass separation ability across several setup locations, hence showing the mass resolution of the optical setup. If required, planes of interest can be selected to observe projected beams in more details (Figure 6).
 
           
