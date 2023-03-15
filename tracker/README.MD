@@ -25,7 +25,7 @@ Each particle of the beam is characterized by its position x and y (usually expr
 &nbsp; &nbsp; The COSY software simulated the beam envelope particle trajectory through the setup for a reference mass M=100, running optimization routines on few setup parameters (voltages, distances...). As the beam undergoes transformations resulting from the setup configuration, the user can select locations at which the software "records" such transformation in a matrix, the coefficients of which could be applied to any particle from the starting beam to calculate its position in the "recording" plane. Besides the transformation coefficients, the actual particle characteristics can also be recorded by the software (Figure 3). Beam characteristics in any recording plane "n" can be calculated using the transformation matrix M of the relevant plane as per Figure 4 formula.     
 
 
-> Figure 3. Example of beam characteristics and beam transformation matrices, as recorded by CosyScript.
+> Figure 3. Extract of the external file containing beam characteristics and beam transformation matrices in all requested planes, as recorded by CosyScript. The blue shapes are emphasized to illustrate the calculations of particle horizontal position detailed hereafter.
 
 <img src="https://user-images.githubusercontent.com/126000617/224133563-25504a2a-1161-4aa1-9b54-9c1ca6fcd5a9.PNG" alt="transfomatrix" width="850"/>
 
