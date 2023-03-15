@@ -1,12 +1,15 @@
-This code reads and processes earthquake acceleration signals produced by the Neo-Deterministic Seismic Hazard Analysis (NDSHA) methodology (Panza 2001,2012).
+***In a nutshell :*** *this code reads and processes a large set of synthetic earthquake acceleration signals (i.e. time histories) produced by the Modal Summation technique as featured in the Neo-Deterministic Seismic Hazard Analysis (NDSHA) methodology (Panza 2001, 2012). . The goal is to obtain earthquake engineering parameters from earthquake synthetic time histories (e.g PGA, PGV ...) that can be compared to earthquake observation data in a companion project section.*
+
 
 The steps are as follows : 
-+ creating functions for later operations (Arias Intensity, spectral accelerations, dataframe and list re-organizing)
++ creating functions for later operations (Arias Intensity, spectral accelerations, dataframe and list re-organizing),
 + preparing the file architecture for subsequent reading, 
 + reading and processing dataframe, 
 + creating a Tree Structure for organizing the files, 
 + processing files to extract relevant earthquake parameters such as PGA, spectral acceleration values, Arias-intensity related parameters,
 + plotting parameters related to earthquake events.
+
+
 
 An example dataset with earthquake signals corresponding to different events, recording channels and stations is provided at the following link:
 https://drive.google.com/drive/folders/1jdH0llIJzKXL89UEYmAZGeMVjHX_uXgJ?usp=sharing
