@@ -1,7 +1,6 @@
 ***In a nutshell :*** *I created this code to obtain engineering parameters from synthetic earthquake signals (i.e. time histories) produced by the MS technique as featured in the NDSHA methodology (Panza 2001, 2012). The code reads and processes a large dataset of earthquake signals, calculating the parameters using a set of functions and keeping track of the range of settings associated to the simulations. I included several plotting options to clearly visualize the data and results. The final output is a dataframe containing seismic parameters derived from simulations that can be compared to earthquake observation data in a companion project section.*
 
 
-to calculate parameters . The goal is to obtain earthquake engineering parameters from earthquake synthetic time histories (e.g PGA, PGV ...) 
 
 
 The steps are as follows : 
