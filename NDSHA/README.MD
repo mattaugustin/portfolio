@@ -2,11 +2,13 @@
 
 
 The section /portfolio/seismic_records provided a set of engineering eathquake parameters thanks to instrumental data associated to actual UK earthquakes and recorded at several seismic stations scattered across the UK. In this section, the work involved producing a dataset of synthetic earthquake signals (i.e. time histories) with the MS techniques for these UK earthquakes and recording stations connected to seismic observations. I hence generated time histories for stations operating on broadband (B-channel) and high broadband (H-channel), just as instrumental data were available on both these channels.
-
+         
+     
 In generating the synthetic time histories, some specifics related to simulation settings had to be accounted for:
 * the upper corner frequency : synthetic signals can and were generated only for a 10 Hz upper frequency, hence the frequency "Tree branch" only includes 10 Hz (and not 25 Hz or 35 Hz as in portfolio/seismic_records).
 * the earthquake fault-rupture realisation : this can be seen as the beginning of an earthquake, when the accumulated stress is released from a nucleation point located randomly along the plane fault (Figure 1). From the nucleation point starts a wave - the rupture front - that triggers other weak points along the fault as it propagates away from the nucleation point.
 * the directivity : the angle formed between the direction taken by the rupture front and the recording station location, for which three angle values - 0°, 90° and 180° - are of particular interest.
+
 
 > Figure 1. Two examples of earthquake fault-rupturing, illustrating several seismicity terms (directivity, random location of nucleation point...).
 
@@ -24,7 +26,7 @@ The folder organisation and file names helped with loading and managing the time
 A Tree Structure was then created to re-organize the files to reflect the folder organisation on the computer. Simulation settings (b) real and (c) directivity were tracked by incorporating them into the Tree structure implemented in portfolio/seismic_records, via the tree branches "directivity" and "real" which record the directivity angle and the realisation index respectively.
 Earthquake name and station recording channels B-channel & H-channel are tracked. Since only one corner frequency is relevant for the simulations, no Tree branch "frequency" was inserted.     
 	
-      
+    	
       
        
         
@@ -53,15 +55,15 @@ References:
 
 + Panza, G.F., La Mura, C., Peresan, A., Romanelli, F. and Vaccari, F., 2012. Seismic hazard scenarios as preventive tools for a disaster resilient society. In Advances in geophysics (Vol. 53, pp. 93-165). Elsevier.
 
-> Geology distribution associated to the seismic monitoring stations
+> Figure 4. Geology distribution associated to the seismic monitoring stations
 
 <img src="https://user-images.githubusercontent.com/61290423/211395831-d7d4aeed-bae8-4f52-8a7b-dfe53c04a143.png" alt="geo distr" width="600"/>
 
-> PGA Amplitude distribution associated to the seismic wavefront directivity angle in case of the Swansea earthquake
+> Figure 2. PGA Amplitude distribution associated to the seismic wavefront directivity angle in case of the Swansea earthquake
 
 <img src="https://user-images.githubusercontent.com/61290423/211396042-991788bc-cfcd-451a-ab35-22b58d07fc4e.png" alt="PGA amp distr" width="750"/>
 
-> Map of earthquakes and associated monitoring stations
+> Figure 3. Map of earthquakes and associated monitoring stations
 
 <img src="https://user-images.githubusercontent.com/61290423/211563354-b06ce175-33f4-4b98-9f8a-5b616f313949.png" alt="map quakes station" width="650"/>
 
