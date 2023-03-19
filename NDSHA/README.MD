@@ -10,7 +10,7 @@ The section /portfolio/seismic_records provided a set of engineering eathquake p
 In generating the synthetic time histories, some specifics related to simulation settings had to be accounted for:
 * the upper corner frequency : synthetic signals can and were generated only for a 10 Hz upper frequency, hence the frequency "Tree branch" only includes 10 Hz (and not 25 Hz or 35 Hz as in portfolio/seismic_records).
 * the earthquake fault-rupture realisation : this can be seen as the beginning of an earthquake, when the accumulated stress is released from a nucleation point located randomly along the plane fault (Figure 1). From the nucleation point starts a wave - the rupture front - that triggers other weak points along the fault as it propagates away from the nucleation point.
-* the directivity : the angle formed between the direction taken by the rupture front and the recording station location, for which three angle values - 0°, 90° and 180° - are of particular interest.
+* the directivity : the angle formed between the direction taken by the rupture front and the recording station location, for which three angle values - 0°, 90° and 180° - are of particular interest since they cover the range of possible subsequent amplitude values.
 
 
 > Figure 1. Two examples of earthquake fault-rupturing, illustrating several seismicity terms (directivity, random location of nucleation point...).
