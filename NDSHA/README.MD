@@ -37,25 +37,25 @@ with ii) structure #8, mode DWN (pu), velocity type (f1), NS (sns), station #10.
 A set of functions were defined at the beginning of the code in order to calculate seismic parameters such as spectral accelerations and parameters related to Arias intensity.      
 
 #### Reading the dataset
-&nbsp; &nbsp; The first part of the code (up to section XX) aims at reading into R the large dataset of earthquake accelerograms produced by the MS technique algorithm.
+&nbsp; &nbsp; The first part of the code (section I & II) aims at reading into R the large dataset of earthquake accelerograms produced by the MS technique algorithm.
 I created a dataframe covering the different combinations of simulation settings and earthquake parameters, then created the file paths, finally tested the existence of all files to spot any possible missing *.plt files based on the anticipated number of dataframe rows.   
 The set of *.plt files were then loaded into a list of dataframes and the file pairs EW & NS were joined to reduce the size of the list of dataframes.
 NB : due to computer RAM limitations and subsequent difficulty in loading all displacement, velocity and acceleration files, the script shows only the building and reading acceleration files (f2f2); reading velocity or displacement is easily done by replacing f2f2 by f1f1 or f0f0 in the relevant lines of this first code section.
     
     
 #### Reorganising the dataset
-&nbsp; &nbsp; The second part of the code aims at re-organizing the files into a Tree structure, to reflect the folder organisation on the computer and to mirror the structure used for the observation dataset (portfolio/seismic_records).
+&nbsp; &nbsp; The second part of the code (section III) aims at re-organizing the files into a Tree structure, to reflect the folder organisation on the computer and to mirror the structure used for the observation dataset (portfolio/seismic_records).
 The folder organisation and file names helped with loading and managing the time histories as well as tracking seismic characteristics (earthquakes, stations...) and simulation settings associated to the signals.
 Simulation settings "realisation" and "directivity" were tracked by incorporating them into the Tree structure implemented in portfolio/seismic_records, via the tree branches "directivity" and "real" which record the directivity angle and the realisation index respectively.
 Earthquake name and station recording channels B-channel & H-channel are tracked. Since only one corner frequency is relevant for the simulations, no Tree branch "frequency" was inserted.    
 
 
 #### Processing the dataset
-&nbsp; &nbsp; The third part of the code focuses on the calculation of all requested seismic engineering parameters (ie.e Peak amplitudes, spectral accelerations, parameters related to Arias intensity...) and their storing into a dataframe which grows as the script loops through each branch of the Tree. The Tree branch names are also incorporated in the growing dataframe to keep track of which settings the engineering parameters relate to.
+&nbsp; &nbsp; The third part of the code (section IV and V) focuses on the calculation of all requested seismic engineering parameters (ie.e Peak amplitudes, spectral accelerations, parameters related to Arias intensity...) and their storing into a dataframe which grows as the script loops through each branch of the Tree. The Tree branch names are also incorporated in the growing dataframe to keep track of which settings the engineering parameters relate to.
 
 
 #### Plotting the results
-&nbsp; &nbsp; The fourth and last part of the code first connects the dataframe with the seismic engineering parameters to station metadata (station underlying geology, geocoordinates...), brings name formatting improvements and then provides visualization options for the results. This notably includes :
+&nbsp; &nbsp; The fourth and last part of the code (section VI & VII) first connects the dataframe with the seismic engineering parameters to station metadata (station underlying geology, geocoordinates...), brings name formatting improvements and then provides visualization options for the results. This notably includes :
 + the distribution of amplitudes (Peak Ground Acceleration) owing to the randomness in fault-rupture processes (Figure 2),
 + the mapping of the seismicity recording stations across the UK land (Figure 3), 
 + the differences in underlying geologies between the stations (Figure 4).
