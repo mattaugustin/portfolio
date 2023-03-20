@@ -14,9 +14,9 @@ library(readr)   ; library(purrr)   ; library(plyr) ;
 library(reshape2); library(ggplot2) ; library(ggrepel) ;
 
 
-##########################################################
-##  CREATE  FUNCTIONS REQUIRED FOR LATER OPERATIONS     ##
-##########################################################
+#####################################################################
+##  PREAMBLE : CREATE  FUNCTIONS REQUIRED FOR LATER OPERATIONS     ##
+#####################################################################
 
 ##  reorganize a pair of dataframes combining EW and NS earthquake acceleration signals
 prepare_df <- function(table_a, table_b){
@@ -90,52 +90,56 @@ resp_spectra_harsh <- function( acceleration , duration , nStep, per ){
 
 arias_parameters   <- function(step , accel_1 , accel_2){
   #
-  time_vec <- data.frame(seq(0,step*(length(accel_1)-1), step))
-  arias_df <- cbind (  time_vec , data.frame(accel_1) , data.frame(accel_2))
+  G_const   <-  9.80665
+  time_vec  <-  (seq(0,step*(length(accel_1)-1), step)) %>% data.frame()
+  arias_df  <-  cbind (  time_vec , data.frame(accel_1) , data.frame(accel_2))
   names(arias_df) <- c("time","acc_ew","acc_ns")
   #
-  arias_ew_g <- c() ; arias_ns_g <- c()  ;arias_ew_m <- c() ; arias_ns_m <- c() ; arias_stats <- data.frame() ;
+  arias_ew_g  <- c() ;  arias_ns_g   <- c() ;  arias_ew_m <- c() ;  arias_ns_m <- c()   ;   
+  ew_m_time_5 <- c() ;  ew_m_time_95 <- c() ; ns_m_time_5 <- c() ;  ns_m_time_95 <- c() ; ew_m_time_diff <- c() ; ew_m_time_diff <- c() ;
   #
-  arias_ew_g    <- cumsum((arias_df[,2]/980.665 )^2)*pi*step/2/G_const
-  arias_ns_g    <- cumsum((arias_df[,3]/980.665 )^2)*pi*step/2/G_const
-  arias_ew_m    <- cumsum((arias_df[,2]/100     )^2)*pi*step/2/G_const
-  arias_ns_m    <- cumsum((arias_df[,3]/100     )^2)*pi*step/2/G_const      
+  arias_df <-  arias_df %>% mutate ( . , arias_ew_g = cumsum(( acc_ew /980.665 )^2)*pi*step/2/G_const ,
+                                         arias_ns_g = cumsum(( acc_ns /980.665 )^2)*pi*step/2/G_const ,
+                                         arias_ew_m = cumsum(( acc_ew /100     )^2)*pi*step/2/G_const ,
+                                         arias_ns_m = cumsum(( acc_ns /100     )^2)*pi*step/2/G_const  )
   #
-  arias_df <- cbind( arias_df , data.frame(arias_ew_g) , data.frame(arias_ns_g) , data.frame(arias_ew_m),data.frame(arias_ns_m)  )
-  ew_g_5pct  <- 0.05*max( arias_df$arias_ew_g  )
-  ew_g_time_5 <-  arias_df[abs(arias_df$arias_ew_g - ew_g_5pct) == min(abs(arias_df$arias_ew_g - ew_g_5pct)),"time"]
-  ew_g_95pct  <-  0.95*max( arias_df$arias_ew_g  )
-  ew_g_time_95 <-  arias_df[abs(arias_df$arias_ew_g - ew_g_95pct) == min(abs(arias_df$arias_ew_g - ew_g_95pct)),"time"]
-  ew_g_time_diff <- ew_g_time_95 - ew_g_time_5
+  arias_values <- function( x ){
+    arias_max       <-  max(x)
+    nrg_5pct        <-  0.05*max(x) ;
+    nrg_5pct_pos    <-  which.min( (abs(x - nrg_5pct)) )
+    nrg_95pct       <-  0.95*max(x) ;
+    nrg_95pct_pos   <-  which.min( (abs(x - nrg_95pct)) )
+    list( arias_max, nrg_5pct_pos , nrg_95pct_pos )
+  }
   #
-  ns_g_5pct   <-  0.05*max( arias_df$arias_ns_g  )
-  ns_g_time_5 <-  arias_df[abs(arias_df$arias_ns_g - ns_g_5pct) == min(abs(arias_df$arias_ns_g - ns_g_5pct)),"time"]
-  ns_g_95pct  <-  0.95*max( arias_df$arias_ns_g  )
-  ns_g_time_95 <-  arias_df[abs(arias_df$arias_ns_g - ns_g_95pct) == min(abs(arias_df$arias_ns_g - ns_g_95pct)),"time"]
-  ns_g_time_diff <- ns_g_time_95 - ns_g_time_5
+  
+  time_arias <- apply ( arias_df[, 4:7] , 2 , arias_values ) %>% unlist
+  
+  arias_ew_g  <-  time_arias[[1]]
+  arias_ns_g  <-  time_arias[[4]]
+  arias_ew_m  <-  time_arias[[7]]
+  arias_ns_m  <-  time_arias[[10]]
   #
-  ew_m_5pct   <-  0.05*max( arias_df$arias_ew_m  )
-  ew_m_time_5 <-  arias_df[abs(arias_df$arias_ew_m - ew_m_5pct) == min(abs(arias_df$arias_ew_m - ew_m_5pct)),"time"]
-  ew_m_95pct  <-  0.95*max( arias_df$arias_ew_m  )
-  ew_m_time_95 <-  arias_df[abs(arias_df$arias_ew_m - ew_m_95pct) == min(abs(arias_df$arias_ew_m - ew_m_95pct)),"time"]
-  ew_m_time_diff <- ew_m_time_95 - ew_m_time_5
+  ew_m_time_5   <-  arias_df[ time_arias[[8]]   , "time" ] 
+  ew_m_time_95  <-  arias_df[ time_arias[[9]]   , "time" ] 
   #
-  ns_m_5pct   <-  0.05*max( arias_df$arias_ns_m  )
-  ns_m_time_5 <-  arias_df[abs(arias_df$arias_ns_m - ns_m_5pct) == min(abs(arias_df$arias_ns_m - ns_m_5pct)),"time"]
-  ns_m_95pct  <-  0.95*max( arias_df$arias_ns_m  )
-  ns_m_time_95 <-  arias_df[abs(arias_df$arias_ns_m - ns_m_95pct) == min(abs(arias_df$arias_ns_m - ns_m_95pct)),"time"]
-  ns_m_time_diff <- ns_m_time_95 - ns_m_time_5
+  ns_m_time_5   <-  arias_df[ time_arias[[11]]  , "time" ] 
+  ns_m_time_95  <-  arias_df[ time_arias[[12]]  , "time" ] 
   #
-  parameters <- list ( max(arias_ew_g),max(arias_ns_g),max(arias_ew_m), max(arias_ns_m) , ew_m_time_diff, ns_m_time_diff , ew_m_time_5 ,ew_m_time_95 , ns_m_time_5 ,ns_m_time_95   )
-  names(parameters) <- c("arias_ew_g","arias_ns_g","arias_ew_m","arias_ns_m","ew_m_time_diff","ns_m_time_diff","ew_m_time_5" ,"ew_m_time_95" , "ns_m_time_5" ,"ns_m_time_95")
+  ew_m_time_diff  <-  ew_m_time_95 - ew_m_time_5
+  ns_m_time_diff  <-  ns_m_time_95 - ns_m_time_5
+  #
+  parameters         <-  list ( arias_ew_g, arias_ns_g , arias_ew_m ,  arias_ns_m , ew_m_time_diff, ns_m_time_diff , ew_m_time_5 ,ew_m_time_95 , ns_m_time_5 ,ns_m_time_95    )
+  names(parameters)  <-  c("arias_ew_g","arias_ns_g","arias_ew_m","arias_ns_m","ew_m_time_diff","ns_m_time_diff","ew_m_time_5" ,"ew_m_time_95" , "ns_m_time_5" ,"ns_m_time_95")
   return(parameters)
 }
 
 
-####
-###########################################################################
-##    CONSTRUCT FOLDER AND FILE ARCHITECTURE FOR SUBSEQUENT READING      ##
-###########################################################################
+
+#####
+######################################################################################
+##   SECTION I : CONSTRUCT FOLDER AND FILE ARCHITECTURE FOR SUBSEQUENT READING      ##
+######################################################################################
 
 
 data_directory = "portfolio/NDSHA/"
@@ -216,9 +220,10 @@ ndsha_ew_ns <- rbind( path_signal[, c("accel_ew","exp_name_ew")]  %>% dplyr::ren
 
 
 #####
-###########################################
-##        LOADING SIGNAL FILES           ##
-###########################################
+####################################################
+##    SECTION II : LOADING SIGNAL FILES           ##
+####################################################
+
 
 signal_ndsha_acc <- list()
 startime <- Sys.time()
@@ -247,9 +252,9 @@ names( signal_ndsha_acc_ewns) <- str_sub ( names( signal_ndsha_acc_ewns) ,  1 , 
 
 
 #####
-######################################################
-##        ORGANIZE FILES INTO A TREE STRUCTURE      ##
-######################################################
+###################################################################
+##      SECTION III :  ORGANIZE FILES INTO A TREE STRUCTURE      ##
+###################################################################
 
 
 stacked_list_ndsha_acc <-  rep( list( list() ) , levels(path_signal$directivity) %>% length  ) %>% setNames( . , paste0( "dir" , levels(path_signal$directivity) ))  
@@ -281,16 +286,16 @@ for (i in 1:length(stacked_list_ndsha_acc)) {
 
 
 #####
-###################################################################################################
-##     EXTRACT AND DERIVE PARAMETERS FROM EARTHQUAKE SIGNALS CLASSIFIED INTO TREE STRUCTURE      ##
-###################################################################################################
+#################################################################################################################
+##      SECTION IV : EXTRACT AND DERIVE PARAMETERS FROM EARTHQUAKE SIGNALS CLASSIFIED INTO TREE STRUCTURE      ##
+#################################################################################################################
 
 
 stacked_ndsha_acc_tables <-  rep( list( list() ) , levels(path_signal$directivity) %>% length  ) %>% setNames( . , paste0( "dir" , levels(path_signal$directivity) ))  
 parameter_table          <-  rep( list( list() ) , levels(path_signal$directivity) %>% length  ) %>% setNames( . , paste0( "dir" , levels(path_signal$directivity) ))  
 xi <- 0.05     #  damping factor for spectral acceleration
-sPeriod <- c(0.05 , 0.1 , 0.2 , 0.3 , 0.4 , 0.5 , 0.6 , 0.7 , 0.8 , 0.9 , 1 , 2 , 3)
-startime <- Sys.time()
+sPeriod  <-  c(0.05 , 0.1 , 0.2 , 0.3 , 0.4 , 0.5 , 0.6 , 0.7 , 0.8 , 0.9 , 1 , 2 , 3)
+startime <-  Sys.time()
 #
 for (i in 1:length(stacked_list_ndsha_acc)) {
   #
@@ -408,10 +413,11 @@ endtime <- Sys.time()
 paste("time difference is " , difftime(endtime, startime, units = "mins") , "mins")
 
 
+
 #####
-########################################
-##     REORGANIZE AND SAVE DATA      ###
-########################################
+#####################################################
+##     SECTION  V : REORGANIZE AND SAVE DATA      ###
+#####################################################
 
 
 names(parameter_table)  <- c( "station_id" ,
@@ -445,9 +451,10 @@ rm(  parameter_table ,  stacked_list_ndsha_acc  ,stacked_ndsha_acc_tables, ndsha
 
 
 #####
-#############################################################
-##   CONNECTING EARTHQUAKE PARAMETERS TO STATION DATA      ##
-#############################################################
+#############################################################################
+##     SECTION  VI : CONNECTING EARTHQUAKE PARAMETERS TO STATION DATA      ##
+#############################################################################
+
 
 ## In the following sections, instead of the example dataset, the full dataset including all 99 realisations for each directivity angle and all monitoring stations 
 ## is connected to station information and re-arranged prior to plotting
@@ -525,9 +532,9 @@ write.csv(  parameter_table_long %>% filter( . ,  str_detect(  groundmotion_bis 
 
 
 #####
-####################################################
-##   PLOTTING SELECTED EARTHQUAKE PARAMETERS      ##
-####################################################
+###################################################################
+##    SECTION VII : PLOTTING SELECTED EARTHQUAKE PARAMETERS      ##
+###################################################################
 
 
 parameter_table  <-  read_csv("portfolio/NDSHA/results/groundmotion_PGX_SA.csv", trim_ws = FALSE)  %>% as.data.frame()
