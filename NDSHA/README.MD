@@ -65,8 +65,8 @@ A set of functions were defined at the beginning of the code in order to calcula
 #### Reading the dataset
 &nbsp; &nbsp; The first part of the code (section I & II) aims at reading into R the large dataset of earthquake accelerograms produced by the MS technique algorithm.
 I created a dataframe covering the different combinations of simulation settings and earthquake parameters, then created the file paths, finally tested the existence of all files to spot any possible missing *.plt files based on the anticipated number of dataframe rows.   
-The set of *.plt files were then loaded into a list of dataframes and the file pairs EW & NS were joined to reduce the size of the list of dataframes.
-NB : due to computer RAM limitations and subsequent difficulty in loading all displacement, velocity and acceleration files, the script shows only the building and reading acceleration files (f2f2); reading velocity or displacement is easily done by replacing f2f2 by f1f1 or f0f0 in the relevant lines of this first code section.
+The set of *.plt files were then loaded into a list of dataframes and the file pairs EW & NS were joined to reduce the size of the list of dataframes.        
+*NB : due to computer RAM limitations and subsequent difficulty in loading all displacement, velocity and acceleration files, the script shows only the building and reading acceleration files (f2f2). Nevertheless, reading velocity or displacement is easily done by replacing f2f2 by f1f1 or f0f0 in the relevant lines of this first code section.*
     
     
 #### Reorganising the dataset
@@ -88,7 +88,7 @@ Earthquake name and station recording channels B-channel & H-channel are tracked
      
 A customized plotting theme was specifically created for the plots and is provided at the end of the script.
 
-An example dataset with earthquake signals corresponding to different events, recording channels and stations is provided at the following link:
+An example dataset with earthquake signals corresponding to different events, recording channels and stations is provided at the link hereafter. The dataset is limited to a few realisations for each event, owing to the large size of the original dataset including all realisations and events.
 https://drive.google.com/drive/folders/1jdH0llIJzKXL89UEYmAZGeMVjHX_uXgJ?usp=sharing
 
 
