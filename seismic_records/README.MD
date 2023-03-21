@@ -9,7 +9,7 @@
 ### Task
 Following the processing of RAW SAC signals in portfolio/SAC, a set of SAC files is now available in the folder /observations, with the following organisation.
 
-In this section, the goal is to further process the SAC signals and obtain several engineering parameters. These include Peak amplitudes (Peak Ground Velocity, Acceleration and Displacement), spectral accelerations at structural periods of interest, parameters related to Arias intensity. A table containing information related to the earthquake events is provided to connect with the engineering parameters. The final outcome is a table containing all desired parameters as well as information on the SAC signal parameters were derived from.
+In this section, the goal is to further process the SAC signals and obtain several engineering parameters. These include Peak amplitudes (Peak Ground Velocity, Acceleration and Displacement), spectral accelerations at structural periods of interest, parameters related to Arias intensity. The final outcome is a table containing all desired parameters as well as information on the SAC signal parameters were derived from.
 
 
 ### Action
@@ -20,6 +20,7 @@ To take into account the different types of SAC files (earthquake event, monitor
 When all SAC signals are "ready" and suitably sorted in the Tree, they can be sent through a routine to extract the desired engineering parameters.
 
 
+A table containing information related to the earthquake events is provided to connect with the engineering parameters.
 With this code is provided a set of SAC earthquake signals and associated station metadata referred to as PoleZero files (PZ).
  https://drive.google.com/drive/folders/1FRe2bp1G7aQ-0hjDYUV57vSaD_2b9zix?usp=sharing
 
