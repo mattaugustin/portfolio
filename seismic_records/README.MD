@@ -3,16 +3,26 @@
 
 
 ### Background 
-&nbsp; &nbsp; &nbsp; &nbsp; Previously (see portfolio/SAC), SAC signals were processed and saved in SAC format, and a set of files was available, in connection with horizontal component type (East-West or North-South), instrumentation channel (broadband or high broadband), filtering frequency (upper corner frequency), earthquake motion type (acceleration...). Further processing of SAC files needs to be achieved in R code in order to ultimately obtain earthquake parameters of relevant engineering interest (PGA etc...).    
+&nbsp; &nbsp; &nbsp; &nbsp; Previously (see portfolio/SAC), SAC signals were processed and saved in SAC format, and a set of files was available, in connection with horizontal component type (East-West or North-South), instrumentation channel (broadband or high broadband), filtering frequency (upper corner frequency), earthquake motion type (acceleration ...). Further processing of SAC files needs to be achieved in R code in order to ultimately obtain earthquake parameters of relevant engineering interest (PGA etc ...).    
 
 
 ### Task
-Following the processing of RAW SAC signals in portfolio/SAC, a set of SAC files is now available in the folder /observations, with the following organisation.
-
+Following the processing of RAW SAC signals in portfolio/SAC, a set of SAC files and associated PoleZero files are now available in the folder /observations, with the following organisation. 
+          
 In this section, the goal is to further process the SAC signals and obtain several engineering parameters. These include Peak amplitudes (Peak Ground Velocity, Acceleration and Displacement), spectral accelerations at structural periods of interest, parameters related to Arias intensity. The final outcome is a table containing all desired parameters as well as information on the SAC signal parameters were derived from.
 
 
 ### Action
+
+&nbsp; &nbsp; &nbsp; &nbsp; Calculating engineering parameters from the SAC files firstly requires to "prepare" said SAC files, a.k.a. ensuring these SAC files contain metadata (start time, coordinates, station name ...) consistent with PoleZero files and have a suitably optimized file size for later calculations. 
+
+Thanks to the table "earthquake_info", I created and verified corresponding file paths, and loaded the PZ and SAC files, and assembled a new table listing useful characteristics associated to each SAC file. These notably include the earthquake name, the monitoring channel (B-chan or H-chan), the filtering corner frequency, seismicity recording station name, the horizontal component, the ground motion type (acceleration/velocity/displacement).     
+Using the "eseis" package, it is easy to write a routine allowing to plot the SAC signal with certain associated metadata in caption (Figure 1, left).
+
+> Figure 1. Clipping the signals to their main physical contents 
+<img src="https://user-images.githubusercontent.com/61290423/210902751-f54c43f5-3a4a-4eca-b091-af74226b83ae.png" alt="SAC signals plot" width="750"/>
+     
+SAC files are sometimes provided as part 1 hour long file ...
 
 I manipulated the SAC files thanks to the "eseis" package, accessing not only the earthquake ground motion datapoints but also all metadata associated to the earthquake record such as seismic network, station instrumentation details, signal sampling time step ... .      
 Before calculating the engineering parameters, few operations are required on the SAC signals. Notably, seismograms including the earthquake signal may cover a duration (~1 hour) much longer than the earthquake signal (few minutes) owing to the seismic station settings. To avoid calculations whose time and computer resources consumption grow with the signal duration, signal clipping (ie reducing) is one of these required operations. Other operations include assigning SAC signals to stations metadata, detecting and correcting inconsistencies in SAC signals metadata ... .    
@@ -36,9 +46,7 @@ Steps in the code are as follows :
      
       
       
-> Figure 1. Clipping the signals to their main physical contents 
-<img src="https://user-images.githubusercontent.com/61290423/210902751-f54c43f5-3a4a-4eca-b091-af74226b83ae.png" alt="SAC signals plot" width="750"/>
-     
+
        
 > Figure 2. Plotting selected parameters to show impact of filtering and epicentral distance
 <img src="https://user-images.githubusercontent.com/61290423/210989406-c875d05f-8d55-4798-97ef-c0e399dbab50.png" width="750"/>
