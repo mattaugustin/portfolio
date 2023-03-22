@@ -47,8 +47,9 @@ With this code is provided a set of SAC earthquake signals and associated statio
 
 
 > Figure 3. Plotting selected parameters to show impact of filtering and epicentral distance.
-<img src="https://user-images.githubusercontent.com/61290423/210989406-c875d05f-8d55-4798-97ef-c0e399dbab50.png" width="750"/>
+<img src="https://user-images.githubusercontent.com/61290423/210989406-c875d05f-8d55-4798-97ef-c0e399dbab50.png" height="700"/>
      
+     width="750" 
       
 
 
