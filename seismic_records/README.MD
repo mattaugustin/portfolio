@@ -1,6 +1,10 @@
 
 ***In a nutshell :*** *I created this code to obtain engineering parameters from SAC earthquake signals (i.e. time histories) previously processed using a SAC (Seismic Analysis Code) code sequence shown in portfolio/SAC. This code reads and further processes SAC signals (clipping, metadata-matching...) before calculating the desired parameters using a set of functions while keeping track of the range of settings associated to the SAC signals (stations, geocoordinates...). I included several plotting options to clearly visualize the data and results. The final output is a dataframe containing seismic parameters derived from earthquake observations that can be compared to earthquake simulation data in a companion project section.*
 
+A table containing information related to the earthquake events is provided to connect with the engineering parameters.
+With this code is provided a set of SAC earthquake signals and associated station metadata referred to as PoleZero files (PZ).
+ https://drive.google.com/drive/folders/1FRe2bp1G7aQ-0hjDYUV57vSaD_2b9zix?usp=sharing
+
 
 ### Background 
 &nbsp; &nbsp; &nbsp; &nbsp; Previously (see portfolio/SAC), SAC signals were processed and saved in SAC format, and a set of files was available, in connection with horizontal component type (East-West or North-South), instrumentation channel (broadband or high broadband), filtering frequency (upper corner frequency), earthquake motion type (acceleration ...). Further processing of SAC files needs to be achieved in R code in order to ultimately obtain earthquake parameters of relevant engineering interest (PGA etc ...).    
@@ -34,9 +38,6 @@ I then created a code sequence to calculate the several engineering parameters r
 &nbsp; &nbsp; &nbsp; &nbsp; I finally obtained a table containing the different engineering parameters. Based on this table, I defined different plotting options to provide insights on the earthquake ground motions, notably one showing selected engineering parameters (Figure 2), and another one describing the impact of different filter corner frequencies as well as seismic attenuation across distance (Figure 3).
 
 
-A table containing information related to the earthquake events is provided to connect with the engineering parameters.
-With this code is provided a set of SAC earthquake signals and associated station metadata referred to as PoleZero files (PZ).
- https://drive.google.com/drive/folders/1FRe2bp1G7aQ-0hjDYUV57vSaD_2b9zix?usp=sharing
 
 
 
