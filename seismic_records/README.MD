@@ -11,7 +11,29 @@ With this code is provided a set of SAC earthquake signals and associated statio
 
 
 ### Task
-Following the processing of RAW SAC signals in portfolio/SAC, a set of SAC files and associated PoleZero files are now available in the folder /observations, with the following organisation. 
+Following the processing of RAW SAC signals in portfolio/SAC, a set of SAC files and associated PoleZero files are now available in the folder /observations, with the  sample below as an example of file organisation.
+- folkestone/
+- rasen/
+- swansea/
+   - Base_Bchan/
+   - Base_Hchan/
+   - Bchan_10Hz/
+   - Bchan_25Hz/
+   - Hchan_10Hz/
+   - Hchan_35Hz/
+     - accel
+     - vel/
+     - disp/
+         - CWF.HHE
+         - CWF.HHN
+         - HPK.HHE
+         - HPK.HHN
+         - MCH1.HHE
+         - MCH1.HHN
+         - STNC.HHE
+         - STNC.HHN
+         - SWN1.HHE
+         - SWN1.HHN
           
 In this section, the goal is to further process the SAC signals and obtain several engineering parameters. These include Peak amplitudes (Peak Ground Velocity, Acceleration and Displacement), spectral accelerations at structural periods of interest, parameters related to Arias intensity. The final outcome is a table containing all desired parameters as well as information on the SAC signal parameters were derived from.
 
