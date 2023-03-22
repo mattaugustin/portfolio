@@ -32,7 +32,7 @@ I then created a code sequence to calculate the several engineering parameters r
 
 ### Results
 
-I finally obtained a table containing the different engineering parameters. Based on this table, I defined different plotting options to provide insights on the earthquake ground motions, notably one showing selected engineering parameters (Figure 2), and another one describing the impact of different filter corner frequencies as well as seismic attenuation across distance (Figure 3).
+&nbsp; &nbsp; &nbsp; &nbsp; I finally obtained a table containing the different engineering parameters. Based on this table, I defined different plotting options to provide insights on the earthquake ground motions, notably one showing selected engineering parameters (Figure 2), and another one describing the impact of different filter corner frequencies as well as seismic attenuation across distance (Figure 3).
 
 
 A table containing information related to the earthquake events is provided to connect with the engineering parameters.
@@ -49,7 +49,7 @@ With this code is provided a set of SAC earthquake signals and associated statio
 > Figure 3. Plotting selected parameters to show impact of filtering and epicentral distance.
 <img src="https://user-images.githubusercontent.com/61290423/210989406-c875d05f-8d55-4798-97ef-c0e399dbab50.png" height="700"/>
      
-     width="750" 
+
       
 
 
