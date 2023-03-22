@@ -88,10 +88,6 @@ Earthquake name and station recording channels B-channel & H-channel are tracked
      
 A customized plotting theme was specifically created for the plots and is provided at the end of the script.
 
-An example dataset with earthquake signals corresponding to different events, recording channels and stations is provided at the link hereafter. The dataset is limited to a few realisations for each event, owing to the large size of the original dataset including all realisations and events.
-https://drive.google.com/drive/folders/1jdH0llIJzKXL89UEYmAZGeMVjHX_uXgJ?usp=sharing
-
-
 
 > Figure 2. PGA Amplitude distribution associated to the seismic wavefront directivity angle in case of the Swansea earthquake
 
@@ -110,7 +106,13 @@ https://drive.google.com/drive/folders/1jdH0llIJzKXL89UEYmAZGeMVjHX_uXgJ?usp=sha
 <img src="https://user-images.githubusercontent.com/61290423/211395831-d7d4aeed-bae8-4f52-8a7b-dfe53c04a143.png" alt="geo distr" width="600"/>
 
 
-References: 
+### Dataset
+An example dataset with earthquake signals corresponding to different events, recording channels and stations is provided at the link hereafter. The dataset is limited to a few realisations for each event, owing to the large size of the original dataset including all realisations and events.
+https://drive.google.com/drive/folders/1jdH0llIJzKXL89UEYmAZGeMVjHX_uXgJ?usp=sharing
+
+
+
+### References: 
 + Panza, G.F., Romanelli, F. and Vaccari, F., 2001. Seismic wave propagation in laterally heterogeneous anelastic media: theory and applications to seismic zonation. In Advances in geophysics (Vol. 43, pp. 1-95). Elsevier.
 
 + Panza, G.F., La Mura, C., Peresan, A., Romanelli, F. and Vaccari, F., 2012. Seismic hazard scenarios as preventive tools for a disaster resilient society. In Advances in geophysics (Vol. 53, pp. 93-165). Elsevier.
