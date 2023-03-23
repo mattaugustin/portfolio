@@ -22,11 +22,17 @@ https://drive.google.com/drive/folders/14DTBeyYuI1QqDD22NuBmGvperO-_bVv_?usp=sha
 I therefore manipulated the dataset, first grouping amplitudes by dropping the column "real" and "directivity", and then grouping by dropping the column "real", determining the aggregated mean and median value of the entire amplitude range. This means that the former grouping will show aggregated values from all 300 amplitudes, and the latter grouping will show aggregated values from 100 amplitudes while still showing the impact of the parameter "directivity".
 This provides a dataset in which the impact of "directivity" can still be observed in the parameter amplitudes, with aggregated values associated to a specific directivity angle (e.g. directivity="bil_dir000" for directivity angle 0) or reflecting all directivities (directivity="combined"). This allows me to assess the impact of directivity in the residual calculations later in the code.    
                     
-I then joined the aggregated simulation dataset to the observation dataset and, upon selecting some variables of interest (engineering parameter, filtering corner frequency for the observations...), plotted observations and simulations together for all earthquakes (Figure 1). 
+I then joined the aggregated simulation dataset to the observation dataset and, upon selecting some variables of interest (engineering parameter, filtering corner frequency for the observations...), plotted observations and simulations together for all earthquakes (Figure 1). I also added a sequence to plot observations against the initial range of all 300 predicted amplitude values per engineering parameter (Figure 2).
 
 > Figure 1. PGA observations against median of all 300 predicted values, using observation signals filtered at 35 Hz.
 
 <img src="https://user-images.githubusercontent.com/61290423/216592445-2f4fe860-b52b-4903-af52-d7749dc24a5f.png" alt="ndsha aggregated vs sac" width="600"/>
+
+
+> Figure 2. PGA Observations compared against full range of predicted values
+
+<img src="https://user-images.githubusercontent.com/61290423/216591159-c656777d-5d7a-4933-ad10-209a602c3246.png" alt="ndsha swarm" width="600"/>
+
 
 
 I then calculated residuals defined as log<sub>10</sub>( predictions / observations ) , using both aggregated mean and median. I additionally calculated residual averages across distance bins in order to obtain additional insight on the performance of the predictive model across distance, adding the soil geology as a differentiating setting in the calculation.
@@ -36,23 +42,18 @@ I finally coded several visualization options to assess the impact of various se
 
 ### Results
 &nbsp; &nbsp; &nbsp; &nbsp; Ultimately, I obtained and saved a table containing residuals between predictions and observations for a range of engineering parameters. The table columns and organisation help to keep track of various settings possibly affecting the residuals such as directivity, distance, soil geology ... .         
-The final residual table and the visualization code sequences allow me to see the impact of several settings including : directivity in simulated motions, filtering corner frequency in observations, soil geology, distance ... (example in Figure 2 and 3). I also added a sequence to plot observations against the initial range of all 300 predicted amplitude values per engineering parameter (Figure 4).
+The final residual table and the visualization code sequences allow me to see the impact of several settings including : directivity in simulated motions, filtering corner frequency in observations, soil geology, distance ... (example in Figure 3 and 4). 
 
 
-> Figure 2. Impact of geologies on residual distribution
+> Figure 3. Impact of geologies on residual distribution
 
 <img src="https://user-images.githubusercontent.com/61290423/216591242-c44b89c4-5569-4547-a456-fc8b9909fa04.png" alt="all geo vs rock" width="600"/>
 
 
-> Figure 3. Impact of geologies on residual distribution : corresponding histogram on residual count. 
+> Figure 4. Impact of geologies on residual distribution : corresponding histogram on residual count. 
 
 <img src="https://user-images.githubusercontent.com/126000617/227207159-4928a573-0801-4391-b765-16381b785b67.png" alt="histo geoVSrock" width="600"/>
 
-
-
-> Figure 4. PGA Observations compared against full range of predicted values
-
-<img src="https://user-images.githubusercontent.com/61290423/216591159-c656777d-5d7a-4933-ad10-209a602c3246.png" alt="ndsha swarm" width="600"/>
 
 
 
