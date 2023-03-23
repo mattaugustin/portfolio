@@ -36,7 +36,7 @@ I finally coded several visualization options to assess the impact of various se
 
 ### Results
 &nbsp; &nbsp; &nbsp; &nbsp; Ultimately, I obtained and saved a table containing residuals between predictions and observations for a range of engineering parameters. The table columns and organisation help to keep track of various settings possibly affecting the residuals such as directivity, distance, soil geology ... .         
-The final residual table and the visualization code sequences allow me to see the impact of several settings including : directivity in simulated motions, filtering corner frequency in observations, soil geology, distance ... (Figure 2). I also added a sequence to plot observations against the initial range of all 300 predicted amplitude values per engineering parameter (Figure 3).
+The final residual table and the visualization code sequences allow me to see the impact of several settings including : directivity in simulated motions, filtering corner frequency in observations, soil geology, distance ... (example in Figure 2 and 3). I also added a sequence to plot observations against the initial range of all 300 predicted amplitude values per engineering parameter (Figure 4).
 
 
 > Figure 2. Impact of geologies on residual distribution
@@ -44,8 +44,13 @@ The final residual table and the visualization code sequences allow me to see th
 <img src="https://user-images.githubusercontent.com/61290423/216591242-c44b89c4-5569-4547-a456-fc8b9909fa04.png" alt="all geo vs rock" width="600"/>
 
 
+> Figure 3. Impact of geologies on residual distribution : corresponding histogram on residual count. 
 
-> Figure 3. PGA Observations compared against full range of predicted values
+<img src="https://user-images.githubusercontent.com/126000617/227207159-4928a573-0801-4391-b765-16381b785b67.png" alt="histo geoVSrock" width="600"/>
+
+
+
+> Figure 4. PGA Observations compared against full range of predicted values
 
 <img src="https://user-images.githubusercontent.com/61290423/216591159-c656777d-5d7a-4933-ad10-209a602c3246.png" alt="ndsha swarm" width="600"/>
 
